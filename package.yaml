@@ -21,6 +21,7 @@ description:         Please see the README on GitHub at <https://github.com/sche
 
 dependencies:
 - base >= 4.7 && < 5
+- http-client
 - protocol-buffers
 - protocol-buffers-descriptor
 
@@ -36,6 +37,7 @@ executables:
     - -rtsopts
     - -with-rtsopts=-N
     dependencies:
+    - http-client
     - mesos-client
 
 tests:
