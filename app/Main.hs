@@ -3,10 +3,9 @@
 import           Network.HTTP.Client
 
 -- TODO:
--- 1. Write scripts to download .proto and generate files
--- e.g. wget ...
---      hprotoc -d src -Iproto -p  Mesos.V1 -l proto/mesos/v1/mesos.proto proto/mesos/v1/scheduler/scheduler.proto
--- 2. Add operator API
+-- Разделить интерфейс на два вида ответов
+-- 200 - обработано немедленно.
+-- 202 - поточная обработка.
 
 main :: IO ()
 main = do
@@ -17,6 +16,8 @@ main = do
     let req = "http://localhost:5050/api/v1"
             { method = "POST"
             , requestBody = RequestBodyLBS "{ \"type\": \"GET_HEALTH\" }"
-            , requestHeaders = [ ("Content-Type", "application/json") ]
+            , requestHeaders = [ ("Content-Type", "application/json")
+                               , ("Accept", "application/x-protobuf")
+                               ]
             }
     httpLbs req man >>= print
