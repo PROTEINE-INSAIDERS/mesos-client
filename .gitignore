@@ -1,4 +1,3 @@
 .stack-work/
 mesos-client.cabal
 *~
-proto
