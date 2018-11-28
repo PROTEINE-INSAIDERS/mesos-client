@@ -39,6 +39,7 @@ executables:
     dependencies:
     - http-client
     - mesos-client
+    - protocol-buffers
 
 tests:
   mesos-client-test:
