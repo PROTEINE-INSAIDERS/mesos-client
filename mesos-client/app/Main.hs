@@ -5,7 +5,10 @@ import           Data.Either
 import           Mesos.HTTP.Client
 import           Mesos.V1.Master
 import qualified Mesos.V1.Master.Protos.Response as Master
-import           Network.HTTP.Client
+import           Network.HTTP.Client             (defaultManagerSettings,
+                                                  managerSetProxy, newManager,
+                                                  proxyEnvironment)
+import           Network.HTTP.Simple
 import           Text.ProtocolBuffers
 import           Text.ProtocolBuffers.Basic
 import           Text.ProtocolBuffers.Header
@@ -30,17 +33,20 @@ main = do
             (proxyEnvironment Nothing)
             defaultManagerSettings
     man <- newManager settings
-    initReq <- mesosRequest "http://localhost:5050/api/v1"
-    let req = initReq { requestBody = RequestBodyLBS getHealthLBS
-            , requestHeaders = [ ("Content-Type", "application/x-protobuf")
-                               , ("Accept", "application/x-protobuf")
-                               ]
-            }
-    res <- httpLbs req man
-    print "Response: "
+
+    request' <- mesosRequest "http://localhost:5050/api/v1"
+    let request = addRequestHeader "Content-Type" "application/x-protobuf"
+                $ addRequestHeader "Accept" "application/x-protobuf"
+                $ setRequestManager man
+                $ setRequestBodyLBS getHealthLBS
+                $ request'
+
+    res <- httpLbs request
+    putStrLn "Response: "
     print res
-    print "Proto: "
-    let pres =  parseResponse  $ responseBody res
+    putStrLn "Proto: "
+    let pres =  parseResponse  $ getResponseBody res
     print $ pres
+    putStrLn "Json: "
     print $ encode pres
     return ()

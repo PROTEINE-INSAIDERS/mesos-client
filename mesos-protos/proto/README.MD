@@ -1,1 +1,1 @@
-proto files taken from mesos sources and patched manually to support hprotoc.
+Proto files taken from mesos sources and patched manually to support hprotoc.

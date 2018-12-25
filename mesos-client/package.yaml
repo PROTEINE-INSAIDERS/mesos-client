@@ -22,8 +22,12 @@ description:         Please see the README on GitHub at <https://github.com/sche
 dependencies:
 - base >= 4.7 && < 5
 - aeson
+- bytestring
+- conduit
+- conduit-extra
 - exceptions
 - http-client
+- http-conduit
 - mesos-protos
 - protocol-buffers
 - protocol-buffers-descriptor
