@@ -3,11 +3,15 @@
 import           Data.Aeson
 import           Data.Either
 import           Mesos.HTTP.Client
+import           Mesos.HTTP.Client.Internal    as M
 import           Mesos.V1.Master
-import qualified Mesos.V1.Master.Protos.Response as Master
-import           Network.HTTP.Client             (defaultManagerSettings,
-                                                  managerSetProxy, newManager,
-                                                  proxyEnvironment)
+import qualified Mesos.V1.Master.Protos.Response
+                                               as Master
+import           Network.HTTP.Client            ( defaultManagerSettings
+                                                , managerSetProxy
+                                                , newManager
+                                                , proxyEnvironment
+                                                )
 import           Network.HTTP.Simple
 import           Text.ProtocolBuffers
 import           Text.ProtocolBuffers.Basic
@@ -24,29 +28,23 @@ getHealthLBS = messagePut getHealth
 
 parseResponse :: ByteString -> Master.Response
 parseResponse bs = case messageGet bs of
-                     Left e         -> error e
-                     Right (msg, _) -> msg
+    Left  e        -> error e
+    Right (msg, _) -> msg
 
 main :: IO ()
 main = do
-    let settings = managerSetProxy
-            (proxyEnvironment Nothing)
-            defaultManagerSettings
-    man <- newManager settings
-
+    let settings =
+            managerSetProxy (proxyEnvironment Nothing) defaultManagerSettings
+    man      <- newManager settings
+    endpoint <- newEndpoint man "http://localhost:5050/api/v1"
+{-
     request' <- mesosRequest "http://localhost:5050/api/v1"
     let request = addRequestHeader "Content-Type" "application/x-protobuf"
                 $ addRequestHeader "Accept" "application/x-protobuf"
                 $ setRequestManager man
                 $ setRequestBodyLBS getHealthLBS
                 $ request'
-
-    res <- httpLbs request
-    putStrLn "Response: "
-    print res
-    putStrLn "Proto: "
-    let pres =  parseResponse  $ getResponseBody res
-    print $ pres
-    putStrLn "Json: "
-    print $ encode pres
+-}
+    res      <- call endpoint M.jsonEncoder getHealth
+    res      <- call endpoint M.protobufEncoder getHealth
     return ()

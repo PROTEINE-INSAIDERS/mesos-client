@@ -28,6 +28,7 @@ dependencies:
 - exceptions
 - http-client
 - http-conduit
+- http-types
 - mesos-protos
 - protocol-buffers
 - protocol-buffers-descriptor
