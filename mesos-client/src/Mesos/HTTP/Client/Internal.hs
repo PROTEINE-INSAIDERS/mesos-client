@@ -2,22 +2,23 @@
 
 module Mesos.HTTP.Client.Internal where
 
--- import           Control.Monad.Catch
 import           Conduit
 import qualified Data.ByteString.Lazy          as LBS
--- import           Network.HTTP.Client
 import           Control.Monad.Catch
 import           Data.Aeson                     ( FromJSON
                                                 , ToJSON
                                                 )
 import qualified Data.Aeson                    as Aeson
 import           Data.ByteString
-import           Data.Conduit.Attoparsec        ( sinkParser )
+import           Data.Conduit.Attoparsec        ( sinkParser
+                                                , sinkParserEither
+                                                )
 import           Data.Typeable
 import           Network.HTTP.Client            ( Manager )
 import           Network.HTTP.Simple
 import           Network.HTTP.Types
 import           Text.ProtocolBuffers
+import           Text.ProtocolBuffers.Get       ( Result(..) )
 
 -- TODO: do not expose constructor.
 -- move smart constructor here.
@@ -47,27 +48,58 @@ protobufEncoder =
 
 data ResponseSink m a = ResponseSink
   { accept :: ByteString
-  , sink :: ConduitT ByteString Void m a
+  , sink :: Request -> Response () -> ConduitT ByteString Void m a
   }
 
 jsonSink :: (MonadThrow m, FromJSON a) => ResponseSink m a  -- ConduitT ByteString Void m a
-jsonSink = ResponseSink 
+jsonSink = ResponseSink
   { accept = "application/json"
-  , sink = do 
-      v <- sinkParser Aeson.json'
-      case Aeson.fromJSON v of
-        Aeson.Error   e -> throwM $ FromJSONException v e
-        Aeson.Success a -> return a  
+  , sink   = \request response -> do
+               eiherValue <- sinkParserEither Aeson.json' -- TODO: заменить на either, использовать JSONParseException 
+               case eiherValue of
+                 Left parseError ->
+                   throwM $ JSONParseException request response parseError
+                 Right value -> case Aeson.fromJSON value of
+                   Aeson.Error converError -> throwM $ JSONConversionException
+                     request
+                     (fmap (const value) response)
+                     converError
+                   Aeson.Success a -> return a
   }
 
-data FromJSONException = FromJSONException Aeson.Value String deriving (Show, Typeable)
-instance Exception FromJSONException
+-- TODO: MonadThrow?
+protobufSink :: (Monad m, ReflectDescriptor a, Wire a) => ResponseSink m a
+protobufSink = ResponseSink
+  { accept = "application/x-protobuf"
+  , sink   = \_ _ -> do
+               maybeInput <- await
+               case maybeInput of
+                 Just input -> go $ runGet messageGetM (LBS.fromStrict input)
+                  where
+                   go (Failed i s) = fail ("Failed at " ++ show i ++ " : " ++ s)
+                   go (Finished _ _ a) = return a
+                   go (Partial f) = f . fmap LBS.fromStrict <$> await >>= go
+                 Nothing -> fail "No input."
+  }
 
-call :: (MonadUnliftIO m) => Endpoint -> RequestEncoder req -> req -> m ()
-call (Endpoint request) (RequestEncoder contentType encode) msg = do
-  res <-
-    httpLBS
-    $ setRequestHeader hContentType [contentType]
-    $ setRequestHeader "Accept"     ["application/json"]
-    $ setRequestBodyLBS (encode msg) request
-  liftIO $ print res
+-- TODO: add status code check
+call
+  :: (MonadUnliftIO m, Show res)
+  => Endpoint
+  -> RequestEncoder req
+  -> ResponseSink m res
+  -> req
+  -> m res
+call (Endpoint request') (RequestEncoder contentType encode) (ResponseSink accept sink) msg
+  = do
+    let request =
+          setRequestHeader hContentType [contentType]
+            $ setRequestHeader hAccept [accept]
+            $ setRequestBodyLBS (encode msg) request'
+    res <- httpSink request (sink request)
+    liftIO $ print res
+    return res
+
+stream :: (MonadUnliftIO m) => Endpoint -> RequestEncoder req -> req -> m ()
+stream (Endpoint request') (RequestEncoder contentType encode) msg = do
+  _

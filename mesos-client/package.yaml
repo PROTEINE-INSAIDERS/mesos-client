@@ -25,6 +25,7 @@ dependencies:
 - bytestring
 - conduit
 - conduit-extra
+- containers
 - exceptions
 - http-client
 - http-conduit
