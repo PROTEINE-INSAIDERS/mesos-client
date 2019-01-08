@@ -4,7 +4,6 @@
 
 import           Data.Aeson
 import           Data.Either
-import           Mesos.HTTP.Client
 import           Mesos.HTTP.Client.Internal    as M
 import qualified Mesos.V1.Master               as Master
 import qualified Mesos.V1.Master.Protos.Response

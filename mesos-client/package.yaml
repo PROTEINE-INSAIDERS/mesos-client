@@ -34,6 +34,7 @@ dependencies:
 - mesos-protos
 - protocol-buffers
 - protocol-buffers-descriptor
+- singletons
 - unliftio
 
 library:
