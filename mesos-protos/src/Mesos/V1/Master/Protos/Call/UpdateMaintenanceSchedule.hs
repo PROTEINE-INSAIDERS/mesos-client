@@ -1,17 +1,21 @@
-{-# LANGUAGE BangPatterns, DeriveDataTypeable, DeriveGeneric, FlexibleInstances, MultiParamTypeClasses, OverloadedStrings #-}
+{-# LANGUAGE TemplateHaskell, BangPatterns, DeriveDataTypeable, DeriveGeneric, FlexibleInstances, MultiParamTypeClasses,
+ OverloadedStrings #-}
 {-# OPTIONS_GHC  -fno-warn-unused-imports #-}
-module Mesos.V1.Master.Protos.Call.UpdateMaintenanceSchedule (UpdateMaintenanceSchedule(..)) where
+module Mesos.V1.Master.Protos.Call.UpdateMaintenanceSchedule (UpdateMaintenanceSchedule(..), schedule) where
 import Prelude ((+), (/), (++), (.))
 import qualified Prelude as Prelude'
 import qualified Data.Typeable as Prelude'
 import qualified GHC.Generics as Prelude'
 import qualified Data.Data as Prelude'
 import qualified Text.ProtocolBuffers.Header as P'
+import qualified Control.Lens.TH
 import qualified Mesos.V1.Maintenance.Protos.Schedule as Protos (Schedule)
 
-data UpdateMaintenanceSchedule = UpdateMaintenanceSchedule{schedule :: !(Protos.Schedule)}
+data UpdateMaintenanceSchedule = UpdateMaintenanceSchedule{_schedule :: !(Protos.Schedule)}
                                  deriving (Prelude'.Show, Prelude'.Eq, Prelude'.Ord, Prelude'.Typeable, Prelude'.Data,
                                            Prelude'.Generic)
+
+Control.Lens.TH.makeLenses ''UpdateMaintenanceSchedule
 
 instance P'.ToJSON UpdateMaintenanceSchedule where
   toJSON msg = P'.objectNoEmpty ([("schedule", P'.toJSON (schedule msg))] ++ Prelude'.concat [])
@@ -22,7 +26,7 @@ instance P'.FromJSON UpdateMaintenanceSchedule where
       (\ o ->
         do
           schedule <- P'.explicitParseField P'.parseJSON o "schedule"
-          Prelude'.return P'.defaultValue{schedule = schedule})
+          Prelude'.return P'.defaultValue{_schedule = schedule})
 
 instance P'.Mergeable UpdateMaintenanceSchedule where
   mergeAppend (UpdateMaintenanceSchedule x'1) (UpdateMaintenanceSchedule y'1) = UpdateMaintenanceSchedule (P'.mergeAppend x'1 y'1)
@@ -60,7 +64,7 @@ instance P'.Wire UpdateMaintenanceSchedule where
     where
         update'Self wire'Tag old'Self
          = case wire'Tag of
-             10 -> Prelude'.fmap (\ !new'Field -> old'Self{schedule = P'.mergeAppend (schedule old'Self) (new'Field)})
+             10 -> Prelude'.fmap (\ !new'Field -> old'Self{_schedule = P'.mergeAppend (_schedule old'Self) (new'Field)})
                     (P'.wireGet 11)
              _ -> let (field'Number, wire'Type) = P'.splitWireTag wire'Tag in P'.unknown field'Number wire'Type old'Self
 
@@ -73,7 +77,7 @@ instance P'.ReflectDescriptor UpdateMaintenanceSchedule where
   getMessageInfo _ = P'.GetMessageInfo (P'.fromDistinctAscList [10]) (P'.fromDistinctAscList [10])
   reflectDescriptorInfo _
    = Prelude'.read
-      "DescriptorInfo {descName = ProtoName {protobufName = FIName \".mesos.v1.master.Call.UpdateMaintenanceSchedule\", haskellPrefix = [MName \"Mesos\",MName \"V1\",MName \"Master\"], parentModule = [MName \"Protos\",MName \"Call\"], baseName = MName \"UpdateMaintenanceSchedule\"}, descFilePath = [\"Mesos\",\"V1\",\"Master\",\"Protos\",\"Call\",\"UpdateMaintenanceSchedule.hs\"], isGroup = False, fields = fromList [FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.master.Call.UpdateMaintenanceSchedule.schedule\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Master\"], parentModule' = [MName \"Protos\",MName \"Call\",MName \"UpdateMaintenanceSchedule\"], baseName' = FName \"schedule\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 1}, wireTag = WireTag {getWireTag = 10}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = True, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.maintenance.Schedule\", haskellPrefix = [MName \"Mesos\",MName \"V1\",MName \"Maintenance\"], parentModule = [MName \"Protos\"], baseName = MName \"Schedule\"}), hsRawDefault = Nothing, hsDefault = Nothing}], descOneofs = fromList [], keys = fromList [], extRanges = [], knownKeys = fromList [], storeUnknown = False, lazyFields = False, makeLenses = False, jsonInstances = True}"
+      "DescriptorInfo {descName = ProtoName {protobufName = FIName \".mesos.v1.master.Call.UpdateMaintenanceSchedule\", haskellPrefix = [MName \"Mesos\",MName \"V1\",MName \"Master\"], parentModule = [MName \"Protos\",MName \"Call\"], baseName = MName \"UpdateMaintenanceSchedule\"}, descFilePath = [\"Mesos\",\"V1\",\"Master\",\"Protos\",\"Call\",\"UpdateMaintenanceSchedule.hs\"], isGroup = False, fields = fromList [FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.master.Call.UpdateMaintenanceSchedule.schedule\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Master\"], parentModule' = [MName \"Protos\",MName \"Call\",MName \"UpdateMaintenanceSchedule\"], baseName' = FName \"schedule\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 1}, wireTag = WireTag {getWireTag = 10}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = True, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.maintenance.Schedule\", haskellPrefix = [MName \"Mesos\",MName \"V1\",MName \"Maintenance\"], parentModule = [MName \"Protos\"], baseName = MName \"Schedule\"}), hsRawDefault = Nothing, hsDefault = Nothing}], descOneofs = fromList [], keys = fromList [], extRanges = [], knownKeys = fromList [], storeUnknown = False, lazyFields = False, makeLenses = True, jsonInstances = True}"
 
 instance P'.TextType UpdateMaintenanceSchedule where
   tellT = P'.tellSubMessage
@@ -82,14 +86,14 @@ instance P'.TextType UpdateMaintenanceSchedule where
 instance P'.TextMsg UpdateMaintenanceSchedule where
   textPut msg
    = do
-       P'.tellT "schedule" (schedule msg)
+       P'.tellT "schedule" (_schedule msg)
   textGet
    = do
-       mods <- P'.sepEndBy (P'.choice [parse'schedule]) P'.spaces
+       mods <- P'.sepEndBy (P'.choice [parse'_schedule]) P'.spaces
        Prelude'.return (Prelude'.foldl (\ v f -> f v) P'.defaultValue mods)
     where
-        parse'schedule
+        parse'_schedule
          = P'.try
             (do
                v <- P'.getT "schedule"
-               Prelude'.return (\ o -> o{schedule = v}))
+               Prelude'.return (\ o -> o{_schedule = v}))

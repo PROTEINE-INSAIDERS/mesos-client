@@ -1,15 +1,19 @@
-{-# LANGUAGE BangPatterns, DeriveDataTypeable, DeriveGeneric, FlexibleInstances, MultiParamTypeClasses, OverloadedStrings #-}
+{-# LANGUAGE TemplateHaskell, BangPatterns, DeriveDataTypeable, DeriveGeneric, FlexibleInstances, MultiParamTypeClasses,
+ OverloadedStrings #-}
 {-# OPTIONS_GHC  -fno-warn-unused-imports #-}
-module Mesos.V1.Protos.Value.Scalar (Scalar(..)) where
+module Mesos.V1.Protos.Value.Scalar (Scalar(..), value) where
 import Prelude ((+), (/), (++), (.))
 import qualified Prelude as Prelude'
 import qualified Data.Typeable as Prelude'
 import qualified GHC.Generics as Prelude'
 import qualified Data.Data as Prelude'
 import qualified Text.ProtocolBuffers.Header as P'
+import qualified Control.Lens.TH
 
-data Scalar = Scalar{value :: !(P'.Double)}
+data Scalar = Scalar{_value :: !(P'.Double)}
               deriving (Prelude'.Show, Prelude'.Eq, Prelude'.Ord, Prelude'.Typeable, Prelude'.Data, Prelude'.Generic)
+
+Control.Lens.TH.makeLenses ''Scalar
 
 instance P'.ToJSON Scalar where
   toJSON msg = P'.objectNoEmpty ([("value", P'.toJSON (value msg))] ++ Prelude'.concat [])
@@ -20,7 +24,7 @@ instance P'.FromJSON Scalar where
       (\ o ->
         do
           value <- P'.explicitParseField P'.parseJSON o "value"
-          Prelude'.return P'.defaultValue{value = value})
+          Prelude'.return P'.defaultValue{_value = value})
 
 instance P'.Mergeable Scalar where
   mergeAppend (Scalar x'1) (Scalar y'1) = Scalar (P'.mergeAppend x'1 y'1)
@@ -58,7 +62,7 @@ instance P'.Wire Scalar where
     where
         update'Self wire'Tag old'Self
          = case wire'Tag of
-             9 -> Prelude'.fmap (\ !new'Field -> old'Self{value = new'Field}) (P'.wireGet 1)
+             9 -> Prelude'.fmap (\ !new'Field -> old'Self{_value = new'Field}) (P'.wireGet 1)
              _ -> let (field'Number, wire'Type) = P'.splitWireTag wire'Tag in P'.unknown field'Number wire'Type old'Self
 
 instance P'.MessageAPI msg' (msg' -> Scalar) Scalar where
@@ -70,7 +74,7 @@ instance P'.ReflectDescriptor Scalar where
   getMessageInfo _ = P'.GetMessageInfo (P'.fromDistinctAscList [9]) (P'.fromDistinctAscList [9])
   reflectDescriptorInfo _
    = Prelude'.read
-      "DescriptorInfo {descName = ProtoName {protobufName = FIName \".mesos.v1.Value.Scalar\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\",MName \"Value\"], baseName = MName \"Scalar\"}, descFilePath = [\"Mesos\",\"V1\",\"Protos\",\"Value\",\"Scalar.hs\"], isGroup = False, fields = fromList [FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Value.Scalar.value\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Value\",MName \"Scalar\"], baseName' = FName \"value\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 1}, wireTag = WireTag {getWireTag = 9}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = True, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 1}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing}], descOneofs = fromList [], keys = fromList [], extRanges = [], knownKeys = fromList [], storeUnknown = False, lazyFields = False, makeLenses = False, jsonInstances = True}"
+      "DescriptorInfo {descName = ProtoName {protobufName = FIName \".mesos.v1.Value.Scalar\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\",MName \"Value\"], baseName = MName \"Scalar\"}, descFilePath = [\"Mesos\",\"V1\",\"Protos\",\"Value\",\"Scalar.hs\"], isGroup = False, fields = fromList [FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Value.Scalar.value\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Value\",MName \"Scalar\"], baseName' = FName \"value\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 1}, wireTag = WireTag {getWireTag = 9}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = True, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 1}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing}], descOneofs = fromList [], keys = fromList [], extRanges = [], knownKeys = fromList [], storeUnknown = False, lazyFields = False, makeLenses = True, jsonInstances = True}"
 
 instance P'.TextType Scalar where
   tellT = P'.tellSubMessage
@@ -79,14 +83,14 @@ instance P'.TextType Scalar where
 instance P'.TextMsg Scalar where
   textPut msg
    = do
-       P'.tellT "value" (value msg)
+       P'.tellT "value" (_value msg)
   textGet
    = do
-       mods <- P'.sepEndBy (P'.choice [parse'value]) P'.spaces
+       mods <- P'.sepEndBy (P'.choice [parse'_value]) P'.spaces
        Prelude'.return (Prelude'.foldl (\ v f -> f v) P'.defaultValue mods)
     where
-        parse'value
+        parse'_value
          = P'.try
             (do
                v <- P'.getT "value"
-               Prelude'.return (\ o -> o{value = v}))
+               Prelude'.return (\ o -> o{_value = v}))

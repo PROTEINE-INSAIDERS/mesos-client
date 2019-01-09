@@ -1,18 +1,22 @@
-{-# LANGUAGE BangPatterns, DeriveDataTypeable, DeriveGeneric, FlexibleInstances, MultiParamTypeClasses, OverloadedStrings #-}
+{-# LANGUAGE TemplateHaskell, BangPatterns, DeriveDataTypeable, DeriveGeneric, FlexibleInstances, MultiParamTypeClasses,
+ OverloadedStrings #-}
 {-# OPTIONS_GHC  -fno-warn-unused-imports #-}
-module Mesos.V1.Protos.CgroupInfo.Blkio.Throttling.Statistics (Statistics(..)) where
+module Mesos.V1.Protos.CgroupInfo.Blkio.Throttling.Statistics (Statistics(..), device, io_serviced, io_service_bytes) where
 import Prelude ((+), (/), (++), (.))
 import qualified Prelude as Prelude'
 import qualified Data.Typeable as Prelude'
 import qualified GHC.Generics as Prelude'
 import qualified Data.Data as Prelude'
 import qualified Text.ProtocolBuffers.Header as P'
+import qualified Control.Lens.TH
 import qualified Mesos.V1.Protos.CgroupInfo.Blkio.Value as Protos.CgroupInfo.Blkio (Value)
 import qualified Mesos.V1.Protos.Device.Number as Protos.Device (Number)
 
-data Statistics = Statistics{device :: !(P'.Maybe Protos.Device.Number), io_serviced :: !(P'.Seq Protos.CgroupInfo.Blkio.Value),
-                             io_service_bytes :: !(P'.Seq Protos.CgroupInfo.Blkio.Value)}
+data Statistics = Statistics{_device :: !(P'.Maybe Protos.Device.Number), _io_serviced :: !(P'.Seq Protos.CgroupInfo.Blkio.Value),
+                             _io_service_bytes :: !(P'.Seq Protos.CgroupInfo.Blkio.Value)}
                   deriving (Prelude'.Show, Prelude'.Eq, Prelude'.Ord, Prelude'.Typeable, Prelude'.Data, Prelude'.Generic)
+
+Control.Lens.TH.makeLenses ''Statistics
 
 instance P'.ToJSON Statistics where
   toJSON msg
@@ -32,7 +36,7 @@ instance P'.FromJSON Statistics where
                           (P'.explicitParseFieldMaybe (Prelude'.mapM P'.parseJSON P'.<=< P'.parseJSON) o "io_serviced")
           io_service_bytes <- Prelude'.fmap (Prelude'.maybe Prelude'.mempty Prelude'.id)
                                (P'.explicitParseFieldMaybe (Prelude'.mapM P'.parseJSON P'.<=< P'.parseJSON) o "io_service_bytes")
-          Prelude'.return P'.defaultValue{device = device, io_serviced = io_serviced, io_service_bytes = io_service_bytes})
+          Prelude'.return P'.defaultValue{_device = device, _io_serviced = io_serviced, _io_service_bytes = io_service_bytes})
 
 instance P'.Mergeable Statistics where
   mergeAppend (Statistics x'1 x'2 x'3) (Statistics y'1 y'2 y'3)
@@ -73,11 +77,11 @@ instance P'.Wire Statistics where
     where
         update'Self wire'Tag old'Self
          = case wire'Tag of
-             10 -> Prelude'.fmap (\ !new'Field -> old'Self{device = P'.mergeAppend (device old'Self) (Prelude'.Just new'Field)})
+             10 -> Prelude'.fmap (\ !new'Field -> old'Self{_device = P'.mergeAppend (_device old'Self) (Prelude'.Just new'Field)})
                     (P'.wireGet 11)
-             18 -> Prelude'.fmap (\ !new'Field -> old'Self{io_serviced = P'.append (io_serviced old'Self) new'Field})
+             18 -> Prelude'.fmap (\ !new'Field -> old'Self{_io_serviced = P'.append (_io_serviced old'Self) new'Field})
                     (P'.wireGet 11)
-             26 -> Prelude'.fmap (\ !new'Field -> old'Self{io_service_bytes = P'.append (io_service_bytes old'Self) new'Field})
+             26 -> Prelude'.fmap (\ !new'Field -> old'Self{_io_service_bytes = P'.append (_io_service_bytes old'Self) new'Field})
                     (P'.wireGet 11)
              _ -> let (field'Number, wire'Type) = P'.splitWireTag wire'Tag in P'.unknown field'Number wire'Type old'Self
 
@@ -90,7 +94,7 @@ instance P'.ReflectDescriptor Statistics where
   getMessageInfo _ = P'.GetMessageInfo (P'.fromDistinctAscList []) (P'.fromDistinctAscList [10, 18, 26])
   reflectDescriptorInfo _
    = Prelude'.read
-      "DescriptorInfo {descName = ProtoName {protobufName = FIName \".mesos.v1.CgroupInfo.Blkio.Throttling.Statistics\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\",MName \"CgroupInfo\",MName \"Blkio\",MName \"Throttling\"], baseName = MName \"Statistics\"}, descFilePath = [\"Mesos\",\"V1\",\"Protos\",\"CgroupInfo\",\"Blkio\",\"Throttling\",\"Statistics.hs\"], isGroup = False, fields = fromList [FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.CgroupInfo.Blkio.Throttling.Statistics.device\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"CgroupInfo\",MName \"Blkio\",MName \"Throttling\",MName \"Statistics\"], baseName' = FName \"device\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 1}, wireTag = WireTag {getWireTag = 10}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.Device.Number\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\",MName \"Device\"], baseName = MName \"Number\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.CgroupInfo.Blkio.Throttling.Statistics.io_serviced\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"CgroupInfo\",MName \"Blkio\",MName \"Throttling\",MName \"Statistics\"], baseName' = FName \"io_serviced\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 2}, wireTag = WireTag {getWireTag = 18}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = True, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.CgroupInfo.Blkio.Value\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\",MName \"CgroupInfo\",MName \"Blkio\"], baseName = MName \"Value\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.CgroupInfo.Blkio.Throttling.Statistics.io_service_bytes\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"CgroupInfo\",MName \"Blkio\",MName \"Throttling\",MName \"Statistics\"], baseName' = FName \"io_service_bytes\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 3}, wireTag = WireTag {getWireTag = 26}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = True, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.CgroupInfo.Blkio.Value\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\",MName \"CgroupInfo\",MName \"Blkio\"], baseName = MName \"Value\"}), hsRawDefault = Nothing, hsDefault = Nothing}], descOneofs = fromList [], keys = fromList [], extRanges = [], knownKeys = fromList [], storeUnknown = False, lazyFields = False, makeLenses = False, jsonInstances = True}"
+      "DescriptorInfo {descName = ProtoName {protobufName = FIName \".mesos.v1.CgroupInfo.Blkio.Throttling.Statistics\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\",MName \"CgroupInfo\",MName \"Blkio\",MName \"Throttling\"], baseName = MName \"Statistics\"}, descFilePath = [\"Mesos\",\"V1\",\"Protos\",\"CgroupInfo\",\"Blkio\",\"Throttling\",\"Statistics.hs\"], isGroup = False, fields = fromList [FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.CgroupInfo.Blkio.Throttling.Statistics.device\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"CgroupInfo\",MName \"Blkio\",MName \"Throttling\",MName \"Statistics\"], baseName' = FName \"device\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 1}, wireTag = WireTag {getWireTag = 10}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.Device.Number\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\",MName \"Device\"], baseName = MName \"Number\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.CgroupInfo.Blkio.Throttling.Statistics.io_serviced\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"CgroupInfo\",MName \"Blkio\",MName \"Throttling\",MName \"Statistics\"], baseName' = FName \"io_serviced\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 2}, wireTag = WireTag {getWireTag = 18}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = True, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.CgroupInfo.Blkio.Value\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\",MName \"CgroupInfo\",MName \"Blkio\"], baseName = MName \"Value\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.CgroupInfo.Blkio.Throttling.Statistics.io_service_bytes\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"CgroupInfo\",MName \"Blkio\",MName \"Throttling\",MName \"Statistics\"], baseName' = FName \"io_service_bytes\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 3}, wireTag = WireTag {getWireTag = 26}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = True, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.CgroupInfo.Blkio.Value\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\",MName \"CgroupInfo\",MName \"Blkio\"], baseName = MName \"Value\"}), hsRawDefault = Nothing, hsDefault = Nothing}], descOneofs = fromList [], keys = fromList [], extRanges = [], knownKeys = fromList [], storeUnknown = False, lazyFields = False, makeLenses = True, jsonInstances = True}"
 
 instance P'.TextType Statistics where
   tellT = P'.tellSubMessage
@@ -99,26 +103,26 @@ instance P'.TextType Statistics where
 instance P'.TextMsg Statistics where
   textPut msg
    = do
-       P'.tellT "device" (device msg)
-       P'.tellT "io_serviced" (io_serviced msg)
-       P'.tellT "io_service_bytes" (io_service_bytes msg)
+       P'.tellT "device" (_device msg)
+       P'.tellT "io_serviced" (_io_serviced msg)
+       P'.tellT "io_service_bytes" (_io_service_bytes msg)
   textGet
    = do
-       mods <- P'.sepEndBy (P'.choice [parse'device, parse'io_serviced, parse'io_service_bytes]) P'.spaces
+       mods <- P'.sepEndBy (P'.choice [parse'_device, parse'_io_serviced, parse'_io_service_bytes]) P'.spaces
        Prelude'.return (Prelude'.foldl (\ v f -> f v) P'.defaultValue mods)
     where
-        parse'device
+        parse'_device
          = P'.try
             (do
                v <- P'.getT "device"
-               Prelude'.return (\ o -> o{device = v}))
-        parse'io_serviced
+               Prelude'.return (\ o -> o{_device = v}))
+        parse'_io_serviced
          = P'.try
             (do
                v <- P'.getT "io_serviced"
-               Prelude'.return (\ o -> o{io_serviced = P'.append (io_serviced o) v}))
-        parse'io_service_bytes
+               Prelude'.return (\ o -> o{_io_serviced = P'.append (_io_serviced o) v}))
+        parse'_io_service_bytes
          = P'.try
             (do
                v <- P'.getT "io_service_bytes"
-               Prelude'.return (\ o -> o{io_service_bytes = P'.append (io_service_bytes o) v}))
+               Prelude'.return (\ o -> o{_io_service_bytes = P'.append (_io_service_bytes o) v}))

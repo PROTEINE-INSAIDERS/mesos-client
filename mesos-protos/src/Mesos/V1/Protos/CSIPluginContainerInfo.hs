@@ -1,23 +1,27 @@
-{-# LANGUAGE BangPatterns, DeriveDataTypeable, DeriveGeneric, FlexibleInstances, MultiParamTypeClasses, OverloadedStrings #-}
+{-# LANGUAGE TemplateHaskell, BangPatterns, DeriveDataTypeable, DeriveGeneric, FlexibleInstances, MultiParamTypeClasses,
+ OverloadedStrings #-}
 {-# OPTIONS_GHC  -fno-warn-unused-imports #-}
-module Mesos.V1.Protos.CSIPluginContainerInfo (CSIPluginContainerInfo(..)) where
+module Mesos.V1.Protos.CSIPluginContainerInfo (CSIPluginContainerInfo(..), services, command, resources, container) where
 import Prelude ((+), (/), (++), (.))
 import qualified Prelude as Prelude'
 import qualified Data.Typeable as Prelude'
 import qualified GHC.Generics as Prelude'
 import qualified Data.Data as Prelude'
 import qualified Text.ProtocolBuffers.Header as P'
+import qualified Control.Lens.TH
 import qualified Mesos.V1.Protos.CSIPluginContainerInfo.Service as Protos.CSIPluginContainerInfo (Service)
 import qualified Mesos.V1.Protos.CommandInfo as Protos (CommandInfo)
 import qualified Mesos.V1.Protos.ContainerInfo as Protos (ContainerInfo)
 import qualified Mesos.V1.Protos.Resource as Protos (Resource)
 
-data CSIPluginContainerInfo = CSIPluginContainerInfo{services :: !(P'.Seq Protos.CSIPluginContainerInfo.Service),
-                                                     command :: !(P'.Maybe Protos.CommandInfo),
-                                                     resources :: !(P'.Seq Protos.Resource),
-                                                     container :: !(P'.Maybe Protos.ContainerInfo)}
+data CSIPluginContainerInfo = CSIPluginContainerInfo{_services :: !(P'.Seq Protos.CSIPluginContainerInfo.Service),
+                                                     _command :: !(P'.Maybe Protos.CommandInfo),
+                                                     _resources :: !(P'.Seq Protos.Resource),
+                                                     _container :: !(P'.Maybe Protos.ContainerInfo)}
                               deriving (Prelude'.Show, Prelude'.Eq, Prelude'.Ord, Prelude'.Typeable, Prelude'.Data,
                                         Prelude'.Generic)
+
+Control.Lens.TH.makeLenses ''CSIPluginContainerInfo
 
 instance P'.ToJSON CSIPluginContainerInfo where
   toJSON msg
@@ -39,7 +43,7 @@ instance P'.FromJSON CSIPluginContainerInfo where
           resources <- Prelude'.fmap (Prelude'.maybe Prelude'.mempty Prelude'.id)
                         (P'.explicitParseFieldMaybe (Prelude'.mapM P'.parseJSON P'.<=< P'.parseJSON) o "resources")
           container <- P'.explicitParseFieldMaybe P'.parseJSON o "container"
-          Prelude'.return P'.defaultValue{services = services, command = command, resources = resources, container = container})
+          Prelude'.return P'.defaultValue{_services = services, _command = command, _resources = resources, _container = container})
 
 instance P'.Mergeable CSIPluginContainerInfo where
   mergeAppend (CSIPluginContainerInfo x'1 x'2 x'3 x'4) (CSIPluginContainerInfo y'1 y'2 y'3 y'4)
@@ -81,14 +85,14 @@ instance P'.Wire CSIPluginContainerInfo where
     where
         update'Self wire'Tag old'Self
          = case wire'Tag of
-             8 -> Prelude'.fmap (\ !new'Field -> old'Self{services = P'.append (services old'Self) new'Field}) (P'.wireGet 14)
-             10 -> Prelude'.fmap (\ !new'Field -> old'Self{services = P'.mergeAppend (services old'Self) new'Field})
+             8 -> Prelude'.fmap (\ !new'Field -> old'Self{_services = P'.append (_services old'Self) new'Field}) (P'.wireGet 14)
+             10 -> Prelude'.fmap (\ !new'Field -> old'Self{_services = P'.mergeAppend (_services old'Self) new'Field})
                     (P'.wireGetPacked 14)
-             18 -> Prelude'.fmap (\ !new'Field -> old'Self{command = P'.mergeAppend (command old'Self) (Prelude'.Just new'Field)})
+             18 -> Prelude'.fmap (\ !new'Field -> old'Self{_command = P'.mergeAppend (_command old'Self) (Prelude'.Just new'Field)})
                     (P'.wireGet 11)
-             26 -> Prelude'.fmap (\ !new'Field -> old'Self{resources = P'.append (resources old'Self) new'Field}) (P'.wireGet 11)
+             26 -> Prelude'.fmap (\ !new'Field -> old'Self{_resources = P'.append (_resources old'Self) new'Field}) (P'.wireGet 11)
              34 -> Prelude'.fmap
-                    (\ !new'Field -> old'Self{container = P'.mergeAppend (container old'Self) (Prelude'.Just new'Field)})
+                    (\ !new'Field -> old'Self{_container = P'.mergeAppend (_container old'Self) (Prelude'.Just new'Field)})
                     (P'.wireGet 11)
              _ -> let (field'Number, wire'Type) = P'.splitWireTag wire'Tag in P'.unknown field'Number wire'Type old'Self
 
@@ -101,7 +105,7 @@ instance P'.ReflectDescriptor CSIPluginContainerInfo where
   getMessageInfo _ = P'.GetMessageInfo (P'.fromDistinctAscList []) (P'.fromDistinctAscList [8, 10, 18, 26, 34])
   reflectDescriptorInfo _
    = Prelude'.read
-      "DescriptorInfo {descName = ProtoName {protobufName = FIName \".mesos.v1.CSIPluginContainerInfo\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"CSIPluginContainerInfo\"}, descFilePath = [\"Mesos\",\"V1\",\"Protos\",\"CSIPluginContainerInfo.hs\"], isGroup = False, fields = fromList [FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.CSIPluginContainerInfo.services\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"CSIPluginContainerInfo\"], baseName' = FName \"services\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 1}, wireTag = WireTag {getWireTag = 8}, packedTag = Just (WireTag {getWireTag = 8},WireTag {getWireTag = 10}), wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = True, mightPack = True, typeCode = FieldType {getFieldType = 14}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.CSIPluginContainerInfo.Service\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\",MName \"CSIPluginContainerInfo\"], baseName = MName \"Service\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.CSIPluginContainerInfo.command\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"CSIPluginContainerInfo\"], baseName' = FName \"command\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 2}, wireTag = WireTag {getWireTag = 18}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.CommandInfo\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"CommandInfo\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.CSIPluginContainerInfo.resources\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"CSIPluginContainerInfo\"], baseName' = FName \"resources\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 3}, wireTag = WireTag {getWireTag = 26}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = True, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.Resource\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"Resource\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.CSIPluginContainerInfo.container\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"CSIPluginContainerInfo\"], baseName' = FName \"container\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 4}, wireTag = WireTag {getWireTag = 34}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.ContainerInfo\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"ContainerInfo\"}), hsRawDefault = Nothing, hsDefault = Nothing}], descOneofs = fromList [], keys = fromList [], extRanges = [], knownKeys = fromList [], storeUnknown = False, lazyFields = False, makeLenses = False, jsonInstances = True}"
+      "DescriptorInfo {descName = ProtoName {protobufName = FIName \".mesos.v1.CSIPluginContainerInfo\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"CSIPluginContainerInfo\"}, descFilePath = [\"Mesos\",\"V1\",\"Protos\",\"CSIPluginContainerInfo.hs\"], isGroup = False, fields = fromList [FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.CSIPluginContainerInfo.services\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"CSIPluginContainerInfo\"], baseName' = FName \"services\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 1}, wireTag = WireTag {getWireTag = 8}, packedTag = Just (WireTag {getWireTag = 8},WireTag {getWireTag = 10}), wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = True, mightPack = True, typeCode = FieldType {getFieldType = 14}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.CSIPluginContainerInfo.Service\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\",MName \"CSIPluginContainerInfo\"], baseName = MName \"Service\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.CSIPluginContainerInfo.command\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"CSIPluginContainerInfo\"], baseName' = FName \"command\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 2}, wireTag = WireTag {getWireTag = 18}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.CommandInfo\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"CommandInfo\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.CSIPluginContainerInfo.resources\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"CSIPluginContainerInfo\"], baseName' = FName \"resources\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 3}, wireTag = WireTag {getWireTag = 26}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = True, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.Resource\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"Resource\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.CSIPluginContainerInfo.container\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"CSIPluginContainerInfo\"], baseName' = FName \"container\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 4}, wireTag = WireTag {getWireTag = 34}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.ContainerInfo\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"ContainerInfo\"}), hsRawDefault = Nothing, hsDefault = Nothing}], descOneofs = fromList [], keys = fromList [], extRanges = [], knownKeys = fromList [], storeUnknown = False, lazyFields = False, makeLenses = True, jsonInstances = True}"
 
 instance P'.TextType CSIPluginContainerInfo where
   tellT = P'.tellSubMessage
@@ -110,32 +114,32 @@ instance P'.TextType CSIPluginContainerInfo where
 instance P'.TextMsg CSIPluginContainerInfo where
   textPut msg
    = do
-       P'.tellT "services" (services msg)
-       P'.tellT "command" (command msg)
-       P'.tellT "resources" (resources msg)
-       P'.tellT "container" (container msg)
+       P'.tellT "services" (_services msg)
+       P'.tellT "command" (_command msg)
+       P'.tellT "resources" (_resources msg)
+       P'.tellT "container" (_container msg)
   textGet
    = do
-       mods <- P'.sepEndBy (P'.choice [parse'services, parse'command, parse'resources, parse'container]) P'.spaces
+       mods <- P'.sepEndBy (P'.choice [parse'_services, parse'_command, parse'_resources, parse'_container]) P'.spaces
        Prelude'.return (Prelude'.foldl (\ v f -> f v) P'.defaultValue mods)
     where
-        parse'services
+        parse'_services
          = P'.try
             (do
                v <- P'.getT "services"
-               Prelude'.return (\ o -> o{services = P'.append (services o) v}))
-        parse'command
+               Prelude'.return (\ o -> o{_services = P'.append (_services o) v}))
+        parse'_command
          = P'.try
             (do
                v <- P'.getT "command"
-               Prelude'.return (\ o -> o{command = v}))
-        parse'resources
+               Prelude'.return (\ o -> o{_command = v}))
+        parse'_resources
          = P'.try
             (do
                v <- P'.getT "resources"
-               Prelude'.return (\ o -> o{resources = P'.append (resources o) v}))
-        parse'container
+               Prelude'.return (\ o -> o{_resources = P'.append (_resources o) v}))
+        parse'_container
          = P'.try
             (do
                v <- P'.getT "container"
-               Prelude'.return (\ o -> o{container = v}))
+               Prelude'.return (\ o -> o{_container = v}))

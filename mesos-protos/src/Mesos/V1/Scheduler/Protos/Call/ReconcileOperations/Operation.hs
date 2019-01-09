@@ -1,19 +1,24 @@
-{-# LANGUAGE BangPatterns, DeriveDataTypeable, DeriveGeneric, FlexibleInstances, MultiParamTypeClasses, OverloadedStrings #-}
+{-# LANGUAGE TemplateHaskell, BangPatterns, DeriveDataTypeable, DeriveGeneric, FlexibleInstances, MultiParamTypeClasses,
+ OverloadedStrings #-}
 {-# OPTIONS_GHC  -fno-warn-unused-imports #-}
-module Mesos.V1.Scheduler.Protos.Call.ReconcileOperations.Operation (Operation(..)) where
+module Mesos.V1.Scheduler.Protos.Call.ReconcileOperations.Operation (Operation(..), operation_id, agent_id, resource_provider_id)
+       where
 import Prelude ((+), (/), (++), (.))
 import qualified Prelude as Prelude'
 import qualified Data.Typeable as Prelude'
 import qualified GHC.Generics as Prelude'
 import qualified Data.Data as Prelude'
 import qualified Text.ProtocolBuffers.Header as P'
+import qualified Control.Lens.TH
 import qualified Mesos.V1.Protos.AgentID as Protos (AgentID)
 import qualified Mesos.V1.Protos.OperationID as Protos (OperationID)
 import qualified Mesos.V1.Protos.ResourceProviderID as Protos (ResourceProviderID)
 
-data Operation = Operation{operation_id :: !(Protos.OperationID), agent_id :: !(P'.Maybe Protos.AgentID),
-                           resource_provider_id :: !(P'.Maybe Protos.ResourceProviderID)}
+data Operation = Operation{_operation_id :: !(Protos.OperationID), _agent_id :: !(P'.Maybe Protos.AgentID),
+                           _resource_provider_id :: !(P'.Maybe Protos.ResourceProviderID)}
                  deriving (Prelude'.Show, Prelude'.Eq, Prelude'.Ord, Prelude'.Typeable, Prelude'.Data, Prelude'.Generic)
+
+Control.Lens.TH.makeLenses ''Operation
 
 instance P'.ToJSON Operation where
   toJSON msg
@@ -31,7 +36,7 @@ instance P'.FromJSON Operation where
           agent_id <- P'.explicitParseFieldMaybe P'.parseJSON o "agent_id"
           resource_provider_id <- P'.explicitParseFieldMaybe P'.parseJSON o "resource_provider_id"
           Prelude'.return
-           P'.defaultValue{operation_id = operation_id, agent_id = agent_id, resource_provider_id = resource_provider_id})
+           P'.defaultValue{_operation_id = operation_id, _agent_id = agent_id, _resource_provider_id = resource_provider_id})
 
 instance P'.Mergeable Operation where
   mergeAppend (Operation x'1 x'2 x'3) (Operation y'1 y'2 y'3)
@@ -72,13 +77,14 @@ instance P'.Wire Operation where
     where
         update'Self wire'Tag old'Self
          = case wire'Tag of
-             10 -> Prelude'.fmap (\ !new'Field -> old'Self{operation_id = P'.mergeAppend (operation_id old'Self) (new'Field)})
+             10 -> Prelude'.fmap (\ !new'Field -> old'Self{_operation_id = P'.mergeAppend (_operation_id old'Self) (new'Field)})
                     (P'.wireGet 11)
-             18 -> Prelude'.fmap (\ !new'Field -> old'Self{agent_id = P'.mergeAppend (agent_id old'Self) (Prelude'.Just new'Field)})
+             18 -> Prelude'.fmap
+                    (\ !new'Field -> old'Self{_agent_id = P'.mergeAppend (_agent_id old'Self) (Prelude'.Just new'Field)})
                     (P'.wireGet 11)
              26 -> Prelude'.fmap
                     (\ !new'Field ->
-                      old'Self{resource_provider_id = P'.mergeAppend (resource_provider_id old'Self) (Prelude'.Just new'Field)})
+                      old'Self{_resource_provider_id = P'.mergeAppend (_resource_provider_id old'Self) (Prelude'.Just new'Field)})
                     (P'.wireGet 11)
              _ -> let (field'Number, wire'Type) = P'.splitWireTag wire'Tag in P'.unknown field'Number wire'Type old'Self
 
@@ -91,7 +97,7 @@ instance P'.ReflectDescriptor Operation where
   getMessageInfo _ = P'.GetMessageInfo (P'.fromDistinctAscList [10]) (P'.fromDistinctAscList [10, 18, 26])
   reflectDescriptorInfo _
    = Prelude'.read
-      "DescriptorInfo {descName = ProtoName {protobufName = FIName \".mesos.v1.scheduler.Call.ReconcileOperations.Operation\", haskellPrefix = [MName \"Mesos\",MName \"V1\",MName \"Scheduler\"], parentModule = [MName \"Protos\",MName \"Call\",MName \"ReconcileOperations\"], baseName = MName \"Operation\"}, descFilePath = [\"Mesos\",\"V1\",\"Scheduler\",\"Protos\",\"Call\",\"ReconcileOperations\",\"Operation.hs\"], isGroup = False, fields = fromList [FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.scheduler.Call.ReconcileOperations.Operation.operation_id\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Scheduler\"], parentModule' = [MName \"Protos\",MName \"Call\",MName \"ReconcileOperations\",MName \"Operation\"], baseName' = FName \"operation_id\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 1}, wireTag = WireTag {getWireTag = 10}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = True, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.OperationID\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"OperationID\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.scheduler.Call.ReconcileOperations.Operation.agent_id\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Scheduler\"], parentModule' = [MName \"Protos\",MName \"Call\",MName \"ReconcileOperations\",MName \"Operation\"], baseName' = FName \"agent_id\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 2}, wireTag = WireTag {getWireTag = 18}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.AgentID\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"AgentID\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.scheduler.Call.ReconcileOperations.Operation.resource_provider_id\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Scheduler\"], parentModule' = [MName \"Protos\",MName \"Call\",MName \"ReconcileOperations\",MName \"Operation\"], baseName' = FName \"resource_provider_id\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 3}, wireTag = WireTag {getWireTag = 26}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.ResourceProviderID\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"ResourceProviderID\"}), hsRawDefault = Nothing, hsDefault = Nothing}], descOneofs = fromList [], keys = fromList [], extRanges = [], knownKeys = fromList [], storeUnknown = False, lazyFields = False, makeLenses = False, jsonInstances = True}"
+      "DescriptorInfo {descName = ProtoName {protobufName = FIName \".mesos.v1.scheduler.Call.ReconcileOperations.Operation\", haskellPrefix = [MName \"Mesos\",MName \"V1\",MName \"Scheduler\"], parentModule = [MName \"Protos\",MName \"Call\",MName \"ReconcileOperations\"], baseName = MName \"Operation\"}, descFilePath = [\"Mesos\",\"V1\",\"Scheduler\",\"Protos\",\"Call\",\"ReconcileOperations\",\"Operation.hs\"], isGroup = False, fields = fromList [FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.scheduler.Call.ReconcileOperations.Operation.operation_id\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Scheduler\"], parentModule' = [MName \"Protos\",MName \"Call\",MName \"ReconcileOperations\",MName \"Operation\"], baseName' = FName \"operation_id\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 1}, wireTag = WireTag {getWireTag = 10}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = True, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.OperationID\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"OperationID\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.scheduler.Call.ReconcileOperations.Operation.agent_id\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Scheduler\"], parentModule' = [MName \"Protos\",MName \"Call\",MName \"ReconcileOperations\",MName \"Operation\"], baseName' = FName \"agent_id\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 2}, wireTag = WireTag {getWireTag = 18}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.AgentID\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"AgentID\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.scheduler.Call.ReconcileOperations.Operation.resource_provider_id\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Scheduler\"], parentModule' = [MName \"Protos\",MName \"Call\",MName \"ReconcileOperations\",MName \"Operation\"], baseName' = FName \"resource_provider_id\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 3}, wireTag = WireTag {getWireTag = 26}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.ResourceProviderID\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"ResourceProviderID\"}), hsRawDefault = Nothing, hsDefault = Nothing}], descOneofs = fromList [], keys = fromList [], extRanges = [], knownKeys = fromList [], storeUnknown = False, lazyFields = False, makeLenses = True, jsonInstances = True}"
 
 instance P'.TextType Operation where
   tellT = P'.tellSubMessage
@@ -100,26 +106,26 @@ instance P'.TextType Operation where
 instance P'.TextMsg Operation where
   textPut msg
    = do
-       P'.tellT "operation_id" (operation_id msg)
-       P'.tellT "agent_id" (agent_id msg)
-       P'.tellT "resource_provider_id" (resource_provider_id msg)
+       P'.tellT "operation_id" (_operation_id msg)
+       P'.tellT "agent_id" (_agent_id msg)
+       P'.tellT "resource_provider_id" (_resource_provider_id msg)
   textGet
    = do
-       mods <- P'.sepEndBy (P'.choice [parse'operation_id, parse'agent_id, parse'resource_provider_id]) P'.spaces
+       mods <- P'.sepEndBy (P'.choice [parse'_operation_id, parse'_agent_id, parse'_resource_provider_id]) P'.spaces
        Prelude'.return (Prelude'.foldl (\ v f -> f v) P'.defaultValue mods)
     where
-        parse'operation_id
+        parse'_operation_id
          = P'.try
             (do
                v <- P'.getT "operation_id"
-               Prelude'.return (\ o -> o{operation_id = v}))
-        parse'agent_id
+               Prelude'.return (\ o -> o{_operation_id = v}))
+        parse'_agent_id
          = P'.try
             (do
                v <- P'.getT "agent_id"
-               Prelude'.return (\ o -> o{agent_id = v}))
-        parse'resource_provider_id
+               Prelude'.return (\ o -> o{_agent_id = v}))
+        parse'_resource_provider_id
          = P'.try
             (do
                v <- P'.getT "resource_provider_id"
-               Prelude'.return (\ o -> o{resource_provider_id = v}))
+               Prelude'.return (\ o -> o{_resource_provider_id = v}))

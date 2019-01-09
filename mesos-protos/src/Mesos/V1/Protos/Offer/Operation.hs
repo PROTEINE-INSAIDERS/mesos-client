@@ -1,12 +1,17 @@
-{-# LANGUAGE BangPatterns, DeriveDataTypeable, DeriveGeneric, FlexibleInstances, MultiParamTypeClasses, OverloadedStrings #-}
+{-# LANGUAGE TemplateHaskell, BangPatterns, DeriveDataTypeable, DeriveGeneric, FlexibleInstances, MultiParamTypeClasses,
+ OverloadedStrings #-}
 {-# OPTIONS_GHC  -fno-warn-unused-imports #-}
-module Mesos.V1.Protos.Offer.Operation (Operation(..)) where
+module Mesos.V1.Protos.Offer.Operation
+       (Operation(..), type', id, launch, launch_group, reserve, unreserve, create, destroy, grow_volume, shrink_volume,
+        create_disk, destroy_disk)
+       where
 import Prelude ((+), (/), (++), (.))
 import qualified Prelude as Prelude'
 import qualified Data.Typeable as Prelude'
 import qualified GHC.Generics as Prelude'
 import qualified Data.Data as Prelude'
 import qualified Text.ProtocolBuffers.Header as P'
+import qualified Control.Lens.TH
 import qualified Mesos.V1.Protos.Offer.Operation.Create as Protos.Offer.Operation (Create)
 import qualified Mesos.V1.Protos.Offer.Operation.CreateDisk as Protos.Offer.Operation (CreateDisk)
 import qualified Mesos.V1.Protos.Offer.Operation.Destroy as Protos.Offer.Operation (Destroy)
@@ -20,18 +25,20 @@ import qualified Mesos.V1.Protos.Offer.Operation.Type as Protos.Offer.Operation 
 import qualified Mesos.V1.Protos.Offer.Operation.Unreserve as Protos.Offer.Operation (Unreserve)
 import qualified Mesos.V1.Protos.OperationID as Protos (OperationID)
 
-data Operation = Operation{type' :: !(P'.Maybe Protos.Offer.Operation.Type), id :: !(P'.Maybe Protos.OperationID),
-                           launch :: !(P'.Maybe Protos.Offer.Operation.Launch),
-                           launch_group :: !(P'.Maybe Protos.Offer.Operation.LaunchGroup),
-                           reserve :: !(P'.Maybe Protos.Offer.Operation.Reserve),
-                           unreserve :: !(P'.Maybe Protos.Offer.Operation.Unreserve),
-                           create :: !(P'.Maybe Protos.Offer.Operation.Create),
-                           destroy :: !(P'.Maybe Protos.Offer.Operation.Destroy),
-                           grow_volume :: !(P'.Maybe Protos.Offer.Operation.GrowVolume),
-                           shrink_volume :: !(P'.Maybe Protos.Offer.Operation.ShrinkVolume),
-                           create_disk :: !(P'.Maybe Protos.Offer.Operation.CreateDisk),
-                           destroy_disk :: !(P'.Maybe Protos.Offer.Operation.DestroyDisk)}
+data Operation = Operation{_type' :: !(P'.Maybe Protos.Offer.Operation.Type), _id :: !(P'.Maybe Protos.OperationID),
+                           _launch :: !(P'.Maybe Protos.Offer.Operation.Launch),
+                           _launch_group :: !(P'.Maybe Protos.Offer.Operation.LaunchGroup),
+                           _reserve :: !(P'.Maybe Protos.Offer.Operation.Reserve),
+                           _unreserve :: !(P'.Maybe Protos.Offer.Operation.Unreserve),
+                           _create :: !(P'.Maybe Protos.Offer.Operation.Create),
+                           _destroy :: !(P'.Maybe Protos.Offer.Operation.Destroy),
+                           _grow_volume :: !(P'.Maybe Protos.Offer.Operation.GrowVolume),
+                           _shrink_volume :: !(P'.Maybe Protos.Offer.Operation.ShrinkVolume),
+                           _create_disk :: !(P'.Maybe Protos.Offer.Operation.CreateDisk),
+                           _destroy_disk :: !(P'.Maybe Protos.Offer.Operation.DestroyDisk)}
                  deriving (Prelude'.Show, Prelude'.Eq, Prelude'.Ord, Prelude'.Typeable, Prelude'.Data, Prelude'.Generic)
+
+Control.Lens.TH.makeLenses ''Operation
 
 instance P'.ToJSON Operation where
   toJSON msg
@@ -67,9 +74,9 @@ instance P'.FromJSON Operation where
           create_disk <- P'.explicitParseFieldMaybe P'.parseJSON o "create_disk"
           destroy_disk <- P'.explicitParseFieldMaybe P'.parseJSON o "destroy_disk"
           Prelude'.return
-           P'.defaultValue{type' = type', id = id, launch = launch, launch_group = launch_group, reserve = reserve,
-                           unreserve = unreserve, create = create, destroy = destroy, grow_volume = grow_volume,
-                           shrink_volume = shrink_volume, create_disk = create_disk, destroy_disk = destroy_disk})
+           P'.defaultValue{_type' = type', _id = id, _launch = launch, _launch_group = launch_group, _reserve = reserve,
+                           _unreserve = unreserve, _create = create, _destroy = destroy, _grow_volume = grow_volume,
+                           _shrink_volume = shrink_volume, _create_disk = create_disk, _destroy_disk = destroy_disk})
 
 instance P'.Mergeable Operation where
   mergeAppend (Operation x'1 x'2 x'3 x'4 x'5 x'6 x'7 x'8 x'9 x'10 x'11 x'12)
@@ -137,34 +144,34 @@ instance P'.Wire Operation where
     where
         update'Self wire'Tag old'Self
          = case wire'Tag of
-             8 -> Prelude'.fmap (\ !new'Field -> old'Self{type' = Prelude'.Just new'Field}) (P'.wireGet 14)
-             98 -> Prelude'.fmap (\ !new'Field -> old'Self{id = P'.mergeAppend (id old'Self) (Prelude'.Just new'Field)})
+             8 -> Prelude'.fmap (\ !new'Field -> old'Self{_type' = Prelude'.Just new'Field}) (P'.wireGet 14)
+             98 -> Prelude'.fmap (\ !new'Field -> old'Self{_id = P'.mergeAppend (_id old'Self) (Prelude'.Just new'Field)})
                     (P'.wireGet 11)
-             18 -> Prelude'.fmap (\ !new'Field -> old'Self{launch = P'.mergeAppend (launch old'Self) (Prelude'.Just new'Field)})
+             18 -> Prelude'.fmap (\ !new'Field -> old'Self{_launch = P'.mergeAppend (_launch old'Self) (Prelude'.Just new'Field)})
                     (P'.wireGet 11)
              58 -> Prelude'.fmap
-                    (\ !new'Field -> old'Self{launch_group = P'.mergeAppend (launch_group old'Self) (Prelude'.Just new'Field)})
+                    (\ !new'Field -> old'Self{_launch_group = P'.mergeAppend (_launch_group old'Self) (Prelude'.Just new'Field)})
                     (P'.wireGet 11)
-             26 -> Prelude'.fmap (\ !new'Field -> old'Self{reserve = P'.mergeAppend (reserve old'Self) (Prelude'.Just new'Field)})
+             26 -> Prelude'.fmap (\ !new'Field -> old'Self{_reserve = P'.mergeAppend (_reserve old'Self) (Prelude'.Just new'Field)})
                     (P'.wireGet 11)
              34 -> Prelude'.fmap
-                    (\ !new'Field -> old'Self{unreserve = P'.mergeAppend (unreserve old'Self) (Prelude'.Just new'Field)})
+                    (\ !new'Field -> old'Self{_unreserve = P'.mergeAppend (_unreserve old'Self) (Prelude'.Just new'Field)})
                     (P'.wireGet 11)
-             42 -> Prelude'.fmap (\ !new'Field -> old'Self{create = P'.mergeAppend (create old'Self) (Prelude'.Just new'Field)})
+             42 -> Prelude'.fmap (\ !new'Field -> old'Self{_create = P'.mergeAppend (_create old'Self) (Prelude'.Just new'Field)})
                     (P'.wireGet 11)
-             50 -> Prelude'.fmap (\ !new'Field -> old'Self{destroy = P'.mergeAppend (destroy old'Self) (Prelude'.Just new'Field)})
+             50 -> Prelude'.fmap (\ !new'Field -> old'Self{_destroy = P'.mergeAppend (_destroy old'Self) (Prelude'.Just new'Field)})
                     (P'.wireGet 11)
              106 -> Prelude'.fmap
-                     (\ !new'Field -> old'Self{grow_volume = P'.mergeAppend (grow_volume old'Self) (Prelude'.Just new'Field)})
+                     (\ !new'Field -> old'Self{_grow_volume = P'.mergeAppend (_grow_volume old'Self) (Prelude'.Just new'Field)})
                      (P'.wireGet 11)
              114 -> Prelude'.fmap
-                     (\ !new'Field -> old'Self{shrink_volume = P'.mergeAppend (shrink_volume old'Self) (Prelude'.Just new'Field)})
+                     (\ !new'Field -> old'Self{_shrink_volume = P'.mergeAppend (_shrink_volume old'Self) (Prelude'.Just new'Field)})
                      (P'.wireGet 11)
              122 -> Prelude'.fmap
-                     (\ !new'Field -> old'Self{create_disk = P'.mergeAppend (create_disk old'Self) (Prelude'.Just new'Field)})
+                     (\ !new'Field -> old'Self{_create_disk = P'.mergeAppend (_create_disk old'Self) (Prelude'.Just new'Field)})
                      (P'.wireGet 11)
              130 -> Prelude'.fmap
-                     (\ !new'Field -> old'Self{destroy_disk = P'.mergeAppend (destroy_disk old'Self) (Prelude'.Just new'Field)})
+                     (\ !new'Field -> old'Self{_destroy_disk = P'.mergeAppend (_destroy_disk old'Self) (Prelude'.Just new'Field)})
                      (P'.wireGet 11)
              _ -> let (field'Number, wire'Type) = P'.splitWireTag wire'Tag in P'.unknown field'Number wire'Type old'Self
 
@@ -178,7 +185,7 @@ instance P'.ReflectDescriptor Operation where
    = P'.GetMessageInfo (P'.fromDistinctAscList []) (P'.fromDistinctAscList [8, 18, 26, 34, 42, 50, 58, 98, 106, 114, 122, 130])
   reflectDescriptorInfo _
    = Prelude'.read
-      "DescriptorInfo {descName = ProtoName {protobufName = FIName \".mesos.v1.Offer.Operation\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\",MName \"Offer\"], baseName = MName \"Operation\"}, descFilePath = [\"Mesos\",\"V1\",\"Protos\",\"Offer\",\"Operation.hs\"], isGroup = False, fields = fromList [FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Offer.Operation.type\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Offer\",MName \"Operation\"], baseName' = FName \"type'\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 1}, wireTag = WireTag {getWireTag = 8}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 14}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.Offer.Operation.Type\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\",MName \"Offer\",MName \"Operation\"], baseName = MName \"Type\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Offer.Operation.id\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Offer\",MName \"Operation\"], baseName' = FName \"id\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 12}, wireTag = WireTag {getWireTag = 98}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.OperationID\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"OperationID\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Offer.Operation.launch\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Offer\",MName \"Operation\"], baseName' = FName \"launch\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 2}, wireTag = WireTag {getWireTag = 18}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.Offer.Operation.Launch\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\",MName \"Offer\",MName \"Operation\"], baseName = MName \"Launch\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Offer.Operation.launch_group\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Offer\",MName \"Operation\"], baseName' = FName \"launch_group\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 7}, wireTag = WireTag {getWireTag = 58}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.Offer.Operation.LaunchGroup\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\",MName \"Offer\",MName \"Operation\"], baseName = MName \"LaunchGroup\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Offer.Operation.reserve\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Offer\",MName \"Operation\"], baseName' = FName \"reserve\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 3}, wireTag = WireTag {getWireTag = 26}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.Offer.Operation.Reserve\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\",MName \"Offer\",MName \"Operation\"], baseName = MName \"Reserve\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Offer.Operation.unreserve\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Offer\",MName \"Operation\"], baseName' = FName \"unreserve\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 4}, wireTag = WireTag {getWireTag = 34}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.Offer.Operation.Unreserve\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\",MName \"Offer\",MName \"Operation\"], baseName = MName \"Unreserve\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Offer.Operation.create\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Offer\",MName \"Operation\"], baseName' = FName \"create\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 5}, wireTag = WireTag {getWireTag = 42}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.Offer.Operation.Create\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\",MName \"Offer\",MName \"Operation\"], baseName = MName \"Create\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Offer.Operation.destroy\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Offer\",MName \"Operation\"], baseName' = FName \"destroy\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 6}, wireTag = WireTag {getWireTag = 50}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.Offer.Operation.Destroy\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\",MName \"Offer\",MName \"Operation\"], baseName = MName \"Destroy\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Offer.Operation.grow_volume\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Offer\",MName \"Operation\"], baseName' = FName \"grow_volume\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 13}, wireTag = WireTag {getWireTag = 106}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.Offer.Operation.GrowVolume\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\",MName \"Offer\",MName \"Operation\"], baseName = MName \"GrowVolume\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Offer.Operation.shrink_volume\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Offer\",MName \"Operation\"], baseName' = FName \"shrink_volume\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 14}, wireTag = WireTag {getWireTag = 114}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.Offer.Operation.ShrinkVolume\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\",MName \"Offer\",MName \"Operation\"], baseName = MName \"ShrinkVolume\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Offer.Operation.create_disk\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Offer\",MName \"Operation\"], baseName' = FName \"create_disk\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 15}, wireTag = WireTag {getWireTag = 122}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.Offer.Operation.CreateDisk\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\",MName \"Offer\",MName \"Operation\"], baseName = MName \"CreateDisk\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Offer.Operation.destroy_disk\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Offer\",MName \"Operation\"], baseName' = FName \"destroy_disk\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 16}, wireTag = WireTag {getWireTag = 130}, packedTag = Nothing, wireTagLength = 2, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.Offer.Operation.DestroyDisk\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\",MName \"Offer\",MName \"Operation\"], baseName = MName \"DestroyDisk\"}), hsRawDefault = Nothing, hsDefault = Nothing}], descOneofs = fromList [], keys = fromList [], extRanges = [], knownKeys = fromList [], storeUnknown = False, lazyFields = False, makeLenses = False, jsonInstances = True}"
+      "DescriptorInfo {descName = ProtoName {protobufName = FIName \".mesos.v1.Offer.Operation\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\",MName \"Offer\"], baseName = MName \"Operation\"}, descFilePath = [\"Mesos\",\"V1\",\"Protos\",\"Offer\",\"Operation.hs\"], isGroup = False, fields = fromList [FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Offer.Operation.type\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Offer\",MName \"Operation\"], baseName' = FName \"type'\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 1}, wireTag = WireTag {getWireTag = 8}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 14}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.Offer.Operation.Type\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\",MName \"Offer\",MName \"Operation\"], baseName = MName \"Type\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Offer.Operation.id\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Offer\",MName \"Operation\"], baseName' = FName \"id\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 12}, wireTag = WireTag {getWireTag = 98}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.OperationID\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"OperationID\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Offer.Operation.launch\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Offer\",MName \"Operation\"], baseName' = FName \"launch\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 2}, wireTag = WireTag {getWireTag = 18}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.Offer.Operation.Launch\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\",MName \"Offer\",MName \"Operation\"], baseName = MName \"Launch\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Offer.Operation.launch_group\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Offer\",MName \"Operation\"], baseName' = FName \"launch_group\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 7}, wireTag = WireTag {getWireTag = 58}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.Offer.Operation.LaunchGroup\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\",MName \"Offer\",MName \"Operation\"], baseName = MName \"LaunchGroup\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Offer.Operation.reserve\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Offer\",MName \"Operation\"], baseName' = FName \"reserve\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 3}, wireTag = WireTag {getWireTag = 26}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.Offer.Operation.Reserve\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\",MName \"Offer\",MName \"Operation\"], baseName = MName \"Reserve\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Offer.Operation.unreserve\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Offer\",MName \"Operation\"], baseName' = FName \"unreserve\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 4}, wireTag = WireTag {getWireTag = 34}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.Offer.Operation.Unreserve\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\",MName \"Offer\",MName \"Operation\"], baseName = MName \"Unreserve\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Offer.Operation.create\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Offer\",MName \"Operation\"], baseName' = FName \"create\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 5}, wireTag = WireTag {getWireTag = 42}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.Offer.Operation.Create\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\",MName \"Offer\",MName \"Operation\"], baseName = MName \"Create\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Offer.Operation.destroy\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Offer\",MName \"Operation\"], baseName' = FName \"destroy\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 6}, wireTag = WireTag {getWireTag = 50}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.Offer.Operation.Destroy\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\",MName \"Offer\",MName \"Operation\"], baseName = MName \"Destroy\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Offer.Operation.grow_volume\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Offer\",MName \"Operation\"], baseName' = FName \"grow_volume\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 13}, wireTag = WireTag {getWireTag = 106}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.Offer.Operation.GrowVolume\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\",MName \"Offer\",MName \"Operation\"], baseName = MName \"GrowVolume\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Offer.Operation.shrink_volume\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Offer\",MName \"Operation\"], baseName' = FName \"shrink_volume\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 14}, wireTag = WireTag {getWireTag = 114}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.Offer.Operation.ShrinkVolume\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\",MName \"Offer\",MName \"Operation\"], baseName = MName \"ShrinkVolume\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Offer.Operation.create_disk\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Offer\",MName \"Operation\"], baseName' = FName \"create_disk\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 15}, wireTag = WireTag {getWireTag = 122}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.Offer.Operation.CreateDisk\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\",MName \"Offer\",MName \"Operation\"], baseName = MName \"CreateDisk\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Offer.Operation.destroy_disk\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Offer\",MName \"Operation\"], baseName' = FName \"destroy_disk\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 16}, wireTag = WireTag {getWireTag = 130}, packedTag = Nothing, wireTagLength = 2, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.Offer.Operation.DestroyDisk\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\",MName \"Offer\",MName \"Operation\"], baseName = MName \"DestroyDisk\"}), hsRawDefault = Nothing, hsDefault = Nothing}], descOneofs = fromList [], keys = fromList [], extRanges = [], knownKeys = fromList [], storeUnknown = False, lazyFields = False, makeLenses = True, jsonInstances = True}"
 
 instance P'.TextType Operation where
   tellT = P'.tellSubMessage
@@ -187,84 +194,84 @@ instance P'.TextType Operation where
 instance P'.TextMsg Operation where
   textPut msg
    = do
-       P'.tellT "type" (type' msg)
-       P'.tellT "id" (id msg)
-       P'.tellT "launch" (launch msg)
-       P'.tellT "launch_group" (launch_group msg)
-       P'.tellT "reserve" (reserve msg)
-       P'.tellT "unreserve" (unreserve msg)
-       P'.tellT "create" (create msg)
-       P'.tellT "destroy" (destroy msg)
-       P'.tellT "grow_volume" (grow_volume msg)
-       P'.tellT "shrink_volume" (shrink_volume msg)
-       P'.tellT "create_disk" (create_disk msg)
-       P'.tellT "destroy_disk" (destroy_disk msg)
+       P'.tellT "type" (_type' msg)
+       P'.tellT "id" (_id msg)
+       P'.tellT "launch" (_launch msg)
+       P'.tellT "launch_group" (_launch_group msg)
+       P'.tellT "reserve" (_reserve msg)
+       P'.tellT "unreserve" (_unreserve msg)
+       P'.tellT "create" (_create msg)
+       P'.tellT "destroy" (_destroy msg)
+       P'.tellT "grow_volume" (_grow_volume msg)
+       P'.tellT "shrink_volume" (_shrink_volume msg)
+       P'.tellT "create_disk" (_create_disk msg)
+       P'.tellT "destroy_disk" (_destroy_disk msg)
   textGet
    = do
        mods <- P'.sepEndBy
                 (P'.choice
-                  [parse'type', parse'id, parse'launch, parse'launch_group, parse'reserve, parse'unreserve, parse'create,
-                   parse'destroy, parse'grow_volume, parse'shrink_volume, parse'create_disk, parse'destroy_disk])
+                  [parse'_type', parse'_id, parse'_launch, parse'_launch_group, parse'_reserve, parse'_unreserve, parse'_create,
+                   parse'_destroy, parse'_grow_volume, parse'_shrink_volume, parse'_create_disk, parse'_destroy_disk])
                 P'.spaces
        Prelude'.return (Prelude'.foldl (\ v f -> f v) P'.defaultValue mods)
     where
-        parse'type'
+        parse'_type'
          = P'.try
             (do
                v <- P'.getT "type"
-               Prelude'.return (\ o -> o{type' = v}))
-        parse'id
+               Prelude'.return (\ o -> o{_type' = v}))
+        parse'_id
          = P'.try
             (do
                v <- P'.getT "id"
-               Prelude'.return (\ o -> o{id = v}))
-        parse'launch
+               Prelude'.return (\ o -> o{_id = v}))
+        parse'_launch
          = P'.try
             (do
                v <- P'.getT "launch"
-               Prelude'.return (\ o -> o{launch = v}))
-        parse'launch_group
+               Prelude'.return (\ o -> o{_launch = v}))
+        parse'_launch_group
          = P'.try
             (do
                v <- P'.getT "launch_group"
-               Prelude'.return (\ o -> o{launch_group = v}))
-        parse'reserve
+               Prelude'.return (\ o -> o{_launch_group = v}))
+        parse'_reserve
          = P'.try
             (do
                v <- P'.getT "reserve"
-               Prelude'.return (\ o -> o{reserve = v}))
-        parse'unreserve
+               Prelude'.return (\ o -> o{_reserve = v}))
+        parse'_unreserve
          = P'.try
             (do
                v <- P'.getT "unreserve"
-               Prelude'.return (\ o -> o{unreserve = v}))
-        parse'create
+               Prelude'.return (\ o -> o{_unreserve = v}))
+        parse'_create
          = P'.try
             (do
                v <- P'.getT "create"
-               Prelude'.return (\ o -> o{create = v}))
-        parse'destroy
+               Prelude'.return (\ o -> o{_create = v}))
+        parse'_destroy
          = P'.try
             (do
                v <- P'.getT "destroy"
-               Prelude'.return (\ o -> o{destroy = v}))
-        parse'grow_volume
+               Prelude'.return (\ o -> o{_destroy = v}))
+        parse'_grow_volume
          = P'.try
             (do
                v <- P'.getT "grow_volume"
-               Prelude'.return (\ o -> o{grow_volume = v}))
-        parse'shrink_volume
+               Prelude'.return (\ o -> o{_grow_volume = v}))
+        parse'_shrink_volume
          = P'.try
             (do
                v <- P'.getT "shrink_volume"
-               Prelude'.return (\ o -> o{shrink_volume = v}))
-        parse'create_disk
+               Prelude'.return (\ o -> o{_shrink_volume = v}))
+        parse'_create_disk
          = P'.try
             (do
                v <- P'.getT "create_disk"
-               Prelude'.return (\ o -> o{create_disk = v}))
-        parse'destroy_disk
+               Prelude'.return (\ o -> o{_create_disk = v}))
+        parse'_destroy_disk
          = P'.try
             (do
                v <- P'.getT "destroy_disk"
-               Prelude'.return (\ o -> o{destroy_disk = v}))
+               Prelude'.return (\ o -> o{_destroy_disk = v}))

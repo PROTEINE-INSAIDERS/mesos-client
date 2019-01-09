@@ -1,16 +1,20 @@
-{-# LANGUAGE BangPatterns, DeriveDataTypeable, DeriveGeneric, FlexibleInstances, MultiParamTypeClasses, OverloadedStrings #-}
+{-# LANGUAGE TemplateHaskell, BangPatterns, DeriveDataTypeable, DeriveGeneric, FlexibleInstances, MultiParamTypeClasses,
+ OverloadedStrings #-}
 {-# OPTIONS_GHC  -fno-warn-unused-imports #-}
-module Mesos.V1.Scheduler.Protos.Event.InverseOffers (InverseOffers(..)) where
+module Mesos.V1.Scheduler.Protos.Event.InverseOffers (InverseOffers(..), inverse_offers) where
 import Prelude ((+), (/), (++), (.))
 import qualified Prelude as Prelude'
 import qualified Data.Typeable as Prelude'
 import qualified GHC.Generics as Prelude'
 import qualified Data.Data as Prelude'
 import qualified Text.ProtocolBuffers.Header as P'
+import qualified Control.Lens.TH
 import qualified Mesos.V1.Protos.InverseOffer as Protos (InverseOffer)
 
-data InverseOffers = InverseOffers{inverse_offers :: !(P'.Seq Protos.InverseOffer)}
+data InverseOffers = InverseOffers{_inverse_offers :: !(P'.Seq Protos.InverseOffer)}
                      deriving (Prelude'.Show, Prelude'.Eq, Prelude'.Ord, Prelude'.Typeable, Prelude'.Data, Prelude'.Generic)
+
+Control.Lens.TH.makeLenses ''InverseOffers
 
 instance P'.ToJSON InverseOffers where
   toJSON msg
@@ -23,7 +27,7 @@ instance P'.FromJSON InverseOffers where
         do
           inverse_offers <- Prelude'.fmap (Prelude'.maybe Prelude'.mempty Prelude'.id)
                              (P'.explicitParseFieldMaybe (Prelude'.mapM P'.parseJSON P'.<=< P'.parseJSON) o "inverse_offers")
-          Prelude'.return P'.defaultValue{inverse_offers = inverse_offers})
+          Prelude'.return P'.defaultValue{_inverse_offers = inverse_offers})
 
 instance P'.Mergeable InverseOffers where
   mergeAppend (InverseOffers x'1) (InverseOffers y'1) = InverseOffers (P'.mergeAppend x'1 y'1)
@@ -61,7 +65,7 @@ instance P'.Wire InverseOffers where
     where
         update'Self wire'Tag old'Self
          = case wire'Tag of
-             10 -> Prelude'.fmap (\ !new'Field -> old'Self{inverse_offers = P'.append (inverse_offers old'Self) new'Field})
+             10 -> Prelude'.fmap (\ !new'Field -> old'Self{_inverse_offers = P'.append (_inverse_offers old'Self) new'Field})
                     (P'.wireGet 11)
              _ -> let (field'Number, wire'Type) = P'.splitWireTag wire'Tag in P'.unknown field'Number wire'Type old'Self
 
@@ -74,7 +78,7 @@ instance P'.ReflectDescriptor InverseOffers where
   getMessageInfo _ = P'.GetMessageInfo (P'.fromDistinctAscList []) (P'.fromDistinctAscList [10])
   reflectDescriptorInfo _
    = Prelude'.read
-      "DescriptorInfo {descName = ProtoName {protobufName = FIName \".mesos.v1.scheduler.Event.InverseOffers\", haskellPrefix = [MName \"Mesos\",MName \"V1\",MName \"Scheduler\"], parentModule = [MName \"Protos\",MName \"Event\"], baseName = MName \"InverseOffers\"}, descFilePath = [\"Mesos\",\"V1\",\"Scheduler\",\"Protos\",\"Event\",\"InverseOffers.hs\"], isGroup = False, fields = fromList [FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.scheduler.Event.InverseOffers.inverse_offers\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Scheduler\"], parentModule' = [MName \"Protos\",MName \"Event\",MName \"InverseOffers\"], baseName' = FName \"inverse_offers\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 1}, wireTag = WireTag {getWireTag = 10}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = True, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.InverseOffer\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"InverseOffer\"}), hsRawDefault = Nothing, hsDefault = Nothing}], descOneofs = fromList [], keys = fromList [], extRanges = [], knownKeys = fromList [], storeUnknown = False, lazyFields = False, makeLenses = False, jsonInstances = True}"
+      "DescriptorInfo {descName = ProtoName {protobufName = FIName \".mesos.v1.scheduler.Event.InverseOffers\", haskellPrefix = [MName \"Mesos\",MName \"V1\",MName \"Scheduler\"], parentModule = [MName \"Protos\",MName \"Event\"], baseName = MName \"InverseOffers\"}, descFilePath = [\"Mesos\",\"V1\",\"Scheduler\",\"Protos\",\"Event\",\"InverseOffers.hs\"], isGroup = False, fields = fromList [FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.scheduler.Event.InverseOffers.inverse_offers\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Scheduler\"], parentModule' = [MName \"Protos\",MName \"Event\",MName \"InverseOffers\"], baseName' = FName \"inverse_offers\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 1}, wireTag = WireTag {getWireTag = 10}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = True, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.InverseOffer\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"InverseOffer\"}), hsRawDefault = Nothing, hsDefault = Nothing}], descOneofs = fromList [], keys = fromList [], extRanges = [], knownKeys = fromList [], storeUnknown = False, lazyFields = False, makeLenses = True, jsonInstances = True}"
 
 instance P'.TextType InverseOffers where
   tellT = P'.tellSubMessage
@@ -83,14 +87,14 @@ instance P'.TextType InverseOffers where
 instance P'.TextMsg InverseOffers where
   textPut msg
    = do
-       P'.tellT "inverse_offers" (inverse_offers msg)
+       P'.tellT "inverse_offers" (_inverse_offers msg)
   textGet
    = do
-       mods <- P'.sepEndBy (P'.choice [parse'inverse_offers]) P'.spaces
+       mods <- P'.sepEndBy (P'.choice [parse'_inverse_offers]) P'.spaces
        Prelude'.return (Prelude'.foldl (\ v f -> f v) P'.defaultValue mods)
     where
-        parse'inverse_offers
+        parse'_inverse_offers
          = P'.try
             (do
                v <- P'.getT "inverse_offers"
-               Prelude'.return (\ o -> o{inverse_offers = P'.append (inverse_offers o) v}))
+               Prelude'.return (\ o -> o{_inverse_offers = P'.append (_inverse_offers o) v}))

@@ -1,15 +1,19 @@
-{-# LANGUAGE BangPatterns, DeriveDataTypeable, DeriveGeneric, FlexibleInstances, MultiParamTypeClasses, OverloadedStrings #-}
+{-# LANGUAGE TemplateHaskell, BangPatterns, DeriveDataTypeable, DeriveGeneric, FlexibleInstances, MultiParamTypeClasses,
+ OverloadedStrings #-}
 {-# OPTIONS_GHC  -fno-warn-unused-imports #-}
-module Mesos.V1.Protos.TTYInfo.WindowSize (WindowSize(..)) where
+module Mesos.V1.Protos.TTYInfo.WindowSize (WindowSize(..), rows, columns) where
 import Prelude ((+), (/), (++), (.))
 import qualified Prelude as Prelude'
 import qualified Data.Typeable as Prelude'
 import qualified GHC.Generics as Prelude'
 import qualified Data.Data as Prelude'
 import qualified Text.ProtocolBuffers.Header as P'
+import qualified Control.Lens.TH
 
-data WindowSize = WindowSize{rows :: !(P'.Word32), columns :: !(P'.Word32)}
+data WindowSize = WindowSize{_rows :: !(P'.Word32), _columns :: !(P'.Word32)}
                   deriving (Prelude'.Show, Prelude'.Eq, Prelude'.Ord, Prelude'.Typeable, Prelude'.Data, Prelude'.Generic)
+
+Control.Lens.TH.makeLenses ''WindowSize
 
 instance P'.ToJSON WindowSize where
   toJSON msg = P'.objectNoEmpty ([("rows", P'.toJSON (rows msg)), ("columns", P'.toJSON (columns msg))] ++ Prelude'.concat [])
@@ -21,7 +25,7 @@ instance P'.FromJSON WindowSize where
         do
           rows <- P'.explicitParseField P'.parseJSON o "rows"
           columns <- P'.explicitParseField P'.parseJSON o "columns"
-          Prelude'.return P'.defaultValue{rows = rows, columns = columns})
+          Prelude'.return P'.defaultValue{_rows = rows, _columns = columns})
 
 instance P'.Mergeable WindowSize where
   mergeAppend (WindowSize x'1 x'2) (WindowSize y'1 y'2) = WindowSize (P'.mergeAppend x'1 y'1) (P'.mergeAppend x'2 y'2)
@@ -59,8 +63,8 @@ instance P'.Wire WindowSize where
     where
         update'Self wire'Tag old'Self
          = case wire'Tag of
-             8 -> Prelude'.fmap (\ !new'Field -> old'Self{rows = new'Field}) (P'.wireGet 13)
-             16 -> Prelude'.fmap (\ !new'Field -> old'Self{columns = new'Field}) (P'.wireGet 13)
+             8 -> Prelude'.fmap (\ !new'Field -> old'Self{_rows = new'Field}) (P'.wireGet 13)
+             16 -> Prelude'.fmap (\ !new'Field -> old'Self{_columns = new'Field}) (P'.wireGet 13)
              _ -> let (field'Number, wire'Type) = P'.splitWireTag wire'Tag in P'.unknown field'Number wire'Type old'Self
 
 instance P'.MessageAPI msg' (msg' -> WindowSize) WindowSize where
@@ -72,7 +76,7 @@ instance P'.ReflectDescriptor WindowSize where
   getMessageInfo _ = P'.GetMessageInfo (P'.fromDistinctAscList [8, 16]) (P'.fromDistinctAscList [8, 16])
   reflectDescriptorInfo _
    = Prelude'.read
-      "DescriptorInfo {descName = ProtoName {protobufName = FIName \".mesos.v1.TTYInfo.WindowSize\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\",MName \"TTYInfo\"], baseName = MName \"WindowSize\"}, descFilePath = [\"Mesos\",\"V1\",\"Protos\",\"TTYInfo\",\"WindowSize.hs\"], isGroup = False, fields = fromList [FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.TTYInfo.WindowSize.rows\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"TTYInfo\",MName \"WindowSize\"], baseName' = FName \"rows\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 1}, wireTag = WireTag {getWireTag = 8}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = True, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 13}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.TTYInfo.WindowSize.columns\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"TTYInfo\",MName \"WindowSize\"], baseName' = FName \"columns\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 2}, wireTag = WireTag {getWireTag = 16}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = True, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 13}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing}], descOneofs = fromList [], keys = fromList [], extRanges = [], knownKeys = fromList [], storeUnknown = False, lazyFields = False, makeLenses = False, jsonInstances = True}"
+      "DescriptorInfo {descName = ProtoName {protobufName = FIName \".mesos.v1.TTYInfo.WindowSize\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\",MName \"TTYInfo\"], baseName = MName \"WindowSize\"}, descFilePath = [\"Mesos\",\"V1\",\"Protos\",\"TTYInfo\",\"WindowSize.hs\"], isGroup = False, fields = fromList [FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.TTYInfo.WindowSize.rows\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"TTYInfo\",MName \"WindowSize\"], baseName' = FName \"rows\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 1}, wireTag = WireTag {getWireTag = 8}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = True, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 13}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.TTYInfo.WindowSize.columns\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"TTYInfo\",MName \"WindowSize\"], baseName' = FName \"columns\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 2}, wireTag = WireTag {getWireTag = 16}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = True, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 13}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing}], descOneofs = fromList [], keys = fromList [], extRanges = [], knownKeys = fromList [], storeUnknown = False, lazyFields = False, makeLenses = True, jsonInstances = True}"
 
 instance P'.TextType WindowSize where
   tellT = P'.tellSubMessage
@@ -81,20 +85,20 @@ instance P'.TextType WindowSize where
 instance P'.TextMsg WindowSize where
   textPut msg
    = do
-       P'.tellT "rows" (rows msg)
-       P'.tellT "columns" (columns msg)
+       P'.tellT "rows" (_rows msg)
+       P'.tellT "columns" (_columns msg)
   textGet
    = do
-       mods <- P'.sepEndBy (P'.choice [parse'rows, parse'columns]) P'.spaces
+       mods <- P'.sepEndBy (P'.choice [parse'_rows, parse'_columns]) P'.spaces
        Prelude'.return (Prelude'.foldl (\ v f -> f v) P'.defaultValue mods)
     where
-        parse'rows
+        parse'_rows
          = P'.try
             (do
                v <- P'.getT "rows"
-               Prelude'.return (\ o -> o{rows = v}))
-        parse'columns
+               Prelude'.return (\ o -> o{_rows = v}))
+        parse'_columns
          = P'.try
             (do
                v <- P'.getT "columns"
-               Prelude'.return (\ o -> o{columns = v}))
+               Prelude'.return (\ o -> o{_columns = v}))

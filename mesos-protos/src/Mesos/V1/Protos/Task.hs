@@ -1,12 +1,17 @@
-{-# LANGUAGE BangPatterns, DeriveDataTypeable, DeriveGeneric, FlexibleInstances, MultiParamTypeClasses, OverloadedStrings #-}
+{-# LANGUAGE TemplateHaskell, BangPatterns, DeriveDataTypeable, DeriveGeneric, FlexibleInstances, MultiParamTypeClasses,
+ OverloadedStrings #-}
 {-# OPTIONS_GHC  -fno-warn-unused-imports #-}
-module Mesos.V1.Protos.Task (Task(..)) where
+module Mesos.V1.Protos.Task
+       (Task(..), name, task_id, framework_id, executor_id, agent_id, state, resources, statuses, status_update_state,
+        status_update_uuid, labels, discovery, container, health_check, user)
+       where
 import Prelude ((+), (/), (++), (.))
 import qualified Prelude as Prelude'
 import qualified Data.Typeable as Prelude'
 import qualified GHC.Generics as Prelude'
 import qualified Data.Data as Prelude'
 import qualified Text.ProtocolBuffers.Header as P'
+import qualified Control.Lens.TH
 import qualified Mesos.V1.Protos.AgentID as Protos (AgentID)
 import qualified Mesos.V1.Protos.ContainerInfo as Protos (ContainerInfo)
 import qualified Mesos.V1.Protos.DiscoveryInfo as Protos (DiscoveryInfo)
@@ -19,14 +24,16 @@ import qualified Mesos.V1.Protos.TaskID as Protos (TaskID)
 import qualified Mesos.V1.Protos.TaskState as Protos (TaskState)
 import qualified Mesos.V1.Protos.TaskStatus as Protos (TaskStatus)
 
-data Task = Task{name :: !(P'.Utf8), task_id :: !(Protos.TaskID), framework_id :: !(Protos.FrameworkID),
-                 executor_id :: !(P'.Maybe Protos.ExecutorID), agent_id :: !(Protos.AgentID), state :: !(Protos.TaskState),
-                 resources :: !(P'.Seq Protos.Resource), statuses :: !(P'.Seq Protos.TaskStatus),
-                 status_update_state :: !(P'.Maybe Protos.TaskState), status_update_uuid :: !(P'.Maybe P'.ByteString),
-                 labels :: !(P'.Maybe Protos.Labels), discovery :: !(P'.Maybe Protos.DiscoveryInfo),
-                 container :: !(P'.Maybe Protos.ContainerInfo), health_check :: !(P'.Maybe Protos.HealthCheck),
-                 user :: !(P'.Maybe P'.Utf8)}
+data Task = Task{_name :: !(P'.Utf8), _task_id :: !(Protos.TaskID), _framework_id :: !(Protos.FrameworkID),
+                 _executor_id :: !(P'.Maybe Protos.ExecutorID), _agent_id :: !(Protos.AgentID), _state :: !(Protos.TaskState),
+                 _resources :: !(P'.Seq Protos.Resource), _statuses :: !(P'.Seq Protos.TaskStatus),
+                 _status_update_state :: !(P'.Maybe Protos.TaskState), _status_update_uuid :: !(P'.Maybe P'.ByteString),
+                 _labels :: !(P'.Maybe Protos.Labels), _discovery :: !(P'.Maybe Protos.DiscoveryInfo),
+                 _container :: !(P'.Maybe Protos.ContainerInfo), _health_check :: !(P'.Maybe Protos.HealthCheck),
+                 _user :: !(P'.Maybe P'.Utf8)}
             deriving (Prelude'.Show, Prelude'.Eq, Prelude'.Ord, Prelude'.Typeable, Prelude'.Data, Prelude'.Generic)
+
+Control.Lens.TH.makeLenses ''Task
 
 instance P'.ToJSON Task where
   toJSON msg
@@ -67,10 +74,10 @@ instance P'.FromJSON Task where
           health_check <- P'.explicitParseFieldMaybe P'.parseJSON o "health_check"
           user <- P'.explicitParseFieldMaybe P'.parseJSON o "user"
           Prelude'.return
-           P'.defaultValue{name = name, task_id = task_id, framework_id = framework_id, executor_id = executor_id,
-                           agent_id = agent_id, state = state, resources = resources, statuses = statuses,
-                           status_update_state = status_update_state, status_update_uuid = status_update_uuid, labels = labels,
-                           discovery = discovery, container = container, health_check = health_check, user = user})
+           P'.defaultValue{_name = name, _task_id = task_id, _framework_id = framework_id, _executor_id = executor_id,
+                           _agent_id = agent_id, _state = state, _resources = resources, _statuses = statuses,
+                           _status_update_state = status_update_state, _status_update_uuid = status_update_uuid, _labels = labels,
+                           _discovery = discovery, _container = container, _health_check = health_check, _user = user})
 
 instance P'.Mergeable Task where
   mergeAppend (Task x'1 x'2 x'3 x'4 x'5 x'6 x'7 x'8 x'9 x'10 x'11 x'12 x'13 x'14 x'15)
@@ -148,32 +155,33 @@ instance P'.Wire Task where
     where
         update'Self wire'Tag old'Self
          = case wire'Tag of
-             10 -> Prelude'.fmap (\ !new'Field -> old'Self{name = new'Field}) (P'.wireGet 9)
-             18 -> Prelude'.fmap (\ !new'Field -> old'Self{task_id = P'.mergeAppend (task_id old'Self) (new'Field)}) (P'.wireGet 11)
-             26 -> Prelude'.fmap (\ !new'Field -> old'Self{framework_id = P'.mergeAppend (framework_id old'Self) (new'Field)})
+             10 -> Prelude'.fmap (\ !new'Field -> old'Self{_name = new'Field}) (P'.wireGet 9)
+             18 -> Prelude'.fmap (\ !new'Field -> old'Self{_task_id = P'.mergeAppend (_task_id old'Self) (new'Field)})
+                    (P'.wireGet 11)
+             26 -> Prelude'.fmap (\ !new'Field -> old'Self{_framework_id = P'.mergeAppend (_framework_id old'Self) (new'Field)})
                     (P'.wireGet 11)
              34 -> Prelude'.fmap
-                    (\ !new'Field -> old'Self{executor_id = P'.mergeAppend (executor_id old'Self) (Prelude'.Just new'Field)})
+                    (\ !new'Field -> old'Self{_executor_id = P'.mergeAppend (_executor_id old'Self) (Prelude'.Just new'Field)})
                     (P'.wireGet 11)
-             42 -> Prelude'.fmap (\ !new'Field -> old'Self{agent_id = P'.mergeAppend (agent_id old'Self) (new'Field)})
+             42 -> Prelude'.fmap (\ !new'Field -> old'Self{_agent_id = P'.mergeAppend (_agent_id old'Self) (new'Field)})
                     (P'.wireGet 11)
-             48 -> Prelude'.fmap (\ !new'Field -> old'Self{state = new'Field}) (P'.wireGet 14)
-             58 -> Prelude'.fmap (\ !new'Field -> old'Self{resources = P'.append (resources old'Self) new'Field}) (P'.wireGet 11)
-             66 -> Prelude'.fmap (\ !new'Field -> old'Self{statuses = P'.append (statuses old'Self) new'Field}) (P'.wireGet 11)
-             72 -> Prelude'.fmap (\ !new'Field -> old'Self{status_update_state = Prelude'.Just new'Field}) (P'.wireGet 14)
-             82 -> Prelude'.fmap (\ !new'Field -> old'Self{status_update_uuid = Prelude'.Just new'Field}) (P'.wireGet 12)
-             90 -> Prelude'.fmap (\ !new'Field -> old'Self{labels = P'.mergeAppend (labels old'Self) (Prelude'.Just new'Field)})
+             48 -> Prelude'.fmap (\ !new'Field -> old'Self{_state = new'Field}) (P'.wireGet 14)
+             58 -> Prelude'.fmap (\ !new'Field -> old'Self{_resources = P'.append (_resources old'Self) new'Field}) (P'.wireGet 11)
+             66 -> Prelude'.fmap (\ !new'Field -> old'Self{_statuses = P'.append (_statuses old'Self) new'Field}) (P'.wireGet 11)
+             72 -> Prelude'.fmap (\ !new'Field -> old'Self{_status_update_state = Prelude'.Just new'Field}) (P'.wireGet 14)
+             82 -> Prelude'.fmap (\ !new'Field -> old'Self{_status_update_uuid = Prelude'.Just new'Field}) (P'.wireGet 12)
+             90 -> Prelude'.fmap (\ !new'Field -> old'Self{_labels = P'.mergeAppend (_labels old'Self) (Prelude'.Just new'Field)})
                     (P'.wireGet 11)
              98 -> Prelude'.fmap
-                    (\ !new'Field -> old'Self{discovery = P'.mergeAppend (discovery old'Self) (Prelude'.Just new'Field)})
+                    (\ !new'Field -> old'Self{_discovery = P'.mergeAppend (_discovery old'Self) (Prelude'.Just new'Field)})
                     (P'.wireGet 11)
              106 -> Prelude'.fmap
-                     (\ !new'Field -> old'Self{container = P'.mergeAppend (container old'Self) (Prelude'.Just new'Field)})
+                     (\ !new'Field -> old'Self{_container = P'.mergeAppend (_container old'Self) (Prelude'.Just new'Field)})
                      (P'.wireGet 11)
              122 -> Prelude'.fmap
-                     (\ !new'Field -> old'Self{health_check = P'.mergeAppend (health_check old'Self) (Prelude'.Just new'Field)})
+                     (\ !new'Field -> old'Self{_health_check = P'.mergeAppend (_health_check old'Self) (Prelude'.Just new'Field)})
                      (P'.wireGet 11)
-             114 -> Prelude'.fmap (\ !new'Field -> old'Self{user = Prelude'.Just new'Field}) (P'.wireGet 9)
+             114 -> Prelude'.fmap (\ !new'Field -> old'Self{_user = Prelude'.Just new'Field}) (P'.wireGet 9)
              _ -> let (field'Number, wire'Type) = P'.splitWireTag wire'Tag in P'.unknown field'Number wire'Type old'Self
 
 instance P'.MessageAPI msg' (msg' -> Task) Task where
@@ -187,7 +195,7 @@ instance P'.ReflectDescriptor Task where
       (P'.fromDistinctAscList [10, 18, 26, 34, 42, 48, 58, 66, 72, 82, 90, 98, 106, 114, 122])
   reflectDescriptorInfo _
    = Prelude'.read
-      "DescriptorInfo {descName = ProtoName {protobufName = FIName \".mesos.v1.Task\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"Task\"}, descFilePath = [\"Mesos\",\"V1\",\"Protos\",\"Task.hs\"], isGroup = False, fields = fromList [FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Task.name\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Task\"], baseName' = FName \"name\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 1}, wireTag = WireTag {getWireTag = 10}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = True, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 9}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Task.task_id\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Task\"], baseName' = FName \"task_id\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 2}, wireTag = WireTag {getWireTag = 18}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = True, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.TaskID\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"TaskID\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Task.framework_id\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Task\"], baseName' = FName \"framework_id\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 3}, wireTag = WireTag {getWireTag = 26}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = True, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.FrameworkID\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"FrameworkID\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Task.executor_id\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Task\"], baseName' = FName \"executor_id\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 4}, wireTag = WireTag {getWireTag = 34}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.ExecutorID\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"ExecutorID\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Task.agent_id\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Task\"], baseName' = FName \"agent_id\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 5}, wireTag = WireTag {getWireTag = 42}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = True, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.AgentID\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"AgentID\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Task.state\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Task\"], baseName' = FName \"state\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 6}, wireTag = WireTag {getWireTag = 48}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = True, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 14}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.TaskState\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"TaskState\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Task.resources\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Task\"], baseName' = FName \"resources\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 7}, wireTag = WireTag {getWireTag = 58}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = True, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.Resource\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"Resource\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Task.statuses\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Task\"], baseName' = FName \"statuses\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 8}, wireTag = WireTag {getWireTag = 66}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = True, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.TaskStatus\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"TaskStatus\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Task.status_update_state\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Task\"], baseName' = FName \"status_update_state\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 9}, wireTag = WireTag {getWireTag = 72}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 14}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.TaskState\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"TaskState\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Task.status_update_uuid\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Task\"], baseName' = FName \"status_update_uuid\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 10}, wireTag = WireTag {getWireTag = 82}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 12}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Task.labels\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Task\"], baseName' = FName \"labels\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 11}, wireTag = WireTag {getWireTag = 90}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.Labels\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"Labels\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Task.discovery\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Task\"], baseName' = FName \"discovery\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 12}, wireTag = WireTag {getWireTag = 98}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.DiscoveryInfo\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"DiscoveryInfo\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Task.container\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Task\"], baseName' = FName \"container\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 13}, wireTag = WireTag {getWireTag = 106}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.ContainerInfo\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"ContainerInfo\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Task.health_check\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Task\"], baseName' = FName \"health_check\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 15}, wireTag = WireTag {getWireTag = 122}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.HealthCheck\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"HealthCheck\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Task.user\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Task\"], baseName' = FName \"user\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 14}, wireTag = WireTag {getWireTag = 114}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 9}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing}], descOneofs = fromList [], keys = fromList [], extRanges = [], knownKeys = fromList [], storeUnknown = False, lazyFields = False, makeLenses = False, jsonInstances = True}"
+      "DescriptorInfo {descName = ProtoName {protobufName = FIName \".mesos.v1.Task\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"Task\"}, descFilePath = [\"Mesos\",\"V1\",\"Protos\",\"Task.hs\"], isGroup = False, fields = fromList [FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Task.name\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Task\"], baseName' = FName \"name\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 1}, wireTag = WireTag {getWireTag = 10}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = True, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 9}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Task.task_id\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Task\"], baseName' = FName \"task_id\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 2}, wireTag = WireTag {getWireTag = 18}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = True, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.TaskID\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"TaskID\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Task.framework_id\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Task\"], baseName' = FName \"framework_id\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 3}, wireTag = WireTag {getWireTag = 26}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = True, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.FrameworkID\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"FrameworkID\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Task.executor_id\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Task\"], baseName' = FName \"executor_id\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 4}, wireTag = WireTag {getWireTag = 34}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.ExecutorID\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"ExecutorID\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Task.agent_id\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Task\"], baseName' = FName \"agent_id\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 5}, wireTag = WireTag {getWireTag = 42}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = True, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.AgentID\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"AgentID\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Task.state\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Task\"], baseName' = FName \"state\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 6}, wireTag = WireTag {getWireTag = 48}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = True, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 14}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.TaskState\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"TaskState\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Task.resources\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Task\"], baseName' = FName \"resources\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 7}, wireTag = WireTag {getWireTag = 58}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = True, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.Resource\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"Resource\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Task.statuses\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Task\"], baseName' = FName \"statuses\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 8}, wireTag = WireTag {getWireTag = 66}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = True, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.TaskStatus\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"TaskStatus\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Task.status_update_state\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Task\"], baseName' = FName \"status_update_state\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 9}, wireTag = WireTag {getWireTag = 72}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 14}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.TaskState\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"TaskState\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Task.status_update_uuid\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Task\"], baseName' = FName \"status_update_uuid\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 10}, wireTag = WireTag {getWireTag = 82}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 12}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Task.labels\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Task\"], baseName' = FName \"labels\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 11}, wireTag = WireTag {getWireTag = 90}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.Labels\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"Labels\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Task.discovery\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Task\"], baseName' = FName \"discovery\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 12}, wireTag = WireTag {getWireTag = 98}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.DiscoveryInfo\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"DiscoveryInfo\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Task.container\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Task\"], baseName' = FName \"container\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 13}, wireTag = WireTag {getWireTag = 106}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.ContainerInfo\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"ContainerInfo\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Task.health_check\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Task\"], baseName' = FName \"health_check\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 15}, wireTag = WireTag {getWireTag = 122}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.HealthCheck\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"HealthCheck\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Task.user\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Task\"], baseName' = FName \"user\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 14}, wireTag = WireTag {getWireTag = 114}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 9}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing}], descOneofs = fromList [], keys = fromList [], extRanges = [], knownKeys = fromList [], storeUnknown = False, lazyFields = False, makeLenses = True, jsonInstances = True}"
 
 instance P'.TextType Task where
   tellT = P'.tellSubMessage
@@ -196,103 +204,103 @@ instance P'.TextType Task where
 instance P'.TextMsg Task where
   textPut msg
    = do
-       P'.tellT "name" (name msg)
-       P'.tellT "task_id" (task_id msg)
-       P'.tellT "framework_id" (framework_id msg)
-       P'.tellT "executor_id" (executor_id msg)
-       P'.tellT "agent_id" (agent_id msg)
-       P'.tellT "state" (state msg)
-       P'.tellT "resources" (resources msg)
-       P'.tellT "statuses" (statuses msg)
-       P'.tellT "status_update_state" (status_update_state msg)
-       P'.tellT "status_update_uuid" (status_update_uuid msg)
-       P'.tellT "labels" (labels msg)
-       P'.tellT "discovery" (discovery msg)
-       P'.tellT "container" (container msg)
-       P'.tellT "health_check" (health_check msg)
-       P'.tellT "user" (user msg)
+       P'.tellT "name" (_name msg)
+       P'.tellT "task_id" (_task_id msg)
+       P'.tellT "framework_id" (_framework_id msg)
+       P'.tellT "executor_id" (_executor_id msg)
+       P'.tellT "agent_id" (_agent_id msg)
+       P'.tellT "state" (_state msg)
+       P'.tellT "resources" (_resources msg)
+       P'.tellT "statuses" (_statuses msg)
+       P'.tellT "status_update_state" (_status_update_state msg)
+       P'.tellT "status_update_uuid" (_status_update_uuid msg)
+       P'.tellT "labels" (_labels msg)
+       P'.tellT "discovery" (_discovery msg)
+       P'.tellT "container" (_container msg)
+       P'.tellT "health_check" (_health_check msg)
+       P'.tellT "user" (_user msg)
   textGet
    = do
        mods <- P'.sepEndBy
                 (P'.choice
-                  [parse'name, parse'task_id, parse'framework_id, parse'executor_id, parse'agent_id, parse'state, parse'resources,
-                   parse'statuses, parse'status_update_state, parse'status_update_uuid, parse'labels, parse'discovery,
-                   parse'container, parse'health_check, parse'user])
+                  [parse'_name, parse'_task_id, parse'_framework_id, parse'_executor_id, parse'_agent_id, parse'_state,
+                   parse'_resources, parse'_statuses, parse'_status_update_state, parse'_status_update_uuid, parse'_labels,
+                   parse'_discovery, parse'_container, parse'_health_check, parse'_user])
                 P'.spaces
        Prelude'.return (Prelude'.foldl (\ v f -> f v) P'.defaultValue mods)
     where
-        parse'name
+        parse'_name
          = P'.try
             (do
                v <- P'.getT "name"
-               Prelude'.return (\ o -> o{name = v}))
-        parse'task_id
+               Prelude'.return (\ o -> o{_name = v}))
+        parse'_task_id
          = P'.try
             (do
                v <- P'.getT "task_id"
-               Prelude'.return (\ o -> o{task_id = v}))
-        parse'framework_id
+               Prelude'.return (\ o -> o{_task_id = v}))
+        parse'_framework_id
          = P'.try
             (do
                v <- P'.getT "framework_id"
-               Prelude'.return (\ o -> o{framework_id = v}))
-        parse'executor_id
+               Prelude'.return (\ o -> o{_framework_id = v}))
+        parse'_executor_id
          = P'.try
             (do
                v <- P'.getT "executor_id"
-               Prelude'.return (\ o -> o{executor_id = v}))
-        parse'agent_id
+               Prelude'.return (\ o -> o{_executor_id = v}))
+        parse'_agent_id
          = P'.try
             (do
                v <- P'.getT "agent_id"
-               Prelude'.return (\ o -> o{agent_id = v}))
-        parse'state
+               Prelude'.return (\ o -> o{_agent_id = v}))
+        parse'_state
          = P'.try
             (do
                v <- P'.getT "state"
-               Prelude'.return (\ o -> o{state = v}))
-        parse'resources
+               Prelude'.return (\ o -> o{_state = v}))
+        parse'_resources
          = P'.try
             (do
                v <- P'.getT "resources"
-               Prelude'.return (\ o -> o{resources = P'.append (resources o) v}))
-        parse'statuses
+               Prelude'.return (\ o -> o{_resources = P'.append (_resources o) v}))
+        parse'_statuses
          = P'.try
             (do
                v <- P'.getT "statuses"
-               Prelude'.return (\ o -> o{statuses = P'.append (statuses o) v}))
-        parse'status_update_state
+               Prelude'.return (\ o -> o{_statuses = P'.append (_statuses o) v}))
+        parse'_status_update_state
          = P'.try
             (do
                v <- P'.getT "status_update_state"
-               Prelude'.return (\ o -> o{status_update_state = v}))
-        parse'status_update_uuid
+               Prelude'.return (\ o -> o{_status_update_state = v}))
+        parse'_status_update_uuid
          = P'.try
             (do
                v <- P'.getT "status_update_uuid"
-               Prelude'.return (\ o -> o{status_update_uuid = v}))
-        parse'labels
+               Prelude'.return (\ o -> o{_status_update_uuid = v}))
+        parse'_labels
          = P'.try
             (do
                v <- P'.getT "labels"
-               Prelude'.return (\ o -> o{labels = v}))
-        parse'discovery
+               Prelude'.return (\ o -> o{_labels = v}))
+        parse'_discovery
          = P'.try
             (do
                v <- P'.getT "discovery"
-               Prelude'.return (\ o -> o{discovery = v}))
-        parse'container
+               Prelude'.return (\ o -> o{_discovery = v}))
+        parse'_container
          = P'.try
             (do
                v <- P'.getT "container"
-               Prelude'.return (\ o -> o{container = v}))
-        parse'health_check
+               Prelude'.return (\ o -> o{_container = v}))
+        parse'_health_check
          = P'.try
             (do
                v <- P'.getT "health_check"
-               Prelude'.return (\ o -> o{health_check = v}))
-        parse'user
+               Prelude'.return (\ o -> o{_health_check = v}))
+        parse'_user
          = P'.try
             (do
                v <- P'.getT "user"
-               Prelude'.return (\ o -> o{user = v}))
+               Prelude'.return (\ o -> o{_user = v}))

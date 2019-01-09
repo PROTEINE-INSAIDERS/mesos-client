@@ -1,16 +1,20 @@
-{-# LANGUAGE BangPatterns, DeriveDataTypeable, DeriveGeneric, FlexibleInstances, MultiParamTypeClasses, OverloadedStrings #-}
+{-# LANGUAGE TemplateHaskell, BangPatterns, DeriveDataTypeable, DeriveGeneric, FlexibleInstances, MultiParamTypeClasses,
+ OverloadedStrings #-}
 {-# OPTIONS_GHC  -fno-warn-unused-imports #-}
-module Mesos.V1.Master.Protos.Call.StopMaintenance (StopMaintenance(..)) where
+module Mesos.V1.Master.Protos.Call.StopMaintenance (StopMaintenance(..), machines) where
 import Prelude ((+), (/), (++), (.))
 import qualified Prelude as Prelude'
 import qualified Data.Typeable as Prelude'
 import qualified GHC.Generics as Prelude'
 import qualified Data.Data as Prelude'
 import qualified Text.ProtocolBuffers.Header as P'
+import qualified Control.Lens.TH
 import qualified Mesos.V1.Protos.MachineID as Protos (MachineID)
 
-data StopMaintenance = StopMaintenance{machines :: !(P'.Seq Protos.MachineID)}
+data StopMaintenance = StopMaintenance{_machines :: !(P'.Seq Protos.MachineID)}
                        deriving (Prelude'.Show, Prelude'.Eq, Prelude'.Ord, Prelude'.Typeable, Prelude'.Data, Prelude'.Generic)
+
+Control.Lens.TH.makeLenses ''StopMaintenance
 
 instance P'.ToJSON StopMaintenance where
   toJSON msg = P'.objectNoEmpty ([("machines", P'.toJSON (Prelude'.fmap P'.toJSON (machines msg)))] ++ Prelude'.concat [])
@@ -22,7 +26,7 @@ instance P'.FromJSON StopMaintenance where
         do
           machines <- Prelude'.fmap (Prelude'.maybe Prelude'.mempty Prelude'.id)
                        (P'.explicitParseFieldMaybe (Prelude'.mapM P'.parseJSON P'.<=< P'.parseJSON) o "machines")
-          Prelude'.return P'.defaultValue{machines = machines})
+          Prelude'.return P'.defaultValue{_machines = machines})
 
 instance P'.Mergeable StopMaintenance where
   mergeAppend (StopMaintenance x'1) (StopMaintenance y'1) = StopMaintenance (P'.mergeAppend x'1 y'1)
@@ -60,7 +64,7 @@ instance P'.Wire StopMaintenance where
     where
         update'Self wire'Tag old'Self
          = case wire'Tag of
-             10 -> Prelude'.fmap (\ !new'Field -> old'Self{machines = P'.append (machines old'Self) new'Field}) (P'.wireGet 11)
+             10 -> Prelude'.fmap (\ !new'Field -> old'Self{_machines = P'.append (_machines old'Self) new'Field}) (P'.wireGet 11)
              _ -> let (field'Number, wire'Type) = P'.splitWireTag wire'Tag in P'.unknown field'Number wire'Type old'Self
 
 instance P'.MessageAPI msg' (msg' -> StopMaintenance) StopMaintenance where
@@ -72,7 +76,7 @@ instance P'.ReflectDescriptor StopMaintenance where
   getMessageInfo _ = P'.GetMessageInfo (P'.fromDistinctAscList []) (P'.fromDistinctAscList [10])
   reflectDescriptorInfo _
    = Prelude'.read
-      "DescriptorInfo {descName = ProtoName {protobufName = FIName \".mesos.v1.master.Call.StopMaintenance\", haskellPrefix = [MName \"Mesos\",MName \"V1\",MName \"Master\"], parentModule = [MName \"Protos\",MName \"Call\"], baseName = MName \"StopMaintenance\"}, descFilePath = [\"Mesos\",\"V1\",\"Master\",\"Protos\",\"Call\",\"StopMaintenance.hs\"], isGroup = False, fields = fromList [FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.master.Call.StopMaintenance.machines\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Master\"], parentModule' = [MName \"Protos\",MName \"Call\",MName \"StopMaintenance\"], baseName' = FName \"machines\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 1}, wireTag = WireTag {getWireTag = 10}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = True, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.MachineID\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"MachineID\"}), hsRawDefault = Nothing, hsDefault = Nothing}], descOneofs = fromList [], keys = fromList [], extRanges = [], knownKeys = fromList [], storeUnknown = False, lazyFields = False, makeLenses = False, jsonInstances = True}"
+      "DescriptorInfo {descName = ProtoName {protobufName = FIName \".mesos.v1.master.Call.StopMaintenance\", haskellPrefix = [MName \"Mesos\",MName \"V1\",MName \"Master\"], parentModule = [MName \"Protos\",MName \"Call\"], baseName = MName \"StopMaintenance\"}, descFilePath = [\"Mesos\",\"V1\",\"Master\",\"Protos\",\"Call\",\"StopMaintenance.hs\"], isGroup = False, fields = fromList [FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.master.Call.StopMaintenance.machines\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Master\"], parentModule' = [MName \"Protos\",MName \"Call\",MName \"StopMaintenance\"], baseName' = FName \"machines\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 1}, wireTag = WireTag {getWireTag = 10}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = True, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.MachineID\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"MachineID\"}), hsRawDefault = Nothing, hsDefault = Nothing}], descOneofs = fromList [], keys = fromList [], extRanges = [], knownKeys = fromList [], storeUnknown = False, lazyFields = False, makeLenses = True, jsonInstances = True}"
 
 instance P'.TextType StopMaintenance where
   tellT = P'.tellSubMessage
@@ -81,14 +85,14 @@ instance P'.TextType StopMaintenance where
 instance P'.TextMsg StopMaintenance where
   textPut msg
    = do
-       P'.tellT "machines" (machines msg)
+       P'.tellT "machines" (_machines msg)
   textGet
    = do
-       mods <- P'.sepEndBy (P'.choice [parse'machines]) P'.spaces
+       mods <- P'.sepEndBy (P'.choice [parse'_machines]) P'.spaces
        Prelude'.return (Prelude'.foldl (\ v f -> f v) P'.defaultValue mods)
     where
-        parse'machines
+        parse'_machines
          = P'.try
             (do
                v <- P'.getT "machines"
-               Prelude'.return (\ o -> o{machines = P'.append (machines o) v}))
+               Prelude'.return (\ o -> o{_machines = P'.append (_machines o) v}))

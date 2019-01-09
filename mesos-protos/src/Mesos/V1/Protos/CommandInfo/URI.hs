@@ -1,16 +1,20 @@
-{-# LANGUAGE BangPatterns, DeriveDataTypeable, DeriveGeneric, FlexibleInstances, MultiParamTypeClasses, OverloadedStrings #-}
+{-# LANGUAGE TemplateHaskell, BangPatterns, DeriveDataTypeable, DeriveGeneric, FlexibleInstances, MultiParamTypeClasses,
+ OverloadedStrings #-}
 {-# OPTIONS_GHC  -fno-warn-unused-imports #-}
-module Mesos.V1.Protos.CommandInfo.URI (URI(..)) where
+module Mesos.V1.Protos.CommandInfo.URI (URI(..), value, executable, extract, cache, output_file) where
 import Prelude ((+), (/), (++), (.))
 import qualified Prelude as Prelude'
 import qualified Data.Typeable as Prelude'
 import qualified GHC.Generics as Prelude'
 import qualified Data.Data as Prelude'
 import qualified Text.ProtocolBuffers.Header as P'
+import qualified Control.Lens.TH
 
-data URI = URI{value :: !(P'.Utf8), executable :: !(P'.Maybe P'.Bool), extract :: !(P'.Maybe P'.Bool), cache :: !(P'.Maybe P'.Bool),
-               output_file :: !(P'.Maybe P'.Utf8)}
+data URI = URI{_value :: !(P'.Utf8), _executable :: !(P'.Maybe P'.Bool), _extract :: !(P'.Maybe P'.Bool),
+               _cache :: !(P'.Maybe P'.Bool), _output_file :: !(P'.Maybe P'.Utf8)}
            deriving (Prelude'.Show, Prelude'.Eq, Prelude'.Ord, Prelude'.Typeable, Prelude'.Data, Prelude'.Generic)
+
+Control.Lens.TH.makeLenses ''URI
 
 instance P'.ToJSON URI where
   toJSON msg
@@ -33,7 +37,8 @@ instance P'.FromJSON URI where
           cache <- P'.explicitParseFieldMaybe P'.parseJSONBool o "cache"
           output_file <- P'.explicitParseFieldMaybe P'.parseJSON o "output_file"
           Prelude'.return
-           P'.defaultValue{value = value, executable = executable, extract = extract, cache = cache, output_file = output_file})
+           P'.defaultValue{_value = value, _executable = executable, _extract = extract, _cache = cache,
+                           _output_file = output_file})
 
 instance P'.Mergeable URI where
   mergeAppend (URI x'1 x'2 x'3 x'4 x'5) (URI y'1 y'2 y'3 y'4 y'5)
@@ -78,11 +83,11 @@ instance P'.Wire URI where
     where
         update'Self wire'Tag old'Self
          = case wire'Tag of
-             10 -> Prelude'.fmap (\ !new'Field -> old'Self{value = new'Field}) (P'.wireGet 9)
-             16 -> Prelude'.fmap (\ !new'Field -> old'Self{executable = Prelude'.Just new'Field}) (P'.wireGet 8)
-             24 -> Prelude'.fmap (\ !new'Field -> old'Self{extract = Prelude'.Just new'Field}) (P'.wireGet 8)
-             32 -> Prelude'.fmap (\ !new'Field -> old'Self{cache = Prelude'.Just new'Field}) (P'.wireGet 8)
-             42 -> Prelude'.fmap (\ !new'Field -> old'Self{output_file = Prelude'.Just new'Field}) (P'.wireGet 9)
+             10 -> Prelude'.fmap (\ !new'Field -> old'Self{_value = new'Field}) (P'.wireGet 9)
+             16 -> Prelude'.fmap (\ !new'Field -> old'Self{_executable = Prelude'.Just new'Field}) (P'.wireGet 8)
+             24 -> Prelude'.fmap (\ !new'Field -> old'Self{_extract = Prelude'.Just new'Field}) (P'.wireGet 8)
+             32 -> Prelude'.fmap (\ !new'Field -> old'Self{_cache = Prelude'.Just new'Field}) (P'.wireGet 8)
+             42 -> Prelude'.fmap (\ !new'Field -> old'Self{_output_file = Prelude'.Just new'Field}) (P'.wireGet 9)
              _ -> let (field'Number, wire'Type) = P'.splitWireTag wire'Tag in P'.unknown field'Number wire'Type old'Self
 
 instance P'.MessageAPI msg' (msg' -> URI) URI where
@@ -94,7 +99,7 @@ instance P'.ReflectDescriptor URI where
   getMessageInfo _ = P'.GetMessageInfo (P'.fromDistinctAscList [10]) (P'.fromDistinctAscList [10, 16, 24, 32, 42])
   reflectDescriptorInfo _
    = Prelude'.read
-      "DescriptorInfo {descName = ProtoName {protobufName = FIName \".mesos.v1.CommandInfo.URI\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\",MName \"CommandInfo\"], baseName = MName \"URI\"}, descFilePath = [\"Mesos\",\"V1\",\"Protos\",\"CommandInfo\",\"URI.hs\"], isGroup = False, fields = fromList [FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.CommandInfo.URI.value\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"CommandInfo\",MName \"URI\"], baseName' = FName \"value\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 1}, wireTag = WireTag {getWireTag = 10}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = True, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 9}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.CommandInfo.URI.executable\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"CommandInfo\",MName \"URI\"], baseName' = FName \"executable\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 2}, wireTag = WireTag {getWireTag = 16}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 8}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.CommandInfo.URI.extract\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"CommandInfo\",MName \"URI\"], baseName' = FName \"extract\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 3}, wireTag = WireTag {getWireTag = 24}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 8}, typeName = Nothing, hsRawDefault = Just \"true\", hsDefault = Just (HsDef'Bool True)},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.CommandInfo.URI.cache\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"CommandInfo\",MName \"URI\"], baseName' = FName \"cache\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 4}, wireTag = WireTag {getWireTag = 32}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 8}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.CommandInfo.URI.output_file\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"CommandInfo\",MName \"URI\"], baseName' = FName \"output_file\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 5}, wireTag = WireTag {getWireTag = 42}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 9}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing}], descOneofs = fromList [], keys = fromList [], extRanges = [], knownKeys = fromList [], storeUnknown = False, lazyFields = False, makeLenses = False, jsonInstances = True}"
+      "DescriptorInfo {descName = ProtoName {protobufName = FIName \".mesos.v1.CommandInfo.URI\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\",MName \"CommandInfo\"], baseName = MName \"URI\"}, descFilePath = [\"Mesos\",\"V1\",\"Protos\",\"CommandInfo\",\"URI.hs\"], isGroup = False, fields = fromList [FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.CommandInfo.URI.value\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"CommandInfo\",MName \"URI\"], baseName' = FName \"value\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 1}, wireTag = WireTag {getWireTag = 10}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = True, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 9}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.CommandInfo.URI.executable\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"CommandInfo\",MName \"URI\"], baseName' = FName \"executable\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 2}, wireTag = WireTag {getWireTag = 16}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 8}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.CommandInfo.URI.extract\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"CommandInfo\",MName \"URI\"], baseName' = FName \"extract\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 3}, wireTag = WireTag {getWireTag = 24}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 8}, typeName = Nothing, hsRawDefault = Just \"true\", hsDefault = Just (HsDef'Bool True)},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.CommandInfo.URI.cache\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"CommandInfo\",MName \"URI\"], baseName' = FName \"cache\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 4}, wireTag = WireTag {getWireTag = 32}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 8}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.CommandInfo.URI.output_file\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"CommandInfo\",MName \"URI\"], baseName' = FName \"output_file\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 5}, wireTag = WireTag {getWireTag = 42}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 9}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing}], descOneofs = fromList [], keys = fromList [], extRanges = [], knownKeys = fromList [], storeUnknown = False, lazyFields = False, makeLenses = True, jsonInstances = True}"
 
 instance P'.TextType URI where
   tellT = P'.tellSubMessage
@@ -103,38 +108,38 @@ instance P'.TextType URI where
 instance P'.TextMsg URI where
   textPut msg
    = do
-       P'.tellT "value" (value msg)
-       P'.tellT "executable" (executable msg)
-       P'.tellT "extract" (extract msg)
-       P'.tellT "cache" (cache msg)
-       P'.tellT "output_file" (output_file msg)
+       P'.tellT "value" (_value msg)
+       P'.tellT "executable" (_executable msg)
+       P'.tellT "extract" (_extract msg)
+       P'.tellT "cache" (_cache msg)
+       P'.tellT "output_file" (_output_file msg)
   textGet
    = do
-       mods <- P'.sepEndBy (P'.choice [parse'value, parse'executable, parse'extract, parse'cache, parse'output_file]) P'.spaces
+       mods <- P'.sepEndBy (P'.choice [parse'_value, parse'_executable, parse'_extract, parse'_cache, parse'_output_file]) P'.spaces
        Prelude'.return (Prelude'.foldl (\ v f -> f v) P'.defaultValue mods)
     where
-        parse'value
+        parse'_value
          = P'.try
             (do
                v <- P'.getT "value"
-               Prelude'.return (\ o -> o{value = v}))
-        parse'executable
+               Prelude'.return (\ o -> o{_value = v}))
+        parse'_executable
          = P'.try
             (do
                v <- P'.getT "executable"
-               Prelude'.return (\ o -> o{executable = v}))
-        parse'extract
+               Prelude'.return (\ o -> o{_executable = v}))
+        parse'_extract
          = P'.try
             (do
                v <- P'.getT "extract"
-               Prelude'.return (\ o -> o{extract = v}))
-        parse'cache
+               Prelude'.return (\ o -> o{_extract = v}))
+        parse'_cache
          = P'.try
             (do
                v <- P'.getT "cache"
-               Prelude'.return (\ o -> o{cache = v}))
-        parse'output_file
+               Prelude'.return (\ o -> o{_cache = v}))
+        parse'_output_file
          = P'.try
             (do
                v <- P'.getT "output_file"
-               Prelude'.return (\ o -> o{output_file = v}))
+               Prelude'.return (\ o -> o{_output_file = v}))

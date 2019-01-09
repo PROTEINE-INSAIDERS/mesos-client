@@ -1,16 +1,20 @@
-{-# LANGUAGE BangPatterns, DeriveDataTypeable, DeriveGeneric, FlexibleInstances, MultiParamTypeClasses, OverloadedStrings #-}
+{-# LANGUAGE TemplateHaskell, BangPatterns, DeriveDataTypeable, DeriveGeneric, FlexibleInstances, MultiParamTypeClasses,
+ OverloadedStrings #-}
 {-# OPTIONS_GHC  -fno-warn-unused-imports #-}
-module Mesos.V1.Scheduler.Protos.APIResult (APIResult(..)) where
+module Mesos.V1.Scheduler.Protos.APIResult (APIResult(..), status_code, response, error) where
 import Prelude ((+), (/), (++), (.))
 import qualified Prelude as Prelude'
 import qualified Data.Typeable as Prelude'
 import qualified GHC.Generics as Prelude'
 import qualified Data.Data as Prelude'
 import qualified Text.ProtocolBuffers.Header as P'
+import qualified Control.Lens.TH
 import qualified Mesos.V1.Scheduler.Protos.Response as Protos (Response)
 
-data APIResult = APIResult{status_code :: !(P'.Word32), response :: !(P'.Maybe Protos.Response), error :: !(P'.Maybe P'.Utf8)}
+data APIResult = APIResult{_status_code :: !(P'.Word32), _response :: !(P'.Maybe Protos.Response), _error :: !(P'.Maybe P'.Utf8)}
                  deriving (Prelude'.Show, Prelude'.Eq, Prelude'.Ord, Prelude'.Typeable, Prelude'.Data, Prelude'.Generic)
+
+Control.Lens.TH.makeLenses ''APIResult
 
 instance P'.ToJSON APIResult where
   toJSON msg
@@ -27,7 +31,7 @@ instance P'.FromJSON APIResult where
           status_code <- P'.explicitParseField P'.parseJSON o "status_code"
           response <- P'.explicitParseFieldMaybe P'.parseJSON o "response"
           error <- P'.explicitParseFieldMaybe P'.parseJSON o "error"
-          Prelude'.return P'.defaultValue{status_code = status_code, response = response, error = error})
+          Prelude'.return P'.defaultValue{_status_code = status_code, _response = response, _error = error})
 
 instance P'.Mergeable APIResult where
   mergeAppend (APIResult x'1 x'2 x'3) (APIResult y'1 y'2 y'3)
@@ -67,10 +71,11 @@ instance P'.Wire APIResult where
     where
         update'Self wire'Tag old'Self
          = case wire'Tag of
-             8 -> Prelude'.fmap (\ !new'Field -> old'Self{status_code = new'Field}) (P'.wireGet 13)
-             18 -> Prelude'.fmap (\ !new'Field -> old'Self{response = P'.mergeAppend (response old'Self) (Prelude'.Just new'Field)})
+             8 -> Prelude'.fmap (\ !new'Field -> old'Self{_status_code = new'Field}) (P'.wireGet 13)
+             18 -> Prelude'.fmap
+                    (\ !new'Field -> old'Self{_response = P'.mergeAppend (_response old'Self) (Prelude'.Just new'Field)})
                     (P'.wireGet 11)
-             26 -> Prelude'.fmap (\ !new'Field -> old'Self{error = Prelude'.Just new'Field}) (P'.wireGet 9)
+             26 -> Prelude'.fmap (\ !new'Field -> old'Self{_error = Prelude'.Just new'Field}) (P'.wireGet 9)
              _ -> let (field'Number, wire'Type) = P'.splitWireTag wire'Tag in P'.unknown field'Number wire'Type old'Self
 
 instance P'.MessageAPI msg' (msg' -> APIResult) APIResult where
@@ -82,7 +87,7 @@ instance P'.ReflectDescriptor APIResult where
   getMessageInfo _ = P'.GetMessageInfo (P'.fromDistinctAscList [8]) (P'.fromDistinctAscList [8, 18, 26])
   reflectDescriptorInfo _
    = Prelude'.read
-      "DescriptorInfo {descName = ProtoName {protobufName = FIName \".mesos.v1.scheduler.APIResult\", haskellPrefix = [MName \"Mesos\",MName \"V1\",MName \"Scheduler\"], parentModule = [MName \"Protos\"], baseName = MName \"APIResult\"}, descFilePath = [\"Mesos\",\"V1\",\"Scheduler\",\"Protos\",\"APIResult.hs\"], isGroup = False, fields = fromList [FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.scheduler.APIResult.status_code\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Scheduler\"], parentModule' = [MName \"Protos\",MName \"APIResult\"], baseName' = FName \"status_code\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 1}, wireTag = WireTag {getWireTag = 8}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = True, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 13}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.scheduler.APIResult.response\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Scheduler\"], parentModule' = [MName \"Protos\",MName \"APIResult\"], baseName' = FName \"response\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 2}, wireTag = WireTag {getWireTag = 18}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.scheduler.Response\", haskellPrefix = [MName \"Mesos\",MName \"V1\",MName \"Scheduler\"], parentModule = [MName \"Protos\"], baseName = MName \"Response\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.scheduler.APIResult.error\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Scheduler\"], parentModule' = [MName \"Protos\",MName \"APIResult\"], baseName' = FName \"error\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 3}, wireTag = WireTag {getWireTag = 26}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 9}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing}], descOneofs = fromList [], keys = fromList [], extRanges = [], knownKeys = fromList [], storeUnknown = False, lazyFields = False, makeLenses = False, jsonInstances = True}"
+      "DescriptorInfo {descName = ProtoName {protobufName = FIName \".mesos.v1.scheduler.APIResult\", haskellPrefix = [MName \"Mesos\",MName \"V1\",MName \"Scheduler\"], parentModule = [MName \"Protos\"], baseName = MName \"APIResult\"}, descFilePath = [\"Mesos\",\"V1\",\"Scheduler\",\"Protos\",\"APIResult.hs\"], isGroup = False, fields = fromList [FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.scheduler.APIResult.status_code\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Scheduler\"], parentModule' = [MName \"Protos\",MName \"APIResult\"], baseName' = FName \"status_code\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 1}, wireTag = WireTag {getWireTag = 8}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = True, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 13}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.scheduler.APIResult.response\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Scheduler\"], parentModule' = [MName \"Protos\",MName \"APIResult\"], baseName' = FName \"response\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 2}, wireTag = WireTag {getWireTag = 18}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.scheduler.Response\", haskellPrefix = [MName \"Mesos\",MName \"V1\",MName \"Scheduler\"], parentModule = [MName \"Protos\"], baseName = MName \"Response\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.scheduler.APIResult.error\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Scheduler\"], parentModule' = [MName \"Protos\",MName \"APIResult\"], baseName' = FName \"error\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 3}, wireTag = WireTag {getWireTag = 26}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 9}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing}], descOneofs = fromList [], keys = fromList [], extRanges = [], knownKeys = fromList [], storeUnknown = False, lazyFields = False, makeLenses = True, jsonInstances = True}"
 
 instance P'.TextType APIResult where
   tellT = P'.tellSubMessage
@@ -91,26 +96,26 @@ instance P'.TextType APIResult where
 instance P'.TextMsg APIResult where
   textPut msg
    = do
-       P'.tellT "status_code" (status_code msg)
-       P'.tellT "response" (response msg)
-       P'.tellT "error" (error msg)
+       P'.tellT "status_code" (_status_code msg)
+       P'.tellT "response" (_response msg)
+       P'.tellT "error" (_error msg)
   textGet
    = do
-       mods <- P'.sepEndBy (P'.choice [parse'status_code, parse'response, parse'error]) P'.spaces
+       mods <- P'.sepEndBy (P'.choice [parse'_status_code, parse'_response, parse'_error]) P'.spaces
        Prelude'.return (Prelude'.foldl (\ v f -> f v) P'.defaultValue mods)
     where
-        parse'status_code
+        parse'_status_code
          = P'.try
             (do
                v <- P'.getT "status_code"
-               Prelude'.return (\ o -> o{status_code = v}))
-        parse'response
+               Prelude'.return (\ o -> o{_status_code = v}))
+        parse'_response
          = P'.try
             (do
                v <- P'.getT "response"
-               Prelude'.return (\ o -> o{response = v}))
-        parse'error
+               Prelude'.return (\ o -> o{_response = v}))
+        parse'_error
          = P'.try
             (do
                v <- P'.getT "error"
-               Prelude'.return (\ o -> o{error = v}))
+               Prelude'.return (\ o -> o{_error = v}))

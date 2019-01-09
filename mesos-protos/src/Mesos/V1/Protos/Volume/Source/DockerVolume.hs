@@ -1,16 +1,21 @@
-{-# LANGUAGE BangPatterns, DeriveDataTypeable, DeriveGeneric, FlexibleInstances, MultiParamTypeClasses, OverloadedStrings #-}
+{-# LANGUAGE TemplateHaskell, BangPatterns, DeriveDataTypeable, DeriveGeneric, FlexibleInstances, MultiParamTypeClasses,
+ OverloadedStrings #-}
 {-# OPTIONS_GHC  -fno-warn-unused-imports #-}
-module Mesos.V1.Protos.Volume.Source.DockerVolume (DockerVolume(..)) where
+module Mesos.V1.Protos.Volume.Source.DockerVolume (DockerVolume(..), driver, name, driver_options) where
 import Prelude ((+), (/), (++), (.))
 import qualified Prelude as Prelude'
 import qualified Data.Typeable as Prelude'
 import qualified GHC.Generics as Prelude'
 import qualified Data.Data as Prelude'
 import qualified Text.ProtocolBuffers.Header as P'
+import qualified Control.Lens.TH
 import qualified Mesos.V1.Protos.Parameters as Protos (Parameters)
 
-data DockerVolume = DockerVolume{driver :: !(P'.Maybe P'.Utf8), name :: !(P'.Utf8), driver_options :: !(P'.Maybe Protos.Parameters)}
+data DockerVolume = DockerVolume{_driver :: !(P'.Maybe P'.Utf8), _name :: !(P'.Utf8),
+                                 _driver_options :: !(P'.Maybe Protos.Parameters)}
                     deriving (Prelude'.Show, Prelude'.Eq, Prelude'.Ord, Prelude'.Typeable, Prelude'.Data, Prelude'.Generic)
+
+Control.Lens.TH.makeLenses ''DockerVolume
 
 instance P'.ToJSON DockerVolume where
   toJSON msg
@@ -27,7 +32,7 @@ instance P'.FromJSON DockerVolume where
           driver <- P'.explicitParseFieldMaybe P'.parseJSON o "driver"
           name <- P'.explicitParseField P'.parseJSON o "name"
           driver_options <- P'.explicitParseFieldMaybe P'.parseJSON o "driver_options"
-          Prelude'.return P'.defaultValue{driver = driver, name = name, driver_options = driver_options})
+          Prelude'.return P'.defaultValue{_driver = driver, _name = name, _driver_options = driver_options})
 
 instance P'.Mergeable DockerVolume where
   mergeAppend (DockerVolume x'1 x'2 x'3) (DockerVolume y'1 y'2 y'3)
@@ -67,10 +72,11 @@ instance P'.Wire DockerVolume where
     where
         update'Self wire'Tag old'Self
          = case wire'Tag of
-             10 -> Prelude'.fmap (\ !new'Field -> old'Self{driver = Prelude'.Just new'Field}) (P'.wireGet 9)
-             18 -> Prelude'.fmap (\ !new'Field -> old'Self{name = new'Field}) (P'.wireGet 9)
+             10 -> Prelude'.fmap (\ !new'Field -> old'Self{_driver = Prelude'.Just new'Field}) (P'.wireGet 9)
+             18 -> Prelude'.fmap (\ !new'Field -> old'Self{_name = new'Field}) (P'.wireGet 9)
              26 -> Prelude'.fmap
-                    (\ !new'Field -> old'Self{driver_options = P'.mergeAppend (driver_options old'Self) (Prelude'.Just new'Field)})
+                    (\ !new'Field ->
+                      old'Self{_driver_options = P'.mergeAppend (_driver_options old'Self) (Prelude'.Just new'Field)})
                     (P'.wireGet 11)
              _ -> let (field'Number, wire'Type) = P'.splitWireTag wire'Tag in P'.unknown field'Number wire'Type old'Self
 
@@ -83,7 +89,7 @@ instance P'.ReflectDescriptor DockerVolume where
   getMessageInfo _ = P'.GetMessageInfo (P'.fromDistinctAscList [18]) (P'.fromDistinctAscList [10, 18, 26])
   reflectDescriptorInfo _
    = Prelude'.read
-      "DescriptorInfo {descName = ProtoName {protobufName = FIName \".mesos.v1.Volume.Source.DockerVolume\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\",MName \"Volume\",MName \"Source\"], baseName = MName \"DockerVolume\"}, descFilePath = [\"Mesos\",\"V1\",\"Protos\",\"Volume\",\"Source\",\"DockerVolume.hs\"], isGroup = False, fields = fromList [FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Volume.Source.DockerVolume.driver\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Volume\",MName \"Source\",MName \"DockerVolume\"], baseName' = FName \"driver\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 1}, wireTag = WireTag {getWireTag = 10}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 9}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Volume.Source.DockerVolume.name\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Volume\",MName \"Source\",MName \"DockerVolume\"], baseName' = FName \"name\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 2}, wireTag = WireTag {getWireTag = 18}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = True, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 9}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Volume.Source.DockerVolume.driver_options\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Volume\",MName \"Source\",MName \"DockerVolume\"], baseName' = FName \"driver_options\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 3}, wireTag = WireTag {getWireTag = 26}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.Parameters\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"Parameters\"}), hsRawDefault = Nothing, hsDefault = Nothing}], descOneofs = fromList [], keys = fromList [], extRanges = [], knownKeys = fromList [], storeUnknown = False, lazyFields = False, makeLenses = False, jsonInstances = True}"
+      "DescriptorInfo {descName = ProtoName {protobufName = FIName \".mesos.v1.Volume.Source.DockerVolume\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\",MName \"Volume\",MName \"Source\"], baseName = MName \"DockerVolume\"}, descFilePath = [\"Mesos\",\"V1\",\"Protos\",\"Volume\",\"Source\",\"DockerVolume.hs\"], isGroup = False, fields = fromList [FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Volume.Source.DockerVolume.driver\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Volume\",MName \"Source\",MName \"DockerVolume\"], baseName' = FName \"driver\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 1}, wireTag = WireTag {getWireTag = 10}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 9}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Volume.Source.DockerVolume.name\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Volume\",MName \"Source\",MName \"DockerVolume\"], baseName' = FName \"name\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 2}, wireTag = WireTag {getWireTag = 18}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = True, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 9}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Volume.Source.DockerVolume.driver_options\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Volume\",MName \"Source\",MName \"DockerVolume\"], baseName' = FName \"driver_options\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 3}, wireTag = WireTag {getWireTag = 26}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.Parameters\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"Parameters\"}), hsRawDefault = Nothing, hsDefault = Nothing}], descOneofs = fromList [], keys = fromList [], extRanges = [], knownKeys = fromList [], storeUnknown = False, lazyFields = False, makeLenses = True, jsonInstances = True}"
 
 instance P'.TextType DockerVolume where
   tellT = P'.tellSubMessage
@@ -92,26 +98,26 @@ instance P'.TextType DockerVolume where
 instance P'.TextMsg DockerVolume where
   textPut msg
    = do
-       P'.tellT "driver" (driver msg)
-       P'.tellT "name" (name msg)
-       P'.tellT "driver_options" (driver_options msg)
+       P'.tellT "driver" (_driver msg)
+       P'.tellT "name" (_name msg)
+       P'.tellT "driver_options" (_driver_options msg)
   textGet
    = do
-       mods <- P'.sepEndBy (P'.choice [parse'driver, parse'name, parse'driver_options]) P'.spaces
+       mods <- P'.sepEndBy (P'.choice [parse'_driver, parse'_name, parse'_driver_options]) P'.spaces
        Prelude'.return (Prelude'.foldl (\ v f -> f v) P'.defaultValue mods)
     where
-        parse'driver
+        parse'_driver
          = P'.try
             (do
                v <- P'.getT "driver"
-               Prelude'.return (\ o -> o{driver = v}))
-        parse'name
+               Prelude'.return (\ o -> o{_driver = v}))
+        parse'_name
          = P'.try
             (do
                v <- P'.getT "name"
-               Prelude'.return (\ o -> o{name = v}))
-        parse'driver_options
+               Prelude'.return (\ o -> o{_name = v}))
+        parse'_driver_options
          = P'.try
             (do
                v <- P'.getT "driver_options"
-               Prelude'.return (\ o -> o{driver_options = v}))
+               Prelude'.return (\ o -> o{_driver_options = v}))

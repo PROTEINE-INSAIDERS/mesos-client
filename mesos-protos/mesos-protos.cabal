@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: c20205b597d4d6990e475efe7e795d153917f1b4542db78e91952bd4f1e3470d
+-- hash: 49204d87176cfce6be5a30a28bb975648a9fb93a8f17e2141fa177ab13feaba2
 
 name:           mesos-protos
 version:        0.1.0.0
@@ -340,6 +340,7 @@ library
       src
   build-depends:
       base >=4.7 && <5
+    , lens
     , protocol-buffers
     , protocol-buffers-descriptor
   default-language: Haskell2010

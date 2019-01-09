@@ -1,15 +1,19 @@
-{-# LANGUAGE BangPatterns, DeriveDataTypeable, DeriveGeneric, FlexibleInstances, MultiParamTypeClasses, OverloadedStrings #-}
+{-# LANGUAGE TemplateHaskell, BangPatterns, DeriveDataTypeable, DeriveGeneric, FlexibleInstances, MultiParamTypeClasses,
+ OverloadedStrings #-}
 {-# OPTIONS_GHC  -fno-warn-unused-imports #-}
-module Mesos.V1.Scheduler.Protos.Call.Suppress (Suppress(..)) where
+module Mesos.V1.Scheduler.Protos.Call.Suppress (Suppress(..), roles) where
 import Prelude ((+), (/), (++), (.))
 import qualified Prelude as Prelude'
 import qualified Data.Typeable as Prelude'
 import qualified GHC.Generics as Prelude'
 import qualified Data.Data as Prelude'
 import qualified Text.ProtocolBuffers.Header as P'
+import qualified Control.Lens.TH
 
-data Suppress = Suppress{roles :: !(P'.Seq P'.Utf8)}
+data Suppress = Suppress{_roles :: !(P'.Seq P'.Utf8)}
                 deriving (Prelude'.Show, Prelude'.Eq, Prelude'.Ord, Prelude'.Typeable, Prelude'.Data, Prelude'.Generic)
+
+Control.Lens.TH.makeLenses ''Suppress
 
 instance P'.ToJSON Suppress where
   toJSON msg = P'.objectNoEmpty ([("roles", P'.toJSON (Prelude'.fmap P'.toJSON (roles msg)))] ++ Prelude'.concat [])
@@ -21,7 +25,7 @@ instance P'.FromJSON Suppress where
         do
           roles <- Prelude'.fmap (Prelude'.maybe Prelude'.mempty Prelude'.id)
                     (P'.explicitParseFieldMaybe (Prelude'.mapM P'.parseJSON P'.<=< P'.parseJSON) o "roles")
-          Prelude'.return P'.defaultValue{roles = roles})
+          Prelude'.return P'.defaultValue{_roles = roles})
 
 instance P'.Mergeable Suppress where
   mergeAppend (Suppress x'1) (Suppress y'1) = Suppress (P'.mergeAppend x'1 y'1)
@@ -59,7 +63,7 @@ instance P'.Wire Suppress where
     where
         update'Self wire'Tag old'Self
          = case wire'Tag of
-             10 -> Prelude'.fmap (\ !new'Field -> old'Self{roles = P'.append (roles old'Self) new'Field}) (P'.wireGet 9)
+             10 -> Prelude'.fmap (\ !new'Field -> old'Self{_roles = P'.append (_roles old'Self) new'Field}) (P'.wireGet 9)
              _ -> let (field'Number, wire'Type) = P'.splitWireTag wire'Tag in P'.unknown field'Number wire'Type old'Self
 
 instance P'.MessageAPI msg' (msg' -> Suppress) Suppress where
@@ -71,7 +75,7 @@ instance P'.ReflectDescriptor Suppress where
   getMessageInfo _ = P'.GetMessageInfo (P'.fromDistinctAscList []) (P'.fromDistinctAscList [10])
   reflectDescriptorInfo _
    = Prelude'.read
-      "DescriptorInfo {descName = ProtoName {protobufName = FIName \".mesos.v1.scheduler.Call.Suppress\", haskellPrefix = [MName \"Mesos\",MName \"V1\",MName \"Scheduler\"], parentModule = [MName \"Protos\",MName \"Call\"], baseName = MName \"Suppress\"}, descFilePath = [\"Mesos\",\"V1\",\"Scheduler\",\"Protos\",\"Call\",\"Suppress.hs\"], isGroup = False, fields = fromList [FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.scheduler.Call.Suppress.roles\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Scheduler\"], parentModule' = [MName \"Protos\",MName \"Call\",MName \"Suppress\"], baseName' = FName \"roles\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 1}, wireTag = WireTag {getWireTag = 10}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = True, mightPack = False, typeCode = FieldType {getFieldType = 9}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing}], descOneofs = fromList [], keys = fromList [], extRanges = [], knownKeys = fromList [], storeUnknown = False, lazyFields = False, makeLenses = False, jsonInstances = True}"
+      "DescriptorInfo {descName = ProtoName {protobufName = FIName \".mesos.v1.scheduler.Call.Suppress\", haskellPrefix = [MName \"Mesos\",MName \"V1\",MName \"Scheduler\"], parentModule = [MName \"Protos\",MName \"Call\"], baseName = MName \"Suppress\"}, descFilePath = [\"Mesos\",\"V1\",\"Scheduler\",\"Protos\",\"Call\",\"Suppress.hs\"], isGroup = False, fields = fromList [FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.scheduler.Call.Suppress.roles\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Scheduler\"], parentModule' = [MName \"Protos\",MName \"Call\",MName \"Suppress\"], baseName' = FName \"roles\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 1}, wireTag = WireTag {getWireTag = 10}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = True, mightPack = False, typeCode = FieldType {getFieldType = 9}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing}], descOneofs = fromList [], keys = fromList [], extRanges = [], knownKeys = fromList [], storeUnknown = False, lazyFields = False, makeLenses = True, jsonInstances = True}"
 
 instance P'.TextType Suppress where
   tellT = P'.tellSubMessage
@@ -80,14 +84,14 @@ instance P'.TextType Suppress where
 instance P'.TextMsg Suppress where
   textPut msg
    = do
-       P'.tellT "roles" (roles msg)
+       P'.tellT "roles" (_roles msg)
   textGet
    = do
-       mods <- P'.sepEndBy (P'.choice [parse'roles]) P'.spaces
+       mods <- P'.sepEndBy (P'.choice [parse'_roles]) P'.spaces
        Prelude'.return (Prelude'.foldl (\ v f -> f v) P'.defaultValue mods)
     where
-        parse'roles
+        parse'_roles
          = P'.try
             (do
                v <- P'.getT "roles"
-               Prelude'.return (\ o -> o{roles = P'.append (roles o) v}))
+               Prelude'.return (\ o -> o{_roles = P'.append (_roles o) v}))

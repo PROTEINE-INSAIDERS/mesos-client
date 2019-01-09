@@ -1,21 +1,25 @@
-{-# LANGUAGE BangPatterns, DeriveDataTypeable, DeriveGeneric, FlexibleInstances, MultiParamTypeClasses, OverloadedStrings #-}
+{-# LANGUAGE TemplateHaskell, BangPatterns, DeriveDataTypeable, DeriveGeneric, FlexibleInstances, MultiParamTypeClasses,
+ OverloadedStrings #-}
 {-# OPTIONS_GHC  -fno-warn-unused-imports #-}
-module Mesos.V1.Protos.DiscoveryInfo (DiscoveryInfo(..)) where
+module Mesos.V1.Protos.DiscoveryInfo (DiscoveryInfo(..), visibility, name, environment, location, version, ports, labels) where
 import Prelude ((+), (/), (++), (.))
 import qualified Prelude as Prelude'
 import qualified Data.Typeable as Prelude'
 import qualified GHC.Generics as Prelude'
 import qualified Data.Data as Prelude'
 import qualified Text.ProtocolBuffers.Header as P'
+import qualified Control.Lens.TH
 import qualified Mesos.V1.Protos.DiscoveryInfo.Visibility as Protos.DiscoveryInfo (Visibility)
 import qualified Mesos.V1.Protos.Labels as Protos (Labels)
 import qualified Mesos.V1.Protos.Ports as Protos (Ports)
 
-data DiscoveryInfo = DiscoveryInfo{visibility :: !(Protos.DiscoveryInfo.Visibility), name :: !(P'.Maybe P'.Utf8),
-                                   environment :: !(P'.Maybe P'.Utf8), location :: !(P'.Maybe P'.Utf8),
-                                   version :: !(P'.Maybe P'.Utf8), ports :: !(P'.Maybe Protos.Ports),
-                                   labels :: !(P'.Maybe Protos.Labels)}
+data DiscoveryInfo = DiscoveryInfo{_visibility :: !(Protos.DiscoveryInfo.Visibility), _name :: !(P'.Maybe P'.Utf8),
+                                   _environment :: !(P'.Maybe P'.Utf8), _location :: !(P'.Maybe P'.Utf8),
+                                   _version :: !(P'.Maybe P'.Utf8), _ports :: !(P'.Maybe Protos.Ports),
+                                   _labels :: !(P'.Maybe Protos.Labels)}
                      deriving (Prelude'.Show, Prelude'.Eq, Prelude'.Ord, Prelude'.Typeable, Prelude'.Data, Prelude'.Generic)
+
+Control.Lens.TH.makeLenses ''DiscoveryInfo
 
 instance P'.ToJSON DiscoveryInfo where
   toJSON msg
@@ -40,8 +44,8 @@ instance P'.FromJSON DiscoveryInfo where
           ports <- P'.explicitParseFieldMaybe P'.parseJSON o "ports"
           labels <- P'.explicitParseFieldMaybe P'.parseJSON o "labels"
           Prelude'.return
-           P'.defaultValue{visibility = visibility, name = name, environment = environment, location = location, version = version,
-                           ports = ports, labels = labels})
+           P'.defaultValue{_visibility = visibility, _name = name, _environment = environment, _location = location,
+                           _version = version, _ports = ports, _labels = labels})
 
 instance P'.Mergeable DiscoveryInfo where
   mergeAppend (DiscoveryInfo x'1 x'2 x'3 x'4 x'5 x'6 x'7) (DiscoveryInfo y'1 y'2 y'3 y'4 y'5 y'6 y'7)
@@ -92,14 +96,14 @@ instance P'.Wire DiscoveryInfo where
     where
         update'Self wire'Tag old'Self
          = case wire'Tag of
-             8 -> Prelude'.fmap (\ !new'Field -> old'Self{visibility = new'Field}) (P'.wireGet 14)
-             18 -> Prelude'.fmap (\ !new'Field -> old'Self{name = Prelude'.Just new'Field}) (P'.wireGet 9)
-             26 -> Prelude'.fmap (\ !new'Field -> old'Self{environment = Prelude'.Just new'Field}) (P'.wireGet 9)
-             34 -> Prelude'.fmap (\ !new'Field -> old'Self{location = Prelude'.Just new'Field}) (P'.wireGet 9)
-             42 -> Prelude'.fmap (\ !new'Field -> old'Self{version = Prelude'.Just new'Field}) (P'.wireGet 9)
-             50 -> Prelude'.fmap (\ !new'Field -> old'Self{ports = P'.mergeAppend (ports old'Self) (Prelude'.Just new'Field)})
+             8 -> Prelude'.fmap (\ !new'Field -> old'Self{_visibility = new'Field}) (P'.wireGet 14)
+             18 -> Prelude'.fmap (\ !new'Field -> old'Self{_name = Prelude'.Just new'Field}) (P'.wireGet 9)
+             26 -> Prelude'.fmap (\ !new'Field -> old'Self{_environment = Prelude'.Just new'Field}) (P'.wireGet 9)
+             34 -> Prelude'.fmap (\ !new'Field -> old'Self{_location = Prelude'.Just new'Field}) (P'.wireGet 9)
+             42 -> Prelude'.fmap (\ !new'Field -> old'Self{_version = Prelude'.Just new'Field}) (P'.wireGet 9)
+             50 -> Prelude'.fmap (\ !new'Field -> old'Self{_ports = P'.mergeAppend (_ports old'Self) (Prelude'.Just new'Field)})
                     (P'.wireGet 11)
-             58 -> Prelude'.fmap (\ !new'Field -> old'Self{labels = P'.mergeAppend (labels old'Self) (Prelude'.Just new'Field)})
+             58 -> Prelude'.fmap (\ !new'Field -> old'Self{_labels = P'.mergeAppend (_labels old'Self) (Prelude'.Just new'Field)})
                     (P'.wireGet 11)
              _ -> let (field'Number, wire'Type) = P'.splitWireTag wire'Tag in P'.unknown field'Number wire'Type old'Self
 
@@ -112,7 +116,7 @@ instance P'.ReflectDescriptor DiscoveryInfo where
   getMessageInfo _ = P'.GetMessageInfo (P'.fromDistinctAscList [8]) (P'.fromDistinctAscList [8, 18, 26, 34, 42, 50, 58])
   reflectDescriptorInfo _
    = Prelude'.read
-      "DescriptorInfo {descName = ProtoName {protobufName = FIName \".mesos.v1.DiscoveryInfo\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"DiscoveryInfo\"}, descFilePath = [\"Mesos\",\"V1\",\"Protos\",\"DiscoveryInfo.hs\"], isGroup = False, fields = fromList [FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.DiscoveryInfo.visibility\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"DiscoveryInfo\"], baseName' = FName \"visibility\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 1}, wireTag = WireTag {getWireTag = 8}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = True, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 14}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.DiscoveryInfo.Visibility\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\",MName \"DiscoveryInfo\"], baseName = MName \"Visibility\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.DiscoveryInfo.name\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"DiscoveryInfo\"], baseName' = FName \"name\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 2}, wireTag = WireTag {getWireTag = 18}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 9}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.DiscoveryInfo.environment\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"DiscoveryInfo\"], baseName' = FName \"environment\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 3}, wireTag = WireTag {getWireTag = 26}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 9}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.DiscoveryInfo.location\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"DiscoveryInfo\"], baseName' = FName \"location\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 4}, wireTag = WireTag {getWireTag = 34}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 9}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.DiscoveryInfo.version\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"DiscoveryInfo\"], baseName' = FName \"version\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 5}, wireTag = WireTag {getWireTag = 42}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 9}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.DiscoveryInfo.ports\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"DiscoveryInfo\"], baseName' = FName \"ports\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 6}, wireTag = WireTag {getWireTag = 50}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.Ports\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"Ports\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.DiscoveryInfo.labels\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"DiscoveryInfo\"], baseName' = FName \"labels\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 7}, wireTag = WireTag {getWireTag = 58}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.Labels\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"Labels\"}), hsRawDefault = Nothing, hsDefault = Nothing}], descOneofs = fromList [], keys = fromList [], extRanges = [], knownKeys = fromList [], storeUnknown = False, lazyFields = False, makeLenses = False, jsonInstances = True}"
+      "DescriptorInfo {descName = ProtoName {protobufName = FIName \".mesos.v1.DiscoveryInfo\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"DiscoveryInfo\"}, descFilePath = [\"Mesos\",\"V1\",\"Protos\",\"DiscoveryInfo.hs\"], isGroup = False, fields = fromList [FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.DiscoveryInfo.visibility\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"DiscoveryInfo\"], baseName' = FName \"visibility\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 1}, wireTag = WireTag {getWireTag = 8}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = True, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 14}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.DiscoveryInfo.Visibility\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\",MName \"DiscoveryInfo\"], baseName = MName \"Visibility\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.DiscoveryInfo.name\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"DiscoveryInfo\"], baseName' = FName \"name\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 2}, wireTag = WireTag {getWireTag = 18}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 9}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.DiscoveryInfo.environment\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"DiscoveryInfo\"], baseName' = FName \"environment\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 3}, wireTag = WireTag {getWireTag = 26}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 9}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.DiscoveryInfo.location\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"DiscoveryInfo\"], baseName' = FName \"location\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 4}, wireTag = WireTag {getWireTag = 34}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 9}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.DiscoveryInfo.version\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"DiscoveryInfo\"], baseName' = FName \"version\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 5}, wireTag = WireTag {getWireTag = 42}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 9}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.DiscoveryInfo.ports\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"DiscoveryInfo\"], baseName' = FName \"ports\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 6}, wireTag = WireTag {getWireTag = 50}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.Ports\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"Ports\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.DiscoveryInfo.labels\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"DiscoveryInfo\"], baseName' = FName \"labels\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 7}, wireTag = WireTag {getWireTag = 58}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.Labels\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"Labels\"}), hsRawDefault = Nothing, hsDefault = Nothing}], descOneofs = fromList [], keys = fromList [], extRanges = [], knownKeys = fromList [], storeUnknown = False, lazyFields = False, makeLenses = True, jsonInstances = True}"
 
 instance P'.TextType DiscoveryInfo where
   tellT = P'.tellSubMessage
@@ -121,53 +125,54 @@ instance P'.TextType DiscoveryInfo where
 instance P'.TextMsg DiscoveryInfo where
   textPut msg
    = do
-       P'.tellT "visibility" (visibility msg)
-       P'.tellT "name" (name msg)
-       P'.tellT "environment" (environment msg)
-       P'.tellT "location" (location msg)
-       P'.tellT "version" (version msg)
-       P'.tellT "ports" (ports msg)
-       P'.tellT "labels" (labels msg)
+       P'.tellT "visibility" (_visibility msg)
+       P'.tellT "name" (_name msg)
+       P'.tellT "environment" (_environment msg)
+       P'.tellT "location" (_location msg)
+       P'.tellT "version" (_version msg)
+       P'.tellT "ports" (_ports msg)
+       P'.tellT "labels" (_labels msg)
   textGet
    = do
        mods <- P'.sepEndBy
                 (P'.choice
-                  [parse'visibility, parse'name, parse'environment, parse'location, parse'version, parse'ports, parse'labels])
+                  [parse'_visibility, parse'_name, parse'_environment, parse'_location, parse'_version, parse'_ports,
+                   parse'_labels])
                 P'.spaces
        Prelude'.return (Prelude'.foldl (\ v f -> f v) P'.defaultValue mods)
     where
-        parse'visibility
+        parse'_visibility
          = P'.try
             (do
                v <- P'.getT "visibility"
-               Prelude'.return (\ o -> o{visibility = v}))
-        parse'name
+               Prelude'.return (\ o -> o{_visibility = v}))
+        parse'_name
          = P'.try
             (do
                v <- P'.getT "name"
-               Prelude'.return (\ o -> o{name = v}))
-        parse'environment
+               Prelude'.return (\ o -> o{_name = v}))
+        parse'_environment
          = P'.try
             (do
                v <- P'.getT "environment"
-               Prelude'.return (\ o -> o{environment = v}))
-        parse'location
+               Prelude'.return (\ o -> o{_environment = v}))
+        parse'_location
          = P'.try
             (do
                v <- P'.getT "location"
-               Prelude'.return (\ o -> o{location = v}))
-        parse'version
+               Prelude'.return (\ o -> o{_location = v}))
+        parse'_version
          = P'.try
             (do
                v <- P'.getT "version"
-               Prelude'.return (\ o -> o{version = v}))
-        parse'ports
+               Prelude'.return (\ o -> o{_version = v}))
+        parse'_ports
          = P'.try
             (do
                v <- P'.getT "ports"
-               Prelude'.return (\ o -> o{ports = v}))
-        parse'labels
+               Prelude'.return (\ o -> o{_ports = v}))
+        parse'_labels
          = P'.try
             (do
                v <- P'.getT "labels"
-               Prelude'.return (\ o -> o{labels = v}))
+               Prelude'.return (\ o -> o{_labels = v}))

@@ -1,15 +1,19 @@
-{-# LANGUAGE BangPatterns, DeriveDataTypeable, DeriveGeneric, FlexibleInstances, MultiParamTypeClasses, OverloadedStrings #-}
+{-# LANGUAGE TemplateHaskell, BangPatterns, DeriveDataTypeable, DeriveGeneric, FlexibleInstances, MultiParamTypeClasses,
+ OverloadedStrings #-}
 {-# OPTIONS_GHC  -fno-warn-unused-imports #-}
-module Mesos.V1.Master.Protos.Response.GetLoggingLevel (GetLoggingLevel(..)) where
+module Mesos.V1.Master.Protos.Response.GetLoggingLevel (GetLoggingLevel(..), level) where
 import Prelude ((+), (/), (++), (.))
 import qualified Prelude as Prelude'
 import qualified Data.Typeable as Prelude'
 import qualified GHC.Generics as Prelude'
 import qualified Data.Data as Prelude'
 import qualified Text.ProtocolBuffers.Header as P'
+import qualified Control.Lens.TH
 
-data GetLoggingLevel = GetLoggingLevel{level :: !(P'.Word32)}
+data GetLoggingLevel = GetLoggingLevel{_level :: !(P'.Word32)}
                        deriving (Prelude'.Show, Prelude'.Eq, Prelude'.Ord, Prelude'.Typeable, Prelude'.Data, Prelude'.Generic)
+
+Control.Lens.TH.makeLenses ''GetLoggingLevel
 
 instance P'.ToJSON GetLoggingLevel where
   toJSON msg = P'.objectNoEmpty ([("level", P'.toJSON (level msg))] ++ Prelude'.concat [])
@@ -20,7 +24,7 @@ instance P'.FromJSON GetLoggingLevel where
       (\ o ->
         do
           level <- P'.explicitParseField P'.parseJSON o "level"
-          Prelude'.return P'.defaultValue{level = level})
+          Prelude'.return P'.defaultValue{_level = level})
 
 instance P'.Mergeable GetLoggingLevel where
   mergeAppend (GetLoggingLevel x'1) (GetLoggingLevel y'1) = GetLoggingLevel (P'.mergeAppend x'1 y'1)
@@ -58,7 +62,7 @@ instance P'.Wire GetLoggingLevel where
     where
         update'Self wire'Tag old'Self
          = case wire'Tag of
-             8 -> Prelude'.fmap (\ !new'Field -> old'Self{level = new'Field}) (P'.wireGet 13)
+             8 -> Prelude'.fmap (\ !new'Field -> old'Self{_level = new'Field}) (P'.wireGet 13)
              _ -> let (field'Number, wire'Type) = P'.splitWireTag wire'Tag in P'.unknown field'Number wire'Type old'Self
 
 instance P'.MessageAPI msg' (msg' -> GetLoggingLevel) GetLoggingLevel where
@@ -70,7 +74,7 @@ instance P'.ReflectDescriptor GetLoggingLevel where
   getMessageInfo _ = P'.GetMessageInfo (P'.fromDistinctAscList [8]) (P'.fromDistinctAscList [8])
   reflectDescriptorInfo _
    = Prelude'.read
-      "DescriptorInfo {descName = ProtoName {protobufName = FIName \".mesos.v1.master.Response.GetLoggingLevel\", haskellPrefix = [MName \"Mesos\",MName \"V1\",MName \"Master\"], parentModule = [MName \"Protos\",MName \"Response\"], baseName = MName \"GetLoggingLevel\"}, descFilePath = [\"Mesos\",\"V1\",\"Master\",\"Protos\",\"Response\",\"GetLoggingLevel.hs\"], isGroup = False, fields = fromList [FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.master.Response.GetLoggingLevel.level\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Master\"], parentModule' = [MName \"Protos\",MName \"Response\",MName \"GetLoggingLevel\"], baseName' = FName \"level\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 1}, wireTag = WireTag {getWireTag = 8}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = True, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 13}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing}], descOneofs = fromList [], keys = fromList [], extRanges = [], knownKeys = fromList [], storeUnknown = False, lazyFields = False, makeLenses = False, jsonInstances = True}"
+      "DescriptorInfo {descName = ProtoName {protobufName = FIName \".mesos.v1.master.Response.GetLoggingLevel\", haskellPrefix = [MName \"Mesos\",MName \"V1\",MName \"Master\"], parentModule = [MName \"Protos\",MName \"Response\"], baseName = MName \"GetLoggingLevel\"}, descFilePath = [\"Mesos\",\"V1\",\"Master\",\"Protos\",\"Response\",\"GetLoggingLevel.hs\"], isGroup = False, fields = fromList [FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.master.Response.GetLoggingLevel.level\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Master\"], parentModule' = [MName \"Protos\",MName \"Response\",MName \"GetLoggingLevel\"], baseName' = FName \"level\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 1}, wireTag = WireTag {getWireTag = 8}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = True, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 13}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing}], descOneofs = fromList [], keys = fromList [], extRanges = [], knownKeys = fromList [], storeUnknown = False, lazyFields = False, makeLenses = True, jsonInstances = True}"
 
 instance P'.TextType GetLoggingLevel where
   tellT = P'.tellSubMessage
@@ -79,14 +83,14 @@ instance P'.TextType GetLoggingLevel where
 instance P'.TextMsg GetLoggingLevel where
   textPut msg
    = do
-       P'.tellT "level" (level msg)
+       P'.tellT "level" (_level msg)
   textGet
    = do
-       mods <- P'.sepEndBy (P'.choice [parse'level]) P'.spaces
+       mods <- P'.sepEndBy (P'.choice [parse'_level]) P'.spaces
        Prelude'.return (Prelude'.foldl (\ v f -> f v) P'.defaultValue mods)
     where
-        parse'level
+        parse'_level
          = P'.try
             (do
                v <- P'.getT "level"
-               Prelude'.return (\ o -> o{level = v}))
+               Prelude'.return (\ o -> o{_level = v}))

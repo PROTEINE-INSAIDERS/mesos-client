@@ -1,17 +1,22 @@
-{-# LANGUAGE BangPatterns, DeriveDataTypeable, DeriveGeneric, FlexibleInstances, MultiParamTypeClasses, OverloadedStrings #-}
+{-# LANGUAGE TemplateHaskell, BangPatterns, DeriveDataTypeable, DeriveGeneric, FlexibleInstances, MultiParamTypeClasses,
+ OverloadedStrings #-}
 {-# OPTIONS_GHC  -fno-warn-unused-imports #-}
-module Mesos.V1.Scheduler.Protos.Call.AcceptInverseOffers (AcceptInverseOffers(..)) where
+module Mesos.V1.Scheduler.Protos.Call.AcceptInverseOffers (AcceptInverseOffers(..), inverse_offer_ids, filters) where
 import Prelude ((+), (/), (++), (.))
 import qualified Prelude as Prelude'
 import qualified Data.Typeable as Prelude'
 import qualified GHC.Generics as Prelude'
 import qualified Data.Data as Prelude'
 import qualified Text.ProtocolBuffers.Header as P'
+import qualified Control.Lens.TH
 import qualified Mesos.V1.Protos.Filters as Protos (Filters)
 import qualified Mesos.V1.Protos.OfferID as Protos (OfferID)
 
-data AcceptInverseOffers = AcceptInverseOffers{inverse_offer_ids :: !(P'.Seq Protos.OfferID), filters :: !(P'.Maybe Protos.Filters)}
+data AcceptInverseOffers = AcceptInverseOffers{_inverse_offer_ids :: !(P'.Seq Protos.OfferID),
+                                               _filters :: !(P'.Maybe Protos.Filters)}
                            deriving (Prelude'.Show, Prelude'.Eq, Prelude'.Ord, Prelude'.Typeable, Prelude'.Data, Prelude'.Generic)
+
+Control.Lens.TH.makeLenses ''AcceptInverseOffers
 
 instance P'.ToJSON AcceptInverseOffers where
   toJSON msg
@@ -28,7 +33,7 @@ instance P'.FromJSON AcceptInverseOffers where
           inverse_offer_ids <- Prelude'.fmap (Prelude'.maybe Prelude'.mempty Prelude'.id)
                                 (P'.explicitParseFieldMaybe (Prelude'.mapM P'.parseJSON P'.<=< P'.parseJSON) o "inverse_offer_ids")
           filters <- P'.explicitParseFieldMaybe P'.parseJSON o "filters"
-          Prelude'.return P'.defaultValue{inverse_offer_ids = inverse_offer_ids, filters = filters})
+          Prelude'.return P'.defaultValue{_inverse_offer_ids = inverse_offer_ids, _filters = filters})
 
 instance P'.Mergeable AcceptInverseOffers where
   mergeAppend (AcceptInverseOffers x'1 x'2) (AcceptInverseOffers y'1 y'2)
@@ -67,9 +72,9 @@ instance P'.Wire AcceptInverseOffers where
     where
         update'Self wire'Tag old'Self
          = case wire'Tag of
-             10 -> Prelude'.fmap (\ !new'Field -> old'Self{inverse_offer_ids = P'.append (inverse_offer_ids old'Self) new'Field})
+             10 -> Prelude'.fmap (\ !new'Field -> old'Self{_inverse_offer_ids = P'.append (_inverse_offer_ids old'Self) new'Field})
                     (P'.wireGet 11)
-             18 -> Prelude'.fmap (\ !new'Field -> old'Self{filters = P'.mergeAppend (filters old'Self) (Prelude'.Just new'Field)})
+             18 -> Prelude'.fmap (\ !new'Field -> old'Self{_filters = P'.mergeAppend (_filters old'Self) (Prelude'.Just new'Field)})
                     (P'.wireGet 11)
              _ -> let (field'Number, wire'Type) = P'.splitWireTag wire'Tag in P'.unknown field'Number wire'Type old'Self
 
@@ -82,7 +87,7 @@ instance P'.ReflectDescriptor AcceptInverseOffers where
   getMessageInfo _ = P'.GetMessageInfo (P'.fromDistinctAscList []) (P'.fromDistinctAscList [10, 18])
   reflectDescriptorInfo _
    = Prelude'.read
-      "DescriptorInfo {descName = ProtoName {protobufName = FIName \".mesos.v1.scheduler.Call.AcceptInverseOffers\", haskellPrefix = [MName \"Mesos\",MName \"V1\",MName \"Scheduler\"], parentModule = [MName \"Protos\",MName \"Call\"], baseName = MName \"AcceptInverseOffers\"}, descFilePath = [\"Mesos\",\"V1\",\"Scheduler\",\"Protos\",\"Call\",\"AcceptInverseOffers.hs\"], isGroup = False, fields = fromList [FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.scheduler.Call.AcceptInverseOffers.inverse_offer_ids\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Scheduler\"], parentModule' = [MName \"Protos\",MName \"Call\",MName \"AcceptInverseOffers\"], baseName' = FName \"inverse_offer_ids\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 1}, wireTag = WireTag {getWireTag = 10}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = True, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.OfferID\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"OfferID\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.scheduler.Call.AcceptInverseOffers.filters\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Scheduler\"], parentModule' = [MName \"Protos\",MName \"Call\",MName \"AcceptInverseOffers\"], baseName' = FName \"filters\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 2}, wireTag = WireTag {getWireTag = 18}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.Filters\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"Filters\"}), hsRawDefault = Nothing, hsDefault = Nothing}], descOneofs = fromList [], keys = fromList [], extRanges = [], knownKeys = fromList [], storeUnknown = False, lazyFields = False, makeLenses = False, jsonInstances = True}"
+      "DescriptorInfo {descName = ProtoName {protobufName = FIName \".mesos.v1.scheduler.Call.AcceptInverseOffers\", haskellPrefix = [MName \"Mesos\",MName \"V1\",MName \"Scheduler\"], parentModule = [MName \"Protos\",MName \"Call\"], baseName = MName \"AcceptInverseOffers\"}, descFilePath = [\"Mesos\",\"V1\",\"Scheduler\",\"Protos\",\"Call\",\"AcceptInverseOffers.hs\"], isGroup = False, fields = fromList [FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.scheduler.Call.AcceptInverseOffers.inverse_offer_ids\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Scheduler\"], parentModule' = [MName \"Protos\",MName \"Call\",MName \"AcceptInverseOffers\"], baseName' = FName \"inverse_offer_ids\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 1}, wireTag = WireTag {getWireTag = 10}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = True, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.OfferID\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"OfferID\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.scheduler.Call.AcceptInverseOffers.filters\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Scheduler\"], parentModule' = [MName \"Protos\",MName \"Call\",MName \"AcceptInverseOffers\"], baseName' = FName \"filters\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 2}, wireTag = WireTag {getWireTag = 18}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.Filters\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"Filters\"}), hsRawDefault = Nothing, hsDefault = Nothing}], descOneofs = fromList [], keys = fromList [], extRanges = [], knownKeys = fromList [], storeUnknown = False, lazyFields = False, makeLenses = True, jsonInstances = True}"
 
 instance P'.TextType AcceptInverseOffers where
   tellT = P'.tellSubMessage
@@ -91,20 +96,20 @@ instance P'.TextType AcceptInverseOffers where
 instance P'.TextMsg AcceptInverseOffers where
   textPut msg
    = do
-       P'.tellT "inverse_offer_ids" (inverse_offer_ids msg)
-       P'.tellT "filters" (filters msg)
+       P'.tellT "inverse_offer_ids" (_inverse_offer_ids msg)
+       P'.tellT "filters" (_filters msg)
   textGet
    = do
-       mods <- P'.sepEndBy (P'.choice [parse'inverse_offer_ids, parse'filters]) P'.spaces
+       mods <- P'.sepEndBy (P'.choice [parse'_inverse_offer_ids, parse'_filters]) P'.spaces
        Prelude'.return (Prelude'.foldl (\ v f -> f v) P'.defaultValue mods)
     where
-        parse'inverse_offer_ids
+        parse'_inverse_offer_ids
          = P'.try
             (do
                v <- P'.getT "inverse_offer_ids"
-               Prelude'.return (\ o -> o{inverse_offer_ids = P'.append (inverse_offer_ids o) v}))
-        parse'filters
+               Prelude'.return (\ o -> o{_inverse_offer_ids = P'.append (_inverse_offer_ids o) v}))
+        parse'_filters
          = P'.try
             (do
                v <- P'.getT "filters"
-               Prelude'.return (\ o -> o{filters = v}))
+               Prelude'.return (\ o -> o{_filters = v}))

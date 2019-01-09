@@ -1,16 +1,20 @@
-{-# LANGUAGE BangPatterns, DeriveDataTypeable, DeriveGeneric, FlexibleInstances, MultiParamTypeClasses, OverloadedStrings #-}
+{-# LANGUAGE TemplateHaskell, BangPatterns, DeriveDataTypeable, DeriveGeneric, FlexibleInstances, MultiParamTypeClasses,
+ OverloadedStrings #-}
 {-# OPTIONS_GHC  -fno-warn-unused-imports #-}
-module Mesos.V1.Master.Protos.Response.ListFiles (ListFiles(..)) where
+module Mesos.V1.Master.Protos.Response.ListFiles (ListFiles(..), file_infos) where
 import Prelude ((+), (/), (++), (.))
 import qualified Prelude as Prelude'
 import qualified Data.Typeable as Prelude'
 import qualified GHC.Generics as Prelude'
 import qualified Data.Data as Prelude'
 import qualified Text.ProtocolBuffers.Header as P'
+import qualified Control.Lens.TH
 import qualified Mesos.V1.Protos.FileInfo as Protos (FileInfo)
 
-data ListFiles = ListFiles{file_infos :: !(P'.Seq Protos.FileInfo)}
+data ListFiles = ListFiles{_file_infos :: !(P'.Seq Protos.FileInfo)}
                  deriving (Prelude'.Show, Prelude'.Eq, Prelude'.Ord, Prelude'.Typeable, Prelude'.Data, Prelude'.Generic)
+
+Control.Lens.TH.makeLenses ''ListFiles
 
 instance P'.ToJSON ListFiles where
   toJSON msg = P'.objectNoEmpty ([("file_infos", P'.toJSON (Prelude'.fmap P'.toJSON (file_infos msg)))] ++ Prelude'.concat [])
@@ -22,7 +26,7 @@ instance P'.FromJSON ListFiles where
         do
           file_infos <- Prelude'.fmap (Prelude'.maybe Prelude'.mempty Prelude'.id)
                          (P'.explicitParseFieldMaybe (Prelude'.mapM P'.parseJSON P'.<=< P'.parseJSON) o "file_infos")
-          Prelude'.return P'.defaultValue{file_infos = file_infos})
+          Prelude'.return P'.defaultValue{_file_infos = file_infos})
 
 instance P'.Mergeable ListFiles where
   mergeAppend (ListFiles x'1) (ListFiles y'1) = ListFiles (P'.mergeAppend x'1 y'1)
@@ -60,7 +64,8 @@ instance P'.Wire ListFiles where
     where
         update'Self wire'Tag old'Self
          = case wire'Tag of
-             10 -> Prelude'.fmap (\ !new'Field -> old'Self{file_infos = P'.append (file_infos old'Self) new'Field}) (P'.wireGet 11)
+             10 -> Prelude'.fmap (\ !new'Field -> old'Self{_file_infos = P'.append (_file_infos old'Self) new'Field})
+                    (P'.wireGet 11)
              _ -> let (field'Number, wire'Type) = P'.splitWireTag wire'Tag in P'.unknown field'Number wire'Type old'Self
 
 instance P'.MessageAPI msg' (msg' -> ListFiles) ListFiles where
@@ -72,7 +77,7 @@ instance P'.ReflectDescriptor ListFiles where
   getMessageInfo _ = P'.GetMessageInfo (P'.fromDistinctAscList []) (P'.fromDistinctAscList [10])
   reflectDescriptorInfo _
    = Prelude'.read
-      "DescriptorInfo {descName = ProtoName {protobufName = FIName \".mesos.v1.master.Response.ListFiles\", haskellPrefix = [MName \"Mesos\",MName \"V1\",MName \"Master\"], parentModule = [MName \"Protos\",MName \"Response\"], baseName = MName \"ListFiles\"}, descFilePath = [\"Mesos\",\"V1\",\"Master\",\"Protos\",\"Response\",\"ListFiles.hs\"], isGroup = False, fields = fromList [FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.master.Response.ListFiles.file_infos\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Master\"], parentModule' = [MName \"Protos\",MName \"Response\",MName \"ListFiles\"], baseName' = FName \"file_infos\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 1}, wireTag = WireTag {getWireTag = 10}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = True, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.FileInfo\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"FileInfo\"}), hsRawDefault = Nothing, hsDefault = Nothing}], descOneofs = fromList [], keys = fromList [], extRanges = [], knownKeys = fromList [], storeUnknown = False, lazyFields = False, makeLenses = False, jsonInstances = True}"
+      "DescriptorInfo {descName = ProtoName {protobufName = FIName \".mesos.v1.master.Response.ListFiles\", haskellPrefix = [MName \"Mesos\",MName \"V1\",MName \"Master\"], parentModule = [MName \"Protos\",MName \"Response\"], baseName = MName \"ListFiles\"}, descFilePath = [\"Mesos\",\"V1\",\"Master\",\"Protos\",\"Response\",\"ListFiles.hs\"], isGroup = False, fields = fromList [FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.master.Response.ListFiles.file_infos\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Master\"], parentModule' = [MName \"Protos\",MName \"Response\",MName \"ListFiles\"], baseName' = FName \"file_infos\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 1}, wireTag = WireTag {getWireTag = 10}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = True, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.FileInfo\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"FileInfo\"}), hsRawDefault = Nothing, hsDefault = Nothing}], descOneofs = fromList [], keys = fromList [], extRanges = [], knownKeys = fromList [], storeUnknown = False, lazyFields = False, makeLenses = True, jsonInstances = True}"
 
 instance P'.TextType ListFiles where
   tellT = P'.tellSubMessage
@@ -81,14 +86,14 @@ instance P'.TextType ListFiles where
 instance P'.TextMsg ListFiles where
   textPut msg
    = do
-       P'.tellT "file_infos" (file_infos msg)
+       P'.tellT "file_infos" (_file_infos msg)
   textGet
    = do
-       mods <- P'.sepEndBy (P'.choice [parse'file_infos]) P'.spaces
+       mods <- P'.sepEndBy (P'.choice [parse'_file_infos]) P'.spaces
        Prelude'.return (Prelude'.foldl (\ v f -> f v) P'.defaultValue mods)
     where
-        parse'file_infos
+        parse'_file_infos
          = P'.try
             (do
                v <- P'.getT "file_infos"
-               Prelude'.return (\ o -> o{file_infos = P'.append (file_infos o) v}))
+               Prelude'.return (\ o -> o{_file_infos = P'.append (_file_infos o) v}))

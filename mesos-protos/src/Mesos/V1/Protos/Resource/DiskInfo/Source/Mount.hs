@@ -1,15 +1,19 @@
-{-# LANGUAGE BangPatterns, DeriveDataTypeable, DeriveGeneric, FlexibleInstances, MultiParamTypeClasses, OverloadedStrings #-}
+{-# LANGUAGE TemplateHaskell, BangPatterns, DeriveDataTypeable, DeriveGeneric, FlexibleInstances, MultiParamTypeClasses,
+ OverloadedStrings #-}
 {-# OPTIONS_GHC  -fno-warn-unused-imports #-}
-module Mesos.V1.Protos.Resource.DiskInfo.Source.Mount (Mount(..)) where
+module Mesos.V1.Protos.Resource.DiskInfo.Source.Mount (Mount(..), root) where
 import Prelude ((+), (/), (++), (.))
 import qualified Prelude as Prelude'
 import qualified Data.Typeable as Prelude'
 import qualified GHC.Generics as Prelude'
 import qualified Data.Data as Prelude'
 import qualified Text.ProtocolBuffers.Header as P'
+import qualified Control.Lens.TH
 
-data Mount = Mount{root :: !(P'.Maybe P'.Utf8)}
+data Mount = Mount{_root :: !(P'.Maybe P'.Utf8)}
              deriving (Prelude'.Show, Prelude'.Eq, Prelude'.Ord, Prelude'.Typeable, Prelude'.Data, Prelude'.Generic)
+
+Control.Lens.TH.makeLenses ''Mount
 
 instance P'.ToJSON Mount where
   toJSON msg = P'.objectNoEmpty ([("root", P'.toJSON (Prelude'.fmap P'.toJSON (root msg)))] ++ Prelude'.concat [])
@@ -20,7 +24,7 @@ instance P'.FromJSON Mount where
       (\ o ->
         do
           root <- P'.explicitParseFieldMaybe P'.parseJSON o "root"
-          Prelude'.return P'.defaultValue{root = root})
+          Prelude'.return P'.defaultValue{_root = root})
 
 instance P'.Mergeable Mount where
   mergeAppend (Mount x'1) (Mount y'1) = Mount (P'.mergeAppend x'1 y'1)
@@ -58,7 +62,7 @@ instance P'.Wire Mount where
     where
         update'Self wire'Tag old'Self
          = case wire'Tag of
-             10 -> Prelude'.fmap (\ !new'Field -> old'Self{root = Prelude'.Just new'Field}) (P'.wireGet 9)
+             10 -> Prelude'.fmap (\ !new'Field -> old'Self{_root = Prelude'.Just new'Field}) (P'.wireGet 9)
              _ -> let (field'Number, wire'Type) = P'.splitWireTag wire'Tag in P'.unknown field'Number wire'Type old'Self
 
 instance P'.MessageAPI msg' (msg' -> Mount) Mount where
@@ -70,7 +74,7 @@ instance P'.ReflectDescriptor Mount where
   getMessageInfo _ = P'.GetMessageInfo (P'.fromDistinctAscList []) (P'.fromDistinctAscList [10])
   reflectDescriptorInfo _
    = Prelude'.read
-      "DescriptorInfo {descName = ProtoName {protobufName = FIName \".mesos.v1.Resource.DiskInfo.Source.Mount\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\",MName \"Resource\",MName \"DiskInfo\",MName \"Source\"], baseName = MName \"Mount\"}, descFilePath = [\"Mesos\",\"V1\",\"Protos\",\"Resource\",\"DiskInfo\",\"Source\",\"Mount.hs\"], isGroup = False, fields = fromList [FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Resource.DiskInfo.Source.Mount.root\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Resource\",MName \"DiskInfo\",MName \"Source\",MName \"Mount\"], baseName' = FName \"root\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 1}, wireTag = WireTag {getWireTag = 10}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 9}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing}], descOneofs = fromList [], keys = fromList [], extRanges = [], knownKeys = fromList [], storeUnknown = False, lazyFields = False, makeLenses = False, jsonInstances = True}"
+      "DescriptorInfo {descName = ProtoName {protobufName = FIName \".mesos.v1.Resource.DiskInfo.Source.Mount\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\",MName \"Resource\",MName \"DiskInfo\",MName \"Source\"], baseName = MName \"Mount\"}, descFilePath = [\"Mesos\",\"V1\",\"Protos\",\"Resource\",\"DiskInfo\",\"Source\",\"Mount.hs\"], isGroup = False, fields = fromList [FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Resource.DiskInfo.Source.Mount.root\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Resource\",MName \"DiskInfo\",MName \"Source\",MName \"Mount\"], baseName' = FName \"root\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 1}, wireTag = WireTag {getWireTag = 10}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 9}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing}], descOneofs = fromList [], keys = fromList [], extRanges = [], knownKeys = fromList [], storeUnknown = False, lazyFields = False, makeLenses = True, jsonInstances = True}"
 
 instance P'.TextType Mount where
   tellT = P'.tellSubMessage
@@ -79,14 +83,14 @@ instance P'.TextType Mount where
 instance P'.TextMsg Mount where
   textPut msg
    = do
-       P'.tellT "root" (root msg)
+       P'.tellT "root" (_root msg)
   textGet
    = do
-       mods <- P'.sepEndBy (P'.choice [parse'root]) P'.spaces
+       mods <- P'.sepEndBy (P'.choice [parse'_root]) P'.spaces
        Prelude'.return (Prelude'.foldl (\ v f -> f v) P'.defaultValue mods)
     where
-        parse'root
+        parse'_root
          = P'.try
             (do
                v <- P'.getT "root"
-               Prelude'.return (\ o -> o{root = v}))
+               Prelude'.return (\ o -> o{_root = v}))

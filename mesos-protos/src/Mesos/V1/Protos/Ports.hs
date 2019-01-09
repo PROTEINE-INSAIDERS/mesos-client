@@ -1,16 +1,20 @@
-{-# LANGUAGE BangPatterns, DeriveDataTypeable, DeriveGeneric, FlexibleInstances, MultiParamTypeClasses, OverloadedStrings #-}
+{-# LANGUAGE TemplateHaskell, BangPatterns, DeriveDataTypeable, DeriveGeneric, FlexibleInstances, MultiParamTypeClasses,
+ OverloadedStrings #-}
 {-# OPTIONS_GHC  -fno-warn-unused-imports #-}
-module Mesos.V1.Protos.Ports (Ports(..)) where
+module Mesos.V1.Protos.Ports (Ports(..), ports) where
 import Prelude ((+), (/), (++), (.))
 import qualified Prelude as Prelude'
 import qualified Data.Typeable as Prelude'
 import qualified GHC.Generics as Prelude'
 import qualified Data.Data as Prelude'
 import qualified Text.ProtocolBuffers.Header as P'
+import qualified Control.Lens.TH
 import qualified Mesos.V1.Protos.Port as Protos (Port)
 
-data Ports = Ports{ports :: !(P'.Seq Protos.Port)}
+data Ports = Ports{_ports :: !(P'.Seq Protos.Port)}
              deriving (Prelude'.Show, Prelude'.Eq, Prelude'.Ord, Prelude'.Typeable, Prelude'.Data, Prelude'.Generic)
+
+Control.Lens.TH.makeLenses ''Ports
 
 instance P'.ToJSON Ports where
   toJSON msg = P'.objectNoEmpty ([("ports", P'.toJSON (Prelude'.fmap P'.toJSON (ports msg)))] ++ Prelude'.concat [])
@@ -22,7 +26,7 @@ instance P'.FromJSON Ports where
         do
           ports <- Prelude'.fmap (Prelude'.maybe Prelude'.mempty Prelude'.id)
                     (P'.explicitParseFieldMaybe (Prelude'.mapM P'.parseJSON P'.<=< P'.parseJSON) o "ports")
-          Prelude'.return P'.defaultValue{ports = ports})
+          Prelude'.return P'.defaultValue{_ports = ports})
 
 instance P'.Mergeable Ports where
   mergeAppend (Ports x'1) (Ports y'1) = Ports (P'.mergeAppend x'1 y'1)
@@ -60,7 +64,7 @@ instance P'.Wire Ports where
     where
         update'Self wire'Tag old'Self
          = case wire'Tag of
-             10 -> Prelude'.fmap (\ !new'Field -> old'Self{ports = P'.append (ports old'Self) new'Field}) (P'.wireGet 11)
+             10 -> Prelude'.fmap (\ !new'Field -> old'Self{_ports = P'.append (_ports old'Self) new'Field}) (P'.wireGet 11)
              _ -> let (field'Number, wire'Type) = P'.splitWireTag wire'Tag in P'.unknown field'Number wire'Type old'Self
 
 instance P'.MessageAPI msg' (msg' -> Ports) Ports where
@@ -72,7 +76,7 @@ instance P'.ReflectDescriptor Ports where
   getMessageInfo _ = P'.GetMessageInfo (P'.fromDistinctAscList []) (P'.fromDistinctAscList [10])
   reflectDescriptorInfo _
    = Prelude'.read
-      "DescriptorInfo {descName = ProtoName {protobufName = FIName \".mesos.v1.Ports\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"Ports\"}, descFilePath = [\"Mesos\",\"V1\",\"Protos\",\"Ports.hs\"], isGroup = False, fields = fromList [FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Ports.ports\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Ports\"], baseName' = FName \"ports\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 1}, wireTag = WireTag {getWireTag = 10}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = True, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.Port\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"Port\"}), hsRawDefault = Nothing, hsDefault = Nothing}], descOneofs = fromList [], keys = fromList [], extRanges = [], knownKeys = fromList [], storeUnknown = False, lazyFields = False, makeLenses = False, jsonInstances = True}"
+      "DescriptorInfo {descName = ProtoName {protobufName = FIName \".mesos.v1.Ports\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"Ports\"}, descFilePath = [\"Mesos\",\"V1\",\"Protos\",\"Ports.hs\"], isGroup = False, fields = fromList [FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Ports.ports\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Ports\"], baseName' = FName \"ports\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 1}, wireTag = WireTag {getWireTag = 10}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = True, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.Port\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"Port\"}), hsRawDefault = Nothing, hsDefault = Nothing}], descOneofs = fromList [], keys = fromList [], extRanges = [], knownKeys = fromList [], storeUnknown = False, lazyFields = False, makeLenses = True, jsonInstances = True}"
 
 instance P'.TextType Ports where
   tellT = P'.tellSubMessage
@@ -81,14 +85,14 @@ instance P'.TextType Ports where
 instance P'.TextMsg Ports where
   textPut msg
    = do
-       P'.tellT "ports" (ports msg)
+       P'.tellT "ports" (_ports msg)
   textGet
    = do
-       mods <- P'.sepEndBy (P'.choice [parse'ports]) P'.spaces
+       mods <- P'.sepEndBy (P'.choice [parse'_ports]) P'.spaces
        Prelude'.return (Prelude'.foldl (\ v f -> f v) P'.defaultValue mods)
     where
-        parse'ports
+        parse'_ports
          = P'.try
             (do
                v <- P'.getT "ports"
-               Prelude'.return (\ o -> o{ports = P'.append (ports o) v}))
+               Prelude'.return (\ o -> o{_ports = P'.append (_ports o) v}))

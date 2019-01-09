@@ -1,12 +1,17 @@
-{-# LANGUAGE BangPatterns, DeriveDataTypeable, DeriveGeneric, FlexibleInstances, MultiParamTypeClasses, OverloadedStrings #-}
+{-# LANGUAGE TemplateHaskell, BangPatterns, DeriveDataTypeable, DeriveGeneric, FlexibleInstances, MultiParamTypeClasses,
+ OverloadedStrings #-}
 {-# OPTIONS_GHC  -fno-warn-unused-imports #-}
-module Mesos.V1.Scheduler.Protos.Call (Call(..)) where
+module Mesos.V1.Scheduler.Protos.Call
+       (Call(..), framework_id, type', subscribe, accept, decline, accept_inverse_offers, decline_inverse_offers, revive, kill,
+        shutdown, acknowledge, acknowledge_operation_status, reconcile, reconcile_operations, message, request, suppress)
+       where
 import Prelude ((+), (/), (++), (.))
 import qualified Prelude as Prelude'
 import qualified Data.Typeable as Prelude'
 import qualified GHC.Generics as Prelude'
 import qualified Data.Data as Prelude'
 import qualified Text.ProtocolBuffers.Header as P'
+import qualified Control.Lens.TH
 import qualified Mesos.V1.Protos.FrameworkID as Protos (FrameworkID)
 import qualified Mesos.V1.Scheduler.Protos.Call.Accept as Protos.Call (Accept)
 import qualified Mesos.V1.Scheduler.Protos.Call.AcceptInverseOffers as Protos.Call (AcceptInverseOffers)
@@ -25,17 +30,19 @@ import qualified Mesos.V1.Scheduler.Protos.Call.Subscribe as Protos.Call (Subscr
 import qualified Mesos.V1.Scheduler.Protos.Call.Suppress as Protos.Call (Suppress)
 import qualified Mesos.V1.Scheduler.Protos.Call.Type as Protos.Call (Type)
 
-data Call = Call{framework_id :: !(P'.Maybe Protos.FrameworkID), type' :: !(P'.Maybe Protos.Call.Type),
-                 subscribe :: !(P'.Maybe Protos.Call.Subscribe), accept :: !(P'.Maybe Protos.Call.Accept),
-                 decline :: !(P'.Maybe Protos.Call.Decline), accept_inverse_offers :: !(P'.Maybe Protos.Call.AcceptInverseOffers),
-                 decline_inverse_offers :: !(P'.Maybe Protos.Call.DeclineInverseOffers), revive :: !(P'.Maybe Protos.Call.Revive),
-                 kill :: !(P'.Maybe Protos.Call.Kill), shutdown :: !(P'.Maybe Protos.Call.Shutdown),
-                 acknowledge :: !(P'.Maybe Protos.Call.Acknowledge),
-                 acknowledge_operation_status :: !(P'.Maybe Protos.Call.AcknowledgeOperationStatus),
-                 reconcile :: !(P'.Maybe Protos.Call.Reconcile),
-                 reconcile_operations :: !(P'.Maybe Protos.Call.ReconcileOperations), message :: !(P'.Maybe Protos.Call.Message),
-                 request :: !(P'.Maybe Protos.Call.Request), suppress :: !(P'.Maybe Protos.Call.Suppress)}
+data Call = Call{_framework_id :: !(P'.Maybe Protos.FrameworkID), _type' :: !(P'.Maybe Protos.Call.Type),
+                 _subscribe :: !(P'.Maybe Protos.Call.Subscribe), _accept :: !(P'.Maybe Protos.Call.Accept),
+                 _decline :: !(P'.Maybe Protos.Call.Decline), _accept_inverse_offers :: !(P'.Maybe Protos.Call.AcceptInverseOffers),
+                 _decline_inverse_offers :: !(P'.Maybe Protos.Call.DeclineInverseOffers), _revive :: !(P'.Maybe Protos.Call.Revive),
+                 _kill :: !(P'.Maybe Protos.Call.Kill), _shutdown :: !(P'.Maybe Protos.Call.Shutdown),
+                 _acknowledge :: !(P'.Maybe Protos.Call.Acknowledge),
+                 _acknowledge_operation_status :: !(P'.Maybe Protos.Call.AcknowledgeOperationStatus),
+                 _reconcile :: !(P'.Maybe Protos.Call.Reconcile),
+                 _reconcile_operations :: !(P'.Maybe Protos.Call.ReconcileOperations), _message :: !(P'.Maybe Protos.Call.Message),
+                 _request :: !(P'.Maybe Protos.Call.Request), _suppress :: !(P'.Maybe Protos.Call.Suppress)}
             deriving (Prelude'.Show, Prelude'.Eq, Prelude'.Ord, Prelude'.Typeable, Prelude'.Data, Prelude'.Generic)
+
+Control.Lens.TH.makeLenses ''Call
 
 instance P'.ToJSON Call where
   toJSON msg
@@ -81,11 +88,12 @@ instance P'.FromJSON Call where
           request <- P'.explicitParseFieldMaybe P'.parseJSON o "request"
           suppress <- P'.explicitParseFieldMaybe P'.parseJSON o "suppress"
           Prelude'.return
-           P'.defaultValue{framework_id = framework_id, type' = type', subscribe = subscribe, accept = accept, decline = decline,
-                           accept_inverse_offers = accept_inverse_offers, decline_inverse_offers = decline_inverse_offers,
-                           revive = revive, kill = kill, shutdown = shutdown, acknowledge = acknowledge,
-                           acknowledge_operation_status = acknowledge_operation_status, reconcile = reconcile,
-                           reconcile_operations = reconcile_operations, message = message, request = request, suppress = suppress})
+           P'.defaultValue{_framework_id = framework_id, _type' = type', _subscribe = subscribe, _accept = accept,
+                           _decline = decline, _accept_inverse_offers = accept_inverse_offers,
+                           _decline_inverse_offers = decline_inverse_offers, _revive = revive, _kill = kill, _shutdown = shutdown,
+                           _acknowledge = acknowledge, _acknowledge_operation_status = acknowledge_operation_status,
+                           _reconcile = reconcile, _reconcile_operations = reconcile_operations, _message = message,
+                           _request = request, _suppress = suppress})
 
 instance P'.Mergeable Call where
   mergeAppend (Call x'1 x'2 x'3 x'4 x'5 x'6 x'7 x'8 x'9 x'10 x'11 x'12 x'13 x'14 x'15 x'16 x'17)
@@ -171,52 +179,54 @@ instance P'.Wire Call where
         update'Self wire'Tag old'Self
          = case wire'Tag of
              10 -> Prelude'.fmap
-                    (\ !new'Field -> old'Self{framework_id = P'.mergeAppend (framework_id old'Self) (Prelude'.Just new'Field)})
+                    (\ !new'Field -> old'Self{_framework_id = P'.mergeAppend (_framework_id old'Self) (Prelude'.Just new'Field)})
                     (P'.wireGet 11)
-             16 -> Prelude'.fmap (\ !new'Field -> old'Self{type' = Prelude'.Just new'Field}) (P'.wireGet 14)
+             16 -> Prelude'.fmap (\ !new'Field -> old'Self{_type' = Prelude'.Just new'Field}) (P'.wireGet 14)
              26 -> Prelude'.fmap
-                    (\ !new'Field -> old'Self{subscribe = P'.mergeAppend (subscribe old'Self) (Prelude'.Just new'Field)})
+                    (\ !new'Field -> old'Self{_subscribe = P'.mergeAppend (_subscribe old'Self) (Prelude'.Just new'Field)})
                     (P'.wireGet 11)
-             34 -> Prelude'.fmap (\ !new'Field -> old'Self{accept = P'.mergeAppend (accept old'Self) (Prelude'.Just new'Field)})
+             34 -> Prelude'.fmap (\ !new'Field -> old'Self{_accept = P'.mergeAppend (_accept old'Self) (Prelude'.Just new'Field)})
                     (P'.wireGet 11)
-             42 -> Prelude'.fmap (\ !new'Field -> old'Self{decline = P'.mergeAppend (decline old'Self) (Prelude'.Just new'Field)})
+             42 -> Prelude'.fmap (\ !new'Field -> old'Self{_decline = P'.mergeAppend (_decline old'Self) (Prelude'.Just new'Field)})
                     (P'.wireGet 11)
              106 -> Prelude'.fmap
                      (\ !new'Field ->
-                       old'Self{accept_inverse_offers = P'.mergeAppend (accept_inverse_offers old'Self) (Prelude'.Just new'Field)})
+                       old'Self{_accept_inverse_offers =
+                                 P'.mergeAppend (_accept_inverse_offers old'Self) (Prelude'.Just new'Field)})
                      (P'.wireGet 11)
              114 -> Prelude'.fmap
                      (\ !new'Field ->
-                       old'Self{decline_inverse_offers =
-                                 P'.mergeAppend (decline_inverse_offers old'Self) (Prelude'.Just new'Field)})
+                       old'Self{_decline_inverse_offers =
+                                 P'.mergeAppend (_decline_inverse_offers old'Self) (Prelude'.Just new'Field)})
                      (P'.wireGet 11)
-             122 -> Prelude'.fmap (\ !new'Field -> old'Self{revive = P'.mergeAppend (revive old'Self) (Prelude'.Just new'Field)})
+             122 -> Prelude'.fmap (\ !new'Field -> old'Self{_revive = P'.mergeAppend (_revive old'Self) (Prelude'.Just new'Field)})
                      (P'.wireGet 11)
-             50 -> Prelude'.fmap (\ !new'Field -> old'Self{kill = P'.mergeAppend (kill old'Self) (Prelude'.Just new'Field)})
+             50 -> Prelude'.fmap (\ !new'Field -> old'Self{_kill = P'.mergeAppend (_kill old'Self) (Prelude'.Just new'Field)})
                     (P'.wireGet 11)
-             58 -> Prelude'.fmap (\ !new'Field -> old'Self{shutdown = P'.mergeAppend (shutdown old'Self) (Prelude'.Just new'Field)})
+             58 -> Prelude'.fmap
+                    (\ !new'Field -> old'Self{_shutdown = P'.mergeAppend (_shutdown old'Self) (Prelude'.Just new'Field)})
                     (P'.wireGet 11)
              66 -> Prelude'.fmap
-                    (\ !new'Field -> old'Self{acknowledge = P'.mergeAppend (acknowledge old'Self) (Prelude'.Just new'Field)})
+                    (\ !new'Field -> old'Self{_acknowledge = P'.mergeAppend (_acknowledge old'Self) (Prelude'.Just new'Field)})
                     (P'.wireGet 11)
              138 -> Prelude'.fmap
                      (\ !new'Field ->
-                       old'Self{acknowledge_operation_status =
-                                 P'.mergeAppend (acknowledge_operation_status old'Self) (Prelude'.Just new'Field)})
+                       old'Self{_acknowledge_operation_status =
+                                 P'.mergeAppend (_acknowledge_operation_status old'Self) (Prelude'.Just new'Field)})
                      (P'.wireGet 11)
              74 -> Prelude'.fmap
-                    (\ !new'Field -> old'Self{reconcile = P'.mergeAppend (reconcile old'Self) (Prelude'.Just new'Field)})
+                    (\ !new'Field -> old'Self{_reconcile = P'.mergeAppend (_reconcile old'Self) (Prelude'.Just new'Field)})
                     (P'.wireGet 11)
              146 -> Prelude'.fmap
                      (\ !new'Field ->
-                       old'Self{reconcile_operations = P'.mergeAppend (reconcile_operations old'Self) (Prelude'.Just new'Field)})
+                       old'Self{_reconcile_operations = P'.mergeAppend (_reconcile_operations old'Self) (Prelude'.Just new'Field)})
                      (P'.wireGet 11)
-             82 -> Prelude'.fmap (\ !new'Field -> old'Self{message = P'.mergeAppend (message old'Self) (Prelude'.Just new'Field)})
+             82 -> Prelude'.fmap (\ !new'Field -> old'Self{_message = P'.mergeAppend (_message old'Self) (Prelude'.Just new'Field)})
                     (P'.wireGet 11)
-             90 -> Prelude'.fmap (\ !new'Field -> old'Self{request = P'.mergeAppend (request old'Self) (Prelude'.Just new'Field)})
+             90 -> Prelude'.fmap (\ !new'Field -> old'Self{_request = P'.mergeAppend (_request old'Self) (Prelude'.Just new'Field)})
                     (P'.wireGet 11)
              130 -> Prelude'.fmap
-                     (\ !new'Field -> old'Self{suppress = P'.mergeAppend (suppress old'Self) (Prelude'.Just new'Field)})
+                     (\ !new'Field -> old'Self{_suppress = P'.mergeAppend (_suppress old'Self) (Prelude'.Just new'Field)})
                      (P'.wireGet 11)
              _ -> let (field'Number, wire'Type) = P'.splitWireTag wire'Tag in P'.unknown field'Number wire'Type old'Self
 
@@ -231,7 +241,7 @@ instance P'.ReflectDescriptor Call where
       (P'.fromDistinctAscList [10, 16, 26, 34, 42, 50, 58, 66, 74, 82, 90, 106, 114, 122, 130, 138, 146])
   reflectDescriptorInfo _
    = Prelude'.read
-      "DescriptorInfo {descName = ProtoName {protobufName = FIName \".mesos.v1.scheduler.Call\", haskellPrefix = [MName \"Mesos\",MName \"V1\",MName \"Scheduler\"], parentModule = [MName \"Protos\"], baseName = MName \"Call\"}, descFilePath = [\"Mesos\",\"V1\",\"Scheduler\",\"Protos\",\"Call.hs\"], isGroup = False, fields = fromList [FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.scheduler.Call.framework_id\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Scheduler\"], parentModule' = [MName \"Protos\",MName \"Call\"], baseName' = FName \"framework_id\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 1}, wireTag = WireTag {getWireTag = 10}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.FrameworkID\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"FrameworkID\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.scheduler.Call.type\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Scheduler\"], parentModule' = [MName \"Protos\",MName \"Call\"], baseName' = FName \"type'\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 2}, wireTag = WireTag {getWireTag = 16}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 14}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.scheduler.Call.Type\", haskellPrefix = [MName \"Mesos\",MName \"V1\",MName \"Scheduler\"], parentModule = [MName \"Protos\",MName \"Call\"], baseName = MName \"Type\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.scheduler.Call.subscribe\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Scheduler\"], parentModule' = [MName \"Protos\",MName \"Call\"], baseName' = FName \"subscribe\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 3}, wireTag = WireTag {getWireTag = 26}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.scheduler.Call.Subscribe\", haskellPrefix = [MName \"Mesos\",MName \"V1\",MName \"Scheduler\"], parentModule = [MName \"Protos\",MName \"Call\"], baseName = MName \"Subscribe\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.scheduler.Call.accept\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Scheduler\"], parentModule' = [MName \"Protos\",MName \"Call\"], baseName' = FName \"accept\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 4}, wireTag = WireTag {getWireTag = 34}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.scheduler.Call.Accept\", haskellPrefix = [MName \"Mesos\",MName \"V1\",MName \"Scheduler\"], parentModule = [MName \"Protos\",MName \"Call\"], baseName = MName \"Accept\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.scheduler.Call.decline\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Scheduler\"], parentModule' = [MName \"Protos\",MName \"Call\"], baseName' = FName \"decline\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 5}, wireTag = WireTag {getWireTag = 42}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.scheduler.Call.Decline\", haskellPrefix = [MName \"Mesos\",MName \"V1\",MName \"Scheduler\"], parentModule = [MName \"Protos\",MName \"Call\"], baseName = MName \"Decline\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.scheduler.Call.accept_inverse_offers\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Scheduler\"], parentModule' = [MName \"Protos\",MName \"Call\"], baseName' = FName \"accept_inverse_offers\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 13}, wireTag = WireTag {getWireTag = 106}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.scheduler.Call.AcceptInverseOffers\", haskellPrefix = [MName \"Mesos\",MName \"V1\",MName \"Scheduler\"], parentModule = [MName \"Protos\",MName \"Call\"], baseName = MName \"AcceptInverseOffers\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.scheduler.Call.decline_inverse_offers\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Scheduler\"], parentModule' = [MName \"Protos\",MName \"Call\"], baseName' = FName \"decline_inverse_offers\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 14}, wireTag = WireTag {getWireTag = 114}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.scheduler.Call.DeclineInverseOffers\", haskellPrefix = [MName \"Mesos\",MName \"V1\",MName \"Scheduler\"], parentModule = [MName \"Protos\",MName \"Call\"], baseName = MName \"DeclineInverseOffers\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.scheduler.Call.revive\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Scheduler\"], parentModule' = [MName \"Protos\",MName \"Call\"], baseName' = FName \"revive\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 15}, wireTag = WireTag {getWireTag = 122}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.scheduler.Call.Revive\", haskellPrefix = [MName \"Mesos\",MName \"V1\",MName \"Scheduler\"], parentModule = [MName \"Protos\",MName \"Call\"], baseName = MName \"Revive\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.scheduler.Call.kill\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Scheduler\"], parentModule' = [MName \"Protos\",MName \"Call\"], baseName' = FName \"kill\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 6}, wireTag = WireTag {getWireTag = 50}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.scheduler.Call.Kill\", haskellPrefix = [MName \"Mesos\",MName \"V1\",MName \"Scheduler\"], parentModule = [MName \"Protos\",MName \"Call\"], baseName = MName \"Kill\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.scheduler.Call.shutdown\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Scheduler\"], parentModule' = [MName \"Protos\",MName \"Call\"], baseName' = FName \"shutdown\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 7}, wireTag = WireTag {getWireTag = 58}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.scheduler.Call.Shutdown\", haskellPrefix = [MName \"Mesos\",MName \"V1\",MName \"Scheduler\"], parentModule = [MName \"Protos\",MName \"Call\"], baseName = MName \"Shutdown\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.scheduler.Call.acknowledge\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Scheduler\"], parentModule' = [MName \"Protos\",MName \"Call\"], baseName' = FName \"acknowledge\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 8}, wireTag = WireTag {getWireTag = 66}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.scheduler.Call.Acknowledge\", haskellPrefix = [MName \"Mesos\",MName \"V1\",MName \"Scheduler\"], parentModule = [MName \"Protos\",MName \"Call\"], baseName = MName \"Acknowledge\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.scheduler.Call.acknowledge_operation_status\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Scheduler\"], parentModule' = [MName \"Protos\",MName \"Call\"], baseName' = FName \"acknowledge_operation_status\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 17}, wireTag = WireTag {getWireTag = 138}, packedTag = Nothing, wireTagLength = 2, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.scheduler.Call.AcknowledgeOperationStatus\", haskellPrefix = [MName \"Mesos\",MName \"V1\",MName \"Scheduler\"], parentModule = [MName \"Protos\",MName \"Call\"], baseName = MName \"AcknowledgeOperationStatus\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.scheduler.Call.reconcile\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Scheduler\"], parentModule' = [MName \"Protos\",MName \"Call\"], baseName' = FName \"reconcile\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 9}, wireTag = WireTag {getWireTag = 74}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.scheduler.Call.Reconcile\", haskellPrefix = [MName \"Mesos\",MName \"V1\",MName \"Scheduler\"], parentModule = [MName \"Protos\",MName \"Call\"], baseName = MName \"Reconcile\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.scheduler.Call.reconcile_operations\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Scheduler\"], parentModule' = [MName \"Protos\",MName \"Call\"], baseName' = FName \"reconcile_operations\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 18}, wireTag = WireTag {getWireTag = 146}, packedTag = Nothing, wireTagLength = 2, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.scheduler.Call.ReconcileOperations\", haskellPrefix = [MName \"Mesos\",MName \"V1\",MName \"Scheduler\"], parentModule = [MName \"Protos\",MName \"Call\"], baseName = MName \"ReconcileOperations\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.scheduler.Call.message\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Scheduler\"], parentModule' = [MName \"Protos\",MName \"Call\"], baseName' = FName \"message\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 10}, wireTag = WireTag {getWireTag = 82}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.scheduler.Call.Message\", haskellPrefix = [MName \"Mesos\",MName \"V1\",MName \"Scheduler\"], parentModule = [MName \"Protos\",MName \"Call\"], baseName = MName \"Message\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.scheduler.Call.request\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Scheduler\"], parentModule' = [MName \"Protos\",MName \"Call\"], baseName' = FName \"request\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 11}, wireTag = WireTag {getWireTag = 90}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.scheduler.Call.Request\", haskellPrefix = [MName \"Mesos\",MName \"V1\",MName \"Scheduler\"], parentModule = [MName \"Protos\",MName \"Call\"], baseName = MName \"Request\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.scheduler.Call.suppress\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Scheduler\"], parentModule' = [MName \"Protos\",MName \"Call\"], baseName' = FName \"suppress\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 16}, wireTag = WireTag {getWireTag = 130}, packedTag = Nothing, wireTagLength = 2, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.scheduler.Call.Suppress\", haskellPrefix = [MName \"Mesos\",MName \"V1\",MName \"Scheduler\"], parentModule = [MName \"Protos\",MName \"Call\"], baseName = MName \"Suppress\"}), hsRawDefault = Nothing, hsDefault = Nothing}], descOneofs = fromList [], keys = fromList [], extRanges = [], knownKeys = fromList [], storeUnknown = False, lazyFields = False, makeLenses = False, jsonInstances = True}"
+      "DescriptorInfo {descName = ProtoName {protobufName = FIName \".mesos.v1.scheduler.Call\", haskellPrefix = [MName \"Mesos\",MName \"V1\",MName \"Scheduler\"], parentModule = [MName \"Protos\"], baseName = MName \"Call\"}, descFilePath = [\"Mesos\",\"V1\",\"Scheduler\",\"Protos\",\"Call.hs\"], isGroup = False, fields = fromList [FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.scheduler.Call.framework_id\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Scheduler\"], parentModule' = [MName \"Protos\",MName \"Call\"], baseName' = FName \"framework_id\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 1}, wireTag = WireTag {getWireTag = 10}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.FrameworkID\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"FrameworkID\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.scheduler.Call.type\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Scheduler\"], parentModule' = [MName \"Protos\",MName \"Call\"], baseName' = FName \"type'\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 2}, wireTag = WireTag {getWireTag = 16}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 14}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.scheduler.Call.Type\", haskellPrefix = [MName \"Mesos\",MName \"V1\",MName \"Scheduler\"], parentModule = [MName \"Protos\",MName \"Call\"], baseName = MName \"Type\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.scheduler.Call.subscribe\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Scheduler\"], parentModule' = [MName \"Protos\",MName \"Call\"], baseName' = FName \"subscribe\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 3}, wireTag = WireTag {getWireTag = 26}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.scheduler.Call.Subscribe\", haskellPrefix = [MName \"Mesos\",MName \"V1\",MName \"Scheduler\"], parentModule = [MName \"Protos\",MName \"Call\"], baseName = MName \"Subscribe\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.scheduler.Call.accept\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Scheduler\"], parentModule' = [MName \"Protos\",MName \"Call\"], baseName' = FName \"accept\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 4}, wireTag = WireTag {getWireTag = 34}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.scheduler.Call.Accept\", haskellPrefix = [MName \"Mesos\",MName \"V1\",MName \"Scheduler\"], parentModule = [MName \"Protos\",MName \"Call\"], baseName = MName \"Accept\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.scheduler.Call.decline\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Scheduler\"], parentModule' = [MName \"Protos\",MName \"Call\"], baseName' = FName \"decline\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 5}, wireTag = WireTag {getWireTag = 42}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.scheduler.Call.Decline\", haskellPrefix = [MName \"Mesos\",MName \"V1\",MName \"Scheduler\"], parentModule = [MName \"Protos\",MName \"Call\"], baseName = MName \"Decline\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.scheduler.Call.accept_inverse_offers\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Scheduler\"], parentModule' = [MName \"Protos\",MName \"Call\"], baseName' = FName \"accept_inverse_offers\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 13}, wireTag = WireTag {getWireTag = 106}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.scheduler.Call.AcceptInverseOffers\", haskellPrefix = [MName \"Mesos\",MName \"V1\",MName \"Scheduler\"], parentModule = [MName \"Protos\",MName \"Call\"], baseName = MName \"AcceptInverseOffers\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.scheduler.Call.decline_inverse_offers\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Scheduler\"], parentModule' = [MName \"Protos\",MName \"Call\"], baseName' = FName \"decline_inverse_offers\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 14}, wireTag = WireTag {getWireTag = 114}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.scheduler.Call.DeclineInverseOffers\", haskellPrefix = [MName \"Mesos\",MName \"V1\",MName \"Scheduler\"], parentModule = [MName \"Protos\",MName \"Call\"], baseName = MName \"DeclineInverseOffers\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.scheduler.Call.revive\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Scheduler\"], parentModule' = [MName \"Protos\",MName \"Call\"], baseName' = FName \"revive\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 15}, wireTag = WireTag {getWireTag = 122}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.scheduler.Call.Revive\", haskellPrefix = [MName \"Mesos\",MName \"V1\",MName \"Scheduler\"], parentModule = [MName \"Protos\",MName \"Call\"], baseName = MName \"Revive\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.scheduler.Call.kill\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Scheduler\"], parentModule' = [MName \"Protos\",MName \"Call\"], baseName' = FName \"kill\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 6}, wireTag = WireTag {getWireTag = 50}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.scheduler.Call.Kill\", haskellPrefix = [MName \"Mesos\",MName \"V1\",MName \"Scheduler\"], parentModule = [MName \"Protos\",MName \"Call\"], baseName = MName \"Kill\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.scheduler.Call.shutdown\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Scheduler\"], parentModule' = [MName \"Protos\",MName \"Call\"], baseName' = FName \"shutdown\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 7}, wireTag = WireTag {getWireTag = 58}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.scheduler.Call.Shutdown\", haskellPrefix = [MName \"Mesos\",MName \"V1\",MName \"Scheduler\"], parentModule = [MName \"Protos\",MName \"Call\"], baseName = MName \"Shutdown\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.scheduler.Call.acknowledge\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Scheduler\"], parentModule' = [MName \"Protos\",MName \"Call\"], baseName' = FName \"acknowledge\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 8}, wireTag = WireTag {getWireTag = 66}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.scheduler.Call.Acknowledge\", haskellPrefix = [MName \"Mesos\",MName \"V1\",MName \"Scheduler\"], parentModule = [MName \"Protos\",MName \"Call\"], baseName = MName \"Acknowledge\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.scheduler.Call.acknowledge_operation_status\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Scheduler\"], parentModule' = [MName \"Protos\",MName \"Call\"], baseName' = FName \"acknowledge_operation_status\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 17}, wireTag = WireTag {getWireTag = 138}, packedTag = Nothing, wireTagLength = 2, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.scheduler.Call.AcknowledgeOperationStatus\", haskellPrefix = [MName \"Mesos\",MName \"V1\",MName \"Scheduler\"], parentModule = [MName \"Protos\",MName \"Call\"], baseName = MName \"AcknowledgeOperationStatus\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.scheduler.Call.reconcile\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Scheduler\"], parentModule' = [MName \"Protos\",MName \"Call\"], baseName' = FName \"reconcile\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 9}, wireTag = WireTag {getWireTag = 74}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.scheduler.Call.Reconcile\", haskellPrefix = [MName \"Mesos\",MName \"V1\",MName \"Scheduler\"], parentModule = [MName \"Protos\",MName \"Call\"], baseName = MName \"Reconcile\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.scheduler.Call.reconcile_operations\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Scheduler\"], parentModule' = [MName \"Protos\",MName \"Call\"], baseName' = FName \"reconcile_operations\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 18}, wireTag = WireTag {getWireTag = 146}, packedTag = Nothing, wireTagLength = 2, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.scheduler.Call.ReconcileOperations\", haskellPrefix = [MName \"Mesos\",MName \"V1\",MName \"Scheduler\"], parentModule = [MName \"Protos\",MName \"Call\"], baseName = MName \"ReconcileOperations\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.scheduler.Call.message\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Scheduler\"], parentModule' = [MName \"Protos\",MName \"Call\"], baseName' = FName \"message\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 10}, wireTag = WireTag {getWireTag = 82}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.scheduler.Call.Message\", haskellPrefix = [MName \"Mesos\",MName \"V1\",MName \"Scheduler\"], parentModule = [MName \"Protos\",MName \"Call\"], baseName = MName \"Message\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.scheduler.Call.request\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Scheduler\"], parentModule' = [MName \"Protos\",MName \"Call\"], baseName' = FName \"request\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 11}, wireTag = WireTag {getWireTag = 90}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.scheduler.Call.Request\", haskellPrefix = [MName \"Mesos\",MName \"V1\",MName \"Scheduler\"], parentModule = [MName \"Protos\",MName \"Call\"], baseName = MName \"Request\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.scheduler.Call.suppress\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Scheduler\"], parentModule' = [MName \"Protos\",MName \"Call\"], baseName' = FName \"suppress\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 16}, wireTag = WireTag {getWireTag = 130}, packedTag = Nothing, wireTagLength = 2, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.scheduler.Call.Suppress\", haskellPrefix = [MName \"Mesos\",MName \"V1\",MName \"Scheduler\"], parentModule = [MName \"Protos\",MName \"Call\"], baseName = MName \"Suppress\"}), hsRawDefault = Nothing, hsDefault = Nothing}], descOneofs = fromList [], keys = fromList [], extRanges = [], knownKeys = fromList [], storeUnknown = False, lazyFields = False, makeLenses = True, jsonInstances = True}"
 
 instance P'.TextType Call where
   tellT = P'.tellSubMessage
@@ -240,116 +250,116 @@ instance P'.TextType Call where
 instance P'.TextMsg Call where
   textPut msg
    = do
-       P'.tellT "framework_id" (framework_id msg)
-       P'.tellT "type" (type' msg)
-       P'.tellT "subscribe" (subscribe msg)
-       P'.tellT "accept" (accept msg)
-       P'.tellT "decline" (decline msg)
-       P'.tellT "accept_inverse_offers" (accept_inverse_offers msg)
-       P'.tellT "decline_inverse_offers" (decline_inverse_offers msg)
-       P'.tellT "revive" (revive msg)
-       P'.tellT "kill" (kill msg)
-       P'.tellT "shutdown" (shutdown msg)
-       P'.tellT "acknowledge" (acknowledge msg)
-       P'.tellT "acknowledge_operation_status" (acknowledge_operation_status msg)
-       P'.tellT "reconcile" (reconcile msg)
-       P'.tellT "reconcile_operations" (reconcile_operations msg)
-       P'.tellT "message" (message msg)
-       P'.tellT "request" (request msg)
-       P'.tellT "suppress" (suppress msg)
+       P'.tellT "framework_id" (_framework_id msg)
+       P'.tellT "type" (_type' msg)
+       P'.tellT "subscribe" (_subscribe msg)
+       P'.tellT "accept" (_accept msg)
+       P'.tellT "decline" (_decline msg)
+       P'.tellT "accept_inverse_offers" (_accept_inverse_offers msg)
+       P'.tellT "decline_inverse_offers" (_decline_inverse_offers msg)
+       P'.tellT "revive" (_revive msg)
+       P'.tellT "kill" (_kill msg)
+       P'.tellT "shutdown" (_shutdown msg)
+       P'.tellT "acknowledge" (_acknowledge msg)
+       P'.tellT "acknowledge_operation_status" (_acknowledge_operation_status msg)
+       P'.tellT "reconcile" (_reconcile msg)
+       P'.tellT "reconcile_operations" (_reconcile_operations msg)
+       P'.tellT "message" (_message msg)
+       P'.tellT "request" (_request msg)
+       P'.tellT "suppress" (_suppress msg)
   textGet
    = do
        mods <- P'.sepEndBy
                 (P'.choice
-                  [parse'framework_id, parse'type', parse'subscribe, parse'accept, parse'decline, parse'accept_inverse_offers,
-                   parse'decline_inverse_offers, parse'revive, parse'kill, parse'shutdown, parse'acknowledge,
-                   parse'acknowledge_operation_status, parse'reconcile, parse'reconcile_operations, parse'message, parse'request,
-                   parse'suppress])
+                  [parse'_framework_id, parse'_type', parse'_subscribe, parse'_accept, parse'_decline, parse'_accept_inverse_offers,
+                   parse'_decline_inverse_offers, parse'_revive, parse'_kill, parse'_shutdown, parse'_acknowledge,
+                   parse'_acknowledge_operation_status, parse'_reconcile, parse'_reconcile_operations, parse'_message,
+                   parse'_request, parse'_suppress])
                 P'.spaces
        Prelude'.return (Prelude'.foldl (\ v f -> f v) P'.defaultValue mods)
     where
-        parse'framework_id
+        parse'_framework_id
          = P'.try
             (do
                v <- P'.getT "framework_id"
-               Prelude'.return (\ o -> o{framework_id = v}))
-        parse'type'
+               Prelude'.return (\ o -> o{_framework_id = v}))
+        parse'_type'
          = P'.try
             (do
                v <- P'.getT "type"
-               Prelude'.return (\ o -> o{type' = v}))
-        parse'subscribe
+               Prelude'.return (\ o -> o{_type' = v}))
+        parse'_subscribe
          = P'.try
             (do
                v <- P'.getT "subscribe"
-               Prelude'.return (\ o -> o{subscribe = v}))
-        parse'accept
+               Prelude'.return (\ o -> o{_subscribe = v}))
+        parse'_accept
          = P'.try
             (do
                v <- P'.getT "accept"
-               Prelude'.return (\ o -> o{accept = v}))
-        parse'decline
+               Prelude'.return (\ o -> o{_accept = v}))
+        parse'_decline
          = P'.try
             (do
                v <- P'.getT "decline"
-               Prelude'.return (\ o -> o{decline = v}))
-        parse'accept_inverse_offers
+               Prelude'.return (\ o -> o{_decline = v}))
+        parse'_accept_inverse_offers
          = P'.try
             (do
                v <- P'.getT "accept_inverse_offers"
-               Prelude'.return (\ o -> o{accept_inverse_offers = v}))
-        parse'decline_inverse_offers
+               Prelude'.return (\ o -> o{_accept_inverse_offers = v}))
+        parse'_decline_inverse_offers
          = P'.try
             (do
                v <- P'.getT "decline_inverse_offers"
-               Prelude'.return (\ o -> o{decline_inverse_offers = v}))
-        parse'revive
+               Prelude'.return (\ o -> o{_decline_inverse_offers = v}))
+        parse'_revive
          = P'.try
             (do
                v <- P'.getT "revive"
-               Prelude'.return (\ o -> o{revive = v}))
-        parse'kill
+               Prelude'.return (\ o -> o{_revive = v}))
+        parse'_kill
          = P'.try
             (do
                v <- P'.getT "kill"
-               Prelude'.return (\ o -> o{kill = v}))
-        parse'shutdown
+               Prelude'.return (\ o -> o{_kill = v}))
+        parse'_shutdown
          = P'.try
             (do
                v <- P'.getT "shutdown"
-               Prelude'.return (\ o -> o{shutdown = v}))
-        parse'acknowledge
+               Prelude'.return (\ o -> o{_shutdown = v}))
+        parse'_acknowledge
          = P'.try
             (do
                v <- P'.getT "acknowledge"
-               Prelude'.return (\ o -> o{acknowledge = v}))
-        parse'acknowledge_operation_status
+               Prelude'.return (\ o -> o{_acknowledge = v}))
+        parse'_acknowledge_operation_status
          = P'.try
             (do
                v <- P'.getT "acknowledge_operation_status"
-               Prelude'.return (\ o -> o{acknowledge_operation_status = v}))
-        parse'reconcile
+               Prelude'.return (\ o -> o{_acknowledge_operation_status = v}))
+        parse'_reconcile
          = P'.try
             (do
                v <- P'.getT "reconcile"
-               Prelude'.return (\ o -> o{reconcile = v}))
-        parse'reconcile_operations
+               Prelude'.return (\ o -> o{_reconcile = v}))
+        parse'_reconcile_operations
          = P'.try
             (do
                v <- P'.getT "reconcile_operations"
-               Prelude'.return (\ o -> o{reconcile_operations = v}))
-        parse'message
+               Prelude'.return (\ o -> o{_reconcile_operations = v}))
+        parse'_message
          = P'.try
             (do
                v <- P'.getT "message"
-               Prelude'.return (\ o -> o{message = v}))
-        parse'request
+               Prelude'.return (\ o -> o{_message = v}))
+        parse'_request
          = P'.try
             (do
                v <- P'.getT "request"
-               Prelude'.return (\ o -> o{request = v}))
-        parse'suppress
+               Prelude'.return (\ o -> o{_request = v}))
+        parse'_suppress
          = P'.try
             (do
                v <- P'.getT "suppress"
-               Prelude'.return (\ o -> o{suppress = v}))
+               Prelude'.return (\ o -> o{_suppress = v}))

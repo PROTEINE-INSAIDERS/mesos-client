@@ -1,16 +1,20 @@
-{-# LANGUAGE BangPatterns, DeriveDataTypeable, DeriveGeneric, FlexibleInstances, MultiParamTypeClasses, OverloadedStrings #-}
+{-# LANGUAGE TemplateHaskell, BangPatterns, DeriveDataTypeable, DeriveGeneric, FlexibleInstances, MultiParamTypeClasses,
+ OverloadedStrings #-}
 {-# OPTIONS_GHC  -fno-warn-unused-imports #-}
-module Mesos.V1.Master.Protos.Event.FrameworkRemoved (FrameworkRemoved(..)) where
+module Mesos.V1.Master.Protos.Event.FrameworkRemoved (FrameworkRemoved(..), framework_info) where
 import Prelude ((+), (/), (++), (.))
 import qualified Prelude as Prelude'
 import qualified Data.Typeable as Prelude'
 import qualified GHC.Generics as Prelude'
 import qualified Data.Data as Prelude'
 import qualified Text.ProtocolBuffers.Header as P'
+import qualified Control.Lens.TH
 import qualified Mesos.V1.Protos.FrameworkInfo as Protos (FrameworkInfo)
 
-data FrameworkRemoved = FrameworkRemoved{framework_info :: !(Protos.FrameworkInfo)}
+data FrameworkRemoved = FrameworkRemoved{_framework_info :: !(Protos.FrameworkInfo)}
                         deriving (Prelude'.Show, Prelude'.Eq, Prelude'.Ord, Prelude'.Typeable, Prelude'.Data, Prelude'.Generic)
+
+Control.Lens.TH.makeLenses ''FrameworkRemoved
 
 instance P'.ToJSON FrameworkRemoved where
   toJSON msg = P'.objectNoEmpty ([("framework_info", P'.toJSON (framework_info msg))] ++ Prelude'.concat [])
@@ -21,7 +25,7 @@ instance P'.FromJSON FrameworkRemoved where
       (\ o ->
         do
           framework_info <- P'.explicitParseField P'.parseJSON o "framework_info"
-          Prelude'.return P'.defaultValue{framework_info = framework_info})
+          Prelude'.return P'.defaultValue{_framework_info = framework_info})
 
 instance P'.Mergeable FrameworkRemoved where
   mergeAppend (FrameworkRemoved x'1) (FrameworkRemoved y'1) = FrameworkRemoved (P'.mergeAppend x'1 y'1)
@@ -59,7 +63,7 @@ instance P'.Wire FrameworkRemoved where
     where
         update'Self wire'Tag old'Self
          = case wire'Tag of
-             10 -> Prelude'.fmap (\ !new'Field -> old'Self{framework_info = P'.mergeAppend (framework_info old'Self) (new'Field)})
+             10 -> Prelude'.fmap (\ !new'Field -> old'Self{_framework_info = P'.mergeAppend (_framework_info old'Self) (new'Field)})
                     (P'.wireGet 11)
              _ -> let (field'Number, wire'Type) = P'.splitWireTag wire'Tag in P'.unknown field'Number wire'Type old'Self
 
@@ -72,7 +76,7 @@ instance P'.ReflectDescriptor FrameworkRemoved where
   getMessageInfo _ = P'.GetMessageInfo (P'.fromDistinctAscList [10]) (P'.fromDistinctAscList [10])
   reflectDescriptorInfo _
    = Prelude'.read
-      "DescriptorInfo {descName = ProtoName {protobufName = FIName \".mesos.v1.master.Event.FrameworkRemoved\", haskellPrefix = [MName \"Mesos\",MName \"V1\",MName \"Master\"], parentModule = [MName \"Protos\",MName \"Event\"], baseName = MName \"FrameworkRemoved\"}, descFilePath = [\"Mesos\",\"V1\",\"Master\",\"Protos\",\"Event\",\"FrameworkRemoved.hs\"], isGroup = False, fields = fromList [FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.master.Event.FrameworkRemoved.framework_info\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Master\"], parentModule' = [MName \"Protos\",MName \"Event\",MName \"FrameworkRemoved\"], baseName' = FName \"framework_info\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 1}, wireTag = WireTag {getWireTag = 10}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = True, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.FrameworkInfo\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"FrameworkInfo\"}), hsRawDefault = Nothing, hsDefault = Nothing}], descOneofs = fromList [], keys = fromList [], extRanges = [], knownKeys = fromList [], storeUnknown = False, lazyFields = False, makeLenses = False, jsonInstances = True}"
+      "DescriptorInfo {descName = ProtoName {protobufName = FIName \".mesos.v1.master.Event.FrameworkRemoved\", haskellPrefix = [MName \"Mesos\",MName \"V1\",MName \"Master\"], parentModule = [MName \"Protos\",MName \"Event\"], baseName = MName \"FrameworkRemoved\"}, descFilePath = [\"Mesos\",\"V1\",\"Master\",\"Protos\",\"Event\",\"FrameworkRemoved.hs\"], isGroup = False, fields = fromList [FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.master.Event.FrameworkRemoved.framework_info\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Master\"], parentModule' = [MName \"Protos\",MName \"Event\",MName \"FrameworkRemoved\"], baseName' = FName \"framework_info\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 1}, wireTag = WireTag {getWireTag = 10}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = True, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.FrameworkInfo\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"FrameworkInfo\"}), hsRawDefault = Nothing, hsDefault = Nothing}], descOneofs = fromList [], keys = fromList [], extRanges = [], knownKeys = fromList [], storeUnknown = False, lazyFields = False, makeLenses = True, jsonInstances = True}"
 
 instance P'.TextType FrameworkRemoved where
   tellT = P'.tellSubMessage
@@ -81,14 +85,14 @@ instance P'.TextType FrameworkRemoved where
 instance P'.TextMsg FrameworkRemoved where
   textPut msg
    = do
-       P'.tellT "framework_info" (framework_info msg)
+       P'.tellT "framework_info" (_framework_info msg)
   textGet
    = do
-       mods <- P'.sepEndBy (P'.choice [parse'framework_info]) P'.spaces
+       mods <- P'.sepEndBy (P'.choice [parse'_framework_info]) P'.spaces
        Prelude'.return (Prelude'.foldl (\ v f -> f v) P'.defaultValue mods)
     where
-        parse'framework_info
+        parse'_framework_info
          = P'.try
             (do
                v <- P'.getT "framework_info"
-               Prelude'.return (\ o -> o{framework_info = v}))
+               Prelude'.return (\ o -> o{_framework_info = v}))

@@ -1,17 +1,22 @@
-{-# LANGUAGE BangPatterns, DeriveDataTypeable, DeriveGeneric, FlexibleInstances, MultiParamTypeClasses, OverloadedStrings #-}
+{-# LANGUAGE TemplateHaskell, BangPatterns, DeriveDataTypeable, DeriveGeneric, FlexibleInstances, MultiParamTypeClasses,
+ OverloadedStrings #-}
 {-# OPTIONS_GHC  -fno-warn-unused-imports #-}
-module Mesos.V1.Master.Protos.Call.GrowVolume (GrowVolume(..)) where
+module Mesos.V1.Master.Protos.Call.GrowVolume (GrowVolume(..), agent_id, volume, addition) where
 import Prelude ((+), (/), (++), (.))
 import qualified Prelude as Prelude'
 import qualified Data.Typeable as Prelude'
 import qualified GHC.Generics as Prelude'
 import qualified Data.Data as Prelude'
 import qualified Text.ProtocolBuffers.Header as P'
+import qualified Control.Lens.TH
 import qualified Mesos.V1.Protos.AgentID as Protos (AgentID)
 import qualified Mesos.V1.Protos.Resource as Protos (Resource)
 
-data GrowVolume = GrowVolume{agent_id :: !(P'.Maybe Protos.AgentID), volume :: !(Protos.Resource), addition :: !(Protos.Resource)}
+data GrowVolume = GrowVolume{_agent_id :: !(P'.Maybe Protos.AgentID), _volume :: !(Protos.Resource),
+                             _addition :: !(Protos.Resource)}
                   deriving (Prelude'.Show, Prelude'.Eq, Prelude'.Ord, Prelude'.Typeable, Prelude'.Data, Prelude'.Generic)
+
+Control.Lens.TH.makeLenses ''GrowVolume
 
 instance P'.ToJSON GrowVolume where
   toJSON msg
@@ -28,7 +33,7 @@ instance P'.FromJSON GrowVolume where
           agent_id <- P'.explicitParseFieldMaybe P'.parseJSON o "agent_id"
           volume <- P'.explicitParseField P'.parseJSON o "volume"
           addition <- P'.explicitParseField P'.parseJSON o "addition"
-          Prelude'.return P'.defaultValue{agent_id = agent_id, volume = volume, addition = addition})
+          Prelude'.return P'.defaultValue{_agent_id = agent_id, _volume = volume, _addition = addition})
 
 instance P'.Mergeable GrowVolume where
   mergeAppend (GrowVolume x'1 x'2 x'3) (GrowVolume y'1 y'2 y'3)
@@ -69,10 +74,11 @@ instance P'.Wire GrowVolume where
     where
         update'Self wire'Tag old'Self
          = case wire'Tag of
-             10 -> Prelude'.fmap (\ !new'Field -> old'Self{agent_id = P'.mergeAppend (agent_id old'Self) (Prelude'.Just new'Field)})
+             10 -> Prelude'.fmap
+                    (\ !new'Field -> old'Self{_agent_id = P'.mergeAppend (_agent_id old'Self) (Prelude'.Just new'Field)})
                     (P'.wireGet 11)
-             18 -> Prelude'.fmap (\ !new'Field -> old'Self{volume = P'.mergeAppend (volume old'Self) (new'Field)}) (P'.wireGet 11)
-             26 -> Prelude'.fmap (\ !new'Field -> old'Self{addition = P'.mergeAppend (addition old'Self) (new'Field)})
+             18 -> Prelude'.fmap (\ !new'Field -> old'Self{_volume = P'.mergeAppend (_volume old'Self) (new'Field)}) (P'.wireGet 11)
+             26 -> Prelude'.fmap (\ !new'Field -> old'Self{_addition = P'.mergeAppend (_addition old'Self) (new'Field)})
                     (P'.wireGet 11)
              _ -> let (field'Number, wire'Type) = P'.splitWireTag wire'Tag in P'.unknown field'Number wire'Type old'Self
 
@@ -85,7 +91,7 @@ instance P'.ReflectDescriptor GrowVolume where
   getMessageInfo _ = P'.GetMessageInfo (P'.fromDistinctAscList [18, 26]) (P'.fromDistinctAscList [10, 18, 26])
   reflectDescriptorInfo _
    = Prelude'.read
-      "DescriptorInfo {descName = ProtoName {protobufName = FIName \".mesos.v1.master.Call.GrowVolume\", haskellPrefix = [MName \"Mesos\",MName \"V1\",MName \"Master\"], parentModule = [MName \"Protos\",MName \"Call\"], baseName = MName \"GrowVolume\"}, descFilePath = [\"Mesos\",\"V1\",\"Master\",\"Protos\",\"Call\",\"GrowVolume.hs\"], isGroup = False, fields = fromList [FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.master.Call.GrowVolume.agent_id\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Master\"], parentModule' = [MName \"Protos\",MName \"Call\",MName \"GrowVolume\"], baseName' = FName \"agent_id\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 1}, wireTag = WireTag {getWireTag = 10}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.AgentID\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"AgentID\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.master.Call.GrowVolume.volume\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Master\"], parentModule' = [MName \"Protos\",MName \"Call\",MName \"GrowVolume\"], baseName' = FName \"volume\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 2}, wireTag = WireTag {getWireTag = 18}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = True, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.Resource\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"Resource\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.master.Call.GrowVolume.addition\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Master\"], parentModule' = [MName \"Protos\",MName \"Call\",MName \"GrowVolume\"], baseName' = FName \"addition\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 3}, wireTag = WireTag {getWireTag = 26}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = True, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.Resource\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"Resource\"}), hsRawDefault = Nothing, hsDefault = Nothing}], descOneofs = fromList [], keys = fromList [], extRanges = [], knownKeys = fromList [], storeUnknown = False, lazyFields = False, makeLenses = False, jsonInstances = True}"
+      "DescriptorInfo {descName = ProtoName {protobufName = FIName \".mesos.v1.master.Call.GrowVolume\", haskellPrefix = [MName \"Mesos\",MName \"V1\",MName \"Master\"], parentModule = [MName \"Protos\",MName \"Call\"], baseName = MName \"GrowVolume\"}, descFilePath = [\"Mesos\",\"V1\",\"Master\",\"Protos\",\"Call\",\"GrowVolume.hs\"], isGroup = False, fields = fromList [FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.master.Call.GrowVolume.agent_id\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Master\"], parentModule' = [MName \"Protos\",MName \"Call\",MName \"GrowVolume\"], baseName' = FName \"agent_id\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 1}, wireTag = WireTag {getWireTag = 10}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.AgentID\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"AgentID\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.master.Call.GrowVolume.volume\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Master\"], parentModule' = [MName \"Protos\",MName \"Call\",MName \"GrowVolume\"], baseName' = FName \"volume\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 2}, wireTag = WireTag {getWireTag = 18}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = True, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.Resource\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"Resource\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.master.Call.GrowVolume.addition\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Master\"], parentModule' = [MName \"Protos\",MName \"Call\",MName \"GrowVolume\"], baseName' = FName \"addition\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 3}, wireTag = WireTag {getWireTag = 26}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = True, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.Resource\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"Resource\"}), hsRawDefault = Nothing, hsDefault = Nothing}], descOneofs = fromList [], keys = fromList [], extRanges = [], knownKeys = fromList [], storeUnknown = False, lazyFields = False, makeLenses = True, jsonInstances = True}"
 
 instance P'.TextType GrowVolume where
   tellT = P'.tellSubMessage
@@ -94,26 +100,26 @@ instance P'.TextType GrowVolume where
 instance P'.TextMsg GrowVolume where
   textPut msg
    = do
-       P'.tellT "agent_id" (agent_id msg)
-       P'.tellT "volume" (volume msg)
-       P'.tellT "addition" (addition msg)
+       P'.tellT "agent_id" (_agent_id msg)
+       P'.tellT "volume" (_volume msg)
+       P'.tellT "addition" (_addition msg)
   textGet
    = do
-       mods <- P'.sepEndBy (P'.choice [parse'agent_id, parse'volume, parse'addition]) P'.spaces
+       mods <- P'.sepEndBy (P'.choice [parse'_agent_id, parse'_volume, parse'_addition]) P'.spaces
        Prelude'.return (Prelude'.foldl (\ v f -> f v) P'.defaultValue mods)
     where
-        parse'agent_id
+        parse'_agent_id
          = P'.try
             (do
                v <- P'.getT "agent_id"
-               Prelude'.return (\ o -> o{agent_id = v}))
-        parse'volume
+               Prelude'.return (\ o -> o{_agent_id = v}))
+        parse'_volume
          = P'.try
             (do
                v <- P'.getT "volume"
-               Prelude'.return (\ o -> o{volume = v}))
-        parse'addition
+               Prelude'.return (\ o -> o{_volume = v}))
+        parse'_addition
          = P'.try
             (do
                v <- P'.getT "addition"
-               Prelude'.return (\ o -> o{addition = v}))
+               Prelude'.return (\ o -> o{_addition = v}))

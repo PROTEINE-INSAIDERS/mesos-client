@@ -1,20 +1,24 @@
-{-# LANGUAGE BangPatterns, DeriveDataTypeable, DeriveGeneric, FlexibleInstances, MultiParamTypeClasses, OverloadedStrings #-}
+{-# LANGUAGE TemplateHaskell, BangPatterns, DeriveDataTypeable, DeriveGeneric, FlexibleInstances, MultiParamTypeClasses,
+ OverloadedStrings #-}
 {-# OPTIONS_GHC  -fno-warn-unused-imports #-}
-module Mesos.V1.Protos.ContainerStatus (ContainerStatus(..)) where
+module Mesos.V1.Protos.ContainerStatus (ContainerStatus(..), container_id, network_infos, cgroup_info, executor_pid) where
 import Prelude ((+), (/), (++), (.))
 import qualified Prelude as Prelude'
 import qualified Data.Typeable as Prelude'
 import qualified GHC.Generics as Prelude'
 import qualified Data.Data as Prelude'
 import qualified Text.ProtocolBuffers.Header as P'
+import qualified Control.Lens.TH
 import qualified Mesos.V1.Protos.CgroupInfo as Protos (CgroupInfo)
 import qualified Mesos.V1.Protos.ContainerID as Protos (ContainerID)
 import qualified Mesos.V1.Protos.NetworkInfo as Protos (NetworkInfo)
 
-data ContainerStatus = ContainerStatus{container_id :: !(P'.Maybe Protos.ContainerID),
-                                       network_infos :: !(P'.Seq Protos.NetworkInfo), cgroup_info :: !(P'.Maybe Protos.CgroupInfo),
-                                       executor_pid :: !(P'.Maybe P'.Word32)}
+data ContainerStatus = ContainerStatus{_container_id :: !(P'.Maybe Protos.ContainerID),
+                                       _network_infos :: !(P'.Seq Protos.NetworkInfo),
+                                       _cgroup_info :: !(P'.Maybe Protos.CgroupInfo), _executor_pid :: !(P'.Maybe P'.Word32)}
                        deriving (Prelude'.Show, Prelude'.Eq, Prelude'.Ord, Prelude'.Typeable, Prelude'.Data, Prelude'.Generic)
+
+Control.Lens.TH.makeLenses ''ContainerStatus
 
 instance P'.ToJSON ContainerStatus where
   toJSON msg
@@ -36,8 +40,8 @@ instance P'.FromJSON ContainerStatus where
           cgroup_info <- P'.explicitParseFieldMaybe P'.parseJSON o "cgroup_info"
           executor_pid <- P'.explicitParseFieldMaybe P'.parseJSON o "executor_pid"
           Prelude'.return
-           P'.defaultValue{container_id = container_id, network_infos = network_infos, cgroup_info = cgroup_info,
-                           executor_pid = executor_pid})
+           P'.defaultValue{_container_id = container_id, _network_infos = network_infos, _cgroup_info = cgroup_info,
+                           _executor_pid = executor_pid})
 
 instance P'.Mergeable ContainerStatus where
   mergeAppend (ContainerStatus x'1 x'2 x'3 x'4) (ContainerStatus y'1 y'2 y'3 y'4)
@@ -80,14 +84,14 @@ instance P'.Wire ContainerStatus where
         update'Self wire'Tag old'Self
          = case wire'Tag of
              34 -> Prelude'.fmap
-                    (\ !new'Field -> old'Self{container_id = P'.mergeAppend (container_id old'Self) (Prelude'.Just new'Field)})
+                    (\ !new'Field -> old'Self{_container_id = P'.mergeAppend (_container_id old'Self) (Prelude'.Just new'Field)})
                     (P'.wireGet 11)
-             10 -> Prelude'.fmap (\ !new'Field -> old'Self{network_infos = P'.append (network_infos old'Self) new'Field})
+             10 -> Prelude'.fmap (\ !new'Field -> old'Self{_network_infos = P'.append (_network_infos old'Self) new'Field})
                     (P'.wireGet 11)
              18 -> Prelude'.fmap
-                    (\ !new'Field -> old'Self{cgroup_info = P'.mergeAppend (cgroup_info old'Self) (Prelude'.Just new'Field)})
+                    (\ !new'Field -> old'Self{_cgroup_info = P'.mergeAppend (_cgroup_info old'Self) (Prelude'.Just new'Field)})
                     (P'.wireGet 11)
-             24 -> Prelude'.fmap (\ !new'Field -> old'Self{executor_pid = Prelude'.Just new'Field}) (P'.wireGet 13)
+             24 -> Prelude'.fmap (\ !new'Field -> old'Self{_executor_pid = Prelude'.Just new'Field}) (P'.wireGet 13)
              _ -> let (field'Number, wire'Type) = P'.splitWireTag wire'Tag in P'.unknown field'Number wire'Type old'Self
 
 instance P'.MessageAPI msg' (msg' -> ContainerStatus) ContainerStatus where
@@ -99,7 +103,7 @@ instance P'.ReflectDescriptor ContainerStatus where
   getMessageInfo _ = P'.GetMessageInfo (P'.fromDistinctAscList []) (P'.fromDistinctAscList [10, 18, 24, 34])
   reflectDescriptorInfo _
    = Prelude'.read
-      "DescriptorInfo {descName = ProtoName {protobufName = FIName \".mesos.v1.ContainerStatus\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"ContainerStatus\"}, descFilePath = [\"Mesos\",\"V1\",\"Protos\",\"ContainerStatus.hs\"], isGroup = False, fields = fromList [FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.ContainerStatus.container_id\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"ContainerStatus\"], baseName' = FName \"container_id\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 4}, wireTag = WireTag {getWireTag = 34}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.ContainerID\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"ContainerID\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.ContainerStatus.network_infos\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"ContainerStatus\"], baseName' = FName \"network_infos\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 1}, wireTag = WireTag {getWireTag = 10}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = True, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.NetworkInfo\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"NetworkInfo\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.ContainerStatus.cgroup_info\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"ContainerStatus\"], baseName' = FName \"cgroup_info\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 2}, wireTag = WireTag {getWireTag = 18}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.CgroupInfo\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"CgroupInfo\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.ContainerStatus.executor_pid\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"ContainerStatus\"], baseName' = FName \"executor_pid\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 3}, wireTag = WireTag {getWireTag = 24}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 13}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing}], descOneofs = fromList [], keys = fromList [], extRanges = [], knownKeys = fromList [], storeUnknown = False, lazyFields = False, makeLenses = False, jsonInstances = True}"
+      "DescriptorInfo {descName = ProtoName {protobufName = FIName \".mesos.v1.ContainerStatus\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"ContainerStatus\"}, descFilePath = [\"Mesos\",\"V1\",\"Protos\",\"ContainerStatus.hs\"], isGroup = False, fields = fromList [FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.ContainerStatus.container_id\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"ContainerStatus\"], baseName' = FName \"container_id\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 4}, wireTag = WireTag {getWireTag = 34}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.ContainerID\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"ContainerID\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.ContainerStatus.network_infos\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"ContainerStatus\"], baseName' = FName \"network_infos\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 1}, wireTag = WireTag {getWireTag = 10}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = True, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.NetworkInfo\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"NetworkInfo\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.ContainerStatus.cgroup_info\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"ContainerStatus\"], baseName' = FName \"cgroup_info\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 2}, wireTag = WireTag {getWireTag = 18}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.CgroupInfo\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"CgroupInfo\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.ContainerStatus.executor_pid\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"ContainerStatus\"], baseName' = FName \"executor_pid\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 3}, wireTag = WireTag {getWireTag = 24}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 13}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing}], descOneofs = fromList [], keys = fromList [], extRanges = [], knownKeys = fromList [], storeUnknown = False, lazyFields = False, makeLenses = True, jsonInstances = True}"
 
 instance P'.TextType ContainerStatus where
   tellT = P'.tellSubMessage
@@ -108,32 +112,33 @@ instance P'.TextType ContainerStatus where
 instance P'.TextMsg ContainerStatus where
   textPut msg
    = do
-       P'.tellT "container_id" (container_id msg)
-       P'.tellT "network_infos" (network_infos msg)
-       P'.tellT "cgroup_info" (cgroup_info msg)
-       P'.tellT "executor_pid" (executor_pid msg)
+       P'.tellT "container_id" (_container_id msg)
+       P'.tellT "network_infos" (_network_infos msg)
+       P'.tellT "cgroup_info" (_cgroup_info msg)
+       P'.tellT "executor_pid" (_executor_pid msg)
   textGet
    = do
-       mods <- P'.sepEndBy (P'.choice [parse'container_id, parse'network_infos, parse'cgroup_info, parse'executor_pid]) P'.spaces
+       mods <- P'.sepEndBy (P'.choice [parse'_container_id, parse'_network_infos, parse'_cgroup_info, parse'_executor_pid])
+                P'.spaces
        Prelude'.return (Prelude'.foldl (\ v f -> f v) P'.defaultValue mods)
     where
-        parse'container_id
+        parse'_container_id
          = P'.try
             (do
                v <- P'.getT "container_id"
-               Prelude'.return (\ o -> o{container_id = v}))
-        parse'network_infos
+               Prelude'.return (\ o -> o{_container_id = v}))
+        parse'_network_infos
          = P'.try
             (do
                v <- P'.getT "network_infos"
-               Prelude'.return (\ o -> o{network_infos = P'.append (network_infos o) v}))
-        parse'cgroup_info
+               Prelude'.return (\ o -> o{_network_infos = P'.append (_network_infos o) v}))
+        parse'_cgroup_info
          = P'.try
             (do
                v <- P'.getT "cgroup_info"
-               Prelude'.return (\ o -> o{cgroup_info = v}))
-        parse'executor_pid
+               Prelude'.return (\ o -> o{_cgroup_info = v}))
+        parse'_executor_pid
          = P'.try
             (do
                v <- P'.getT "executor_pid"
-               Prelude'.return (\ o -> o{executor_pid = v}))
+               Prelude'.return (\ o -> o{_executor_pid = v}))

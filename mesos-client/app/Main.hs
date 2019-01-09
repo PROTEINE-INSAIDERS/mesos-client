@@ -1,11 +1,13 @@
 {-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE DisambiguateRecordFields #-}
+{-# LANGUAGE DataKinds #-}
+{-# LANGUAGE PolyKinds #-}
 
+import Data.Proxy
 import           Data.Aeson
 import           Data.Either
-import           Mesos.HTTP.Client
-import           Mesos.HTTP.Client.Internal    as M
+import Mesos.HTTP.Client.Internal
 import qualified Mesos.V1.Master               as Master
 import qualified Mesos.V1.Master.Protos.Response
                                                as Master
@@ -14,7 +16,6 @@ import           Network.HTTP.Client            ( defaultManagerSettings
                                                 , newManager
                                                 , proxyEnvironment
                                                 )
-import           Network.HTTP.Simple
 import           Text.ProtocolBuffers
 import           Text.ProtocolBuffers.Basic
 import           Text.ProtocolBuffers.Header
@@ -31,6 +32,8 @@ import           Mesos.V1.Protos.FrameworkInfo.Capability.Type
                                                 ( Type(..) )
 import           Mesos.V1.Protos.Labels
 import           Mesos.V1.Protos.Label
+import           Mesos.V1.Internal
+import Mesos.V1.Master.Protos.Call.Type as Master
 
 -- import qualified Mesos.V1.Protos.FrameworkInfo as FrameworkInfo
 
@@ -62,16 +65,15 @@ fin = FrameworkInfo { user             = uFromString "schernichkin"
 main :: IO ()
 main = do
         let
-                settings = managerSetProxy (proxyEnvironment Nothing)
-                                           defaultManagerSettings
+          settings = managerSetProxy (proxyEnvironment Nothing) defaultManagerSettings
         man <- newManager settings
         endpoint <- newEndpoint man "http://localhost:5050/api/v1/scheduler"
-        -- (res :: Master.Response) <- call endpoint
-        --                                 M.jsonEncoder
-        --                                 M.jsonDecoder
-        --                                 Master.getHealth
-        let s = Scheduler.Subscribe { Scheduler.framework_info   = fin
-                                    , Scheduler.suppressed_roles = empty
-                                    }
-        stream endpoint M.jsonEncoder (M.jsonDecoder :: ResponseDecoder Scheduler.Event) (Scheduler.doSubscribe s)
+        (res :: Master.Response) <- call endpoint
+                                         jsonEncoder
+                                         jsonDecoder
+                                         (construct (Proxy :: Proxy Master.GET_HEALTH) ()) 
+                                         -- let s = Scheduler.Subscribe { Scheduler.framework_info   = fin
+         --                           , Scheduler.suppressed_roles = empty
+         --                           }
+        --stream endpoint M.jsonEncoder (M.jsonDecoder :: ResponseDecoder Scheduler.Event) (Scheduler.doSubscribe s)
         return ()

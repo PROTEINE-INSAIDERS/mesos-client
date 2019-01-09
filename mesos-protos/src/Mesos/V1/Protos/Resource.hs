@@ -1,12 +1,17 @@
-{-# LANGUAGE BangPatterns, DeriveDataTypeable, DeriveGeneric, FlexibleInstances, MultiParamTypeClasses, OverloadedStrings #-}
+{-# LANGUAGE TemplateHaskell, BangPatterns, DeriveDataTypeable, DeriveGeneric, FlexibleInstances, MultiParamTypeClasses,
+ OverloadedStrings #-}
 {-# OPTIONS_GHC  -fno-warn-unused-imports #-}
-module Mesos.V1.Protos.Resource (Resource(..)) where
+module Mesos.V1.Protos.Resource
+       (Resource(..), provider_id, name, type', scalar, ranges, set, role, allocation_info, reservation, reservations, disk,
+        revocable, shared)
+       where
 import Prelude ((+), (/), (++), (.))
 import qualified Prelude as Prelude'
 import qualified Data.Typeable as Prelude'
 import qualified GHC.Generics as Prelude'
 import qualified Data.Data as Prelude'
 import qualified Text.ProtocolBuffers.Header as P'
+import qualified Control.Lens.TH
 import qualified Mesos.V1.Protos.Resource.AllocationInfo as Protos.Resource (AllocationInfo)
 import qualified Mesos.V1.Protos.Resource.DiskInfo as Protos.Resource (DiskInfo)
 import qualified Mesos.V1.Protos.Resource.ReservationInfo as Protos.Resource (ReservationInfo)
@@ -18,14 +23,16 @@ import qualified Mesos.V1.Protos.Value.Scalar as Protos.Value (Scalar)
 import qualified Mesos.V1.Protos.Value.Set as Protos.Value (Set)
 import qualified Mesos.V1.Protos.Value.Type as Protos.Value (Type)
 
-data Resource = Resource{provider_id :: !(P'.Maybe Protos.ResourceProviderID), name :: !(P'.Utf8), type' :: !(Protos.Value.Type),
-                         scalar :: !(P'.Maybe Protos.Value.Scalar), ranges :: !(P'.Maybe Protos.Value.Ranges),
-                         set :: !(P'.Maybe Protos.Value.Set), role :: !(P'.Maybe P'.Utf8),
-                         allocation_info :: !(P'.Maybe Protos.Resource.AllocationInfo),
-                         reservation :: !(P'.Maybe Protos.Resource.ReservationInfo),
-                         reservations :: !(P'.Seq Protos.Resource.ReservationInfo), disk :: !(P'.Maybe Protos.Resource.DiskInfo),
-                         revocable :: !(P'.Maybe Protos.Resource.RevocableInfo), shared :: !(P'.Maybe Protos.Resource.SharedInfo)}
+data Resource = Resource{_provider_id :: !(P'.Maybe Protos.ResourceProviderID), _name :: !(P'.Utf8), _type' :: !(Protos.Value.Type),
+                         _scalar :: !(P'.Maybe Protos.Value.Scalar), _ranges :: !(P'.Maybe Protos.Value.Ranges),
+                         _set :: !(P'.Maybe Protos.Value.Set), _role :: !(P'.Maybe P'.Utf8),
+                         _allocation_info :: !(P'.Maybe Protos.Resource.AllocationInfo),
+                         _reservation :: !(P'.Maybe Protos.Resource.ReservationInfo),
+                         _reservations :: !(P'.Seq Protos.Resource.ReservationInfo), _disk :: !(P'.Maybe Protos.Resource.DiskInfo),
+                         _revocable :: !(P'.Maybe Protos.Resource.RevocableInfo), _shared :: !(P'.Maybe Protos.Resource.SharedInfo)}
                 deriving (Prelude'.Show, Prelude'.Eq, Prelude'.Ord, Prelude'.Typeable, Prelude'.Data, Prelude'.Generic)
+
+Control.Lens.TH.makeLenses ''Resource
 
 instance P'.ToJSON Resource where
   toJSON msg
@@ -64,9 +71,9 @@ instance P'.FromJSON Resource where
           revocable <- P'.explicitParseFieldMaybe P'.parseJSON o "revocable"
           shared <- P'.explicitParseFieldMaybe P'.parseJSON o "shared"
           Prelude'.return
-           P'.defaultValue{provider_id = provider_id, name = name, type' = type', scalar = scalar, ranges = ranges, set = set,
-                           role = role, allocation_info = allocation_info, reservation = reservation, reservations = reservations,
-                           disk = disk, revocable = revocable, shared = shared})
+           P'.defaultValue{_provider_id = provider_id, _name = name, _type' = type', _scalar = scalar, _ranges = ranges, _set = set,
+                           _role = role, _allocation_info = allocation_info, _reservation = reservation,
+                           _reservations = reservations, _disk = disk, _revocable = revocable, _shared = shared})
 
 instance P'.Mergeable Resource where
   mergeAppend (Resource x'1 x'2 x'3 x'4 x'5 x'6 x'7 x'8 x'9 x'10 x'11 x'12 x'13)
@@ -140,32 +147,32 @@ instance P'.Wire Resource where
         update'Self wire'Tag old'Self
          = case wire'Tag of
              98 -> Prelude'.fmap
-                    (\ !new'Field -> old'Self{provider_id = P'.mergeAppend (provider_id old'Self) (Prelude'.Just new'Field)})
+                    (\ !new'Field -> old'Self{_provider_id = P'.mergeAppend (_provider_id old'Self) (Prelude'.Just new'Field)})
                     (P'.wireGet 11)
-             10 -> Prelude'.fmap (\ !new'Field -> old'Self{name = new'Field}) (P'.wireGet 9)
-             16 -> Prelude'.fmap (\ !new'Field -> old'Self{type' = new'Field}) (P'.wireGet 14)
-             26 -> Prelude'.fmap (\ !new'Field -> old'Self{scalar = P'.mergeAppend (scalar old'Self) (Prelude'.Just new'Field)})
+             10 -> Prelude'.fmap (\ !new'Field -> old'Self{_name = new'Field}) (P'.wireGet 9)
+             16 -> Prelude'.fmap (\ !new'Field -> old'Self{_type' = new'Field}) (P'.wireGet 14)
+             26 -> Prelude'.fmap (\ !new'Field -> old'Self{_scalar = P'.mergeAppend (_scalar old'Self) (Prelude'.Just new'Field)})
                     (P'.wireGet 11)
-             34 -> Prelude'.fmap (\ !new'Field -> old'Self{ranges = P'.mergeAppend (ranges old'Self) (Prelude'.Just new'Field)})
+             34 -> Prelude'.fmap (\ !new'Field -> old'Self{_ranges = P'.mergeAppend (_ranges old'Self) (Prelude'.Just new'Field)})
                     (P'.wireGet 11)
-             42 -> Prelude'.fmap (\ !new'Field -> old'Self{set = P'.mergeAppend (set old'Self) (Prelude'.Just new'Field)})
+             42 -> Prelude'.fmap (\ !new'Field -> old'Self{_set = P'.mergeAppend (_set old'Self) (Prelude'.Just new'Field)})
                     (P'.wireGet 11)
-             50 -> Prelude'.fmap (\ !new'Field -> old'Self{role = Prelude'.Just new'Field}) (P'.wireGet 9)
+             50 -> Prelude'.fmap (\ !new'Field -> old'Self{_role = Prelude'.Just new'Field}) (P'.wireGet 9)
              90 -> Prelude'.fmap
                     (\ !new'Field ->
-                      old'Self{allocation_info = P'.mergeAppend (allocation_info old'Self) (Prelude'.Just new'Field)})
+                      old'Self{_allocation_info = P'.mergeAppend (_allocation_info old'Self) (Prelude'.Just new'Field)})
                     (P'.wireGet 11)
              66 -> Prelude'.fmap
-                    (\ !new'Field -> old'Self{reservation = P'.mergeAppend (reservation old'Self) (Prelude'.Just new'Field)})
+                    (\ !new'Field -> old'Self{_reservation = P'.mergeAppend (_reservation old'Self) (Prelude'.Just new'Field)})
                     (P'.wireGet 11)
-             106 -> Prelude'.fmap (\ !new'Field -> old'Self{reservations = P'.append (reservations old'Self) new'Field})
+             106 -> Prelude'.fmap (\ !new'Field -> old'Self{_reservations = P'.append (_reservations old'Self) new'Field})
                      (P'.wireGet 11)
-             58 -> Prelude'.fmap (\ !new'Field -> old'Self{disk = P'.mergeAppend (disk old'Self) (Prelude'.Just new'Field)})
+             58 -> Prelude'.fmap (\ !new'Field -> old'Self{_disk = P'.mergeAppend (_disk old'Self) (Prelude'.Just new'Field)})
                     (P'.wireGet 11)
              74 -> Prelude'.fmap
-                    (\ !new'Field -> old'Self{revocable = P'.mergeAppend (revocable old'Self) (Prelude'.Just new'Field)})
+                    (\ !new'Field -> old'Self{_revocable = P'.mergeAppend (_revocable old'Self) (Prelude'.Just new'Field)})
                     (P'.wireGet 11)
-             82 -> Prelude'.fmap (\ !new'Field -> old'Self{shared = P'.mergeAppend (shared old'Self) (Prelude'.Just new'Field)})
+             82 -> Prelude'.fmap (\ !new'Field -> old'Self{_shared = P'.mergeAppend (_shared old'Self) (Prelude'.Just new'Field)})
                     (P'.wireGet 11)
              _ -> let (field'Number, wire'Type) = P'.splitWireTag wire'Tag in P'.unknown field'Number wire'Type old'Self
 
@@ -180,7 +187,7 @@ instance P'.ReflectDescriptor Resource where
       (P'.fromDistinctAscList [10, 16, 26, 34, 42, 50, 58, 66, 74, 82, 90, 98, 106])
   reflectDescriptorInfo _
    = Prelude'.read
-      "DescriptorInfo {descName = ProtoName {protobufName = FIName \".mesos.v1.Resource\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"Resource\"}, descFilePath = [\"Mesos\",\"V1\",\"Protos\",\"Resource.hs\"], isGroup = False, fields = fromList [FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Resource.provider_id\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Resource\"], baseName' = FName \"provider_id\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 12}, wireTag = WireTag {getWireTag = 98}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.ResourceProviderID\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"ResourceProviderID\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Resource.name\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Resource\"], baseName' = FName \"name\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 1}, wireTag = WireTag {getWireTag = 10}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = True, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 9}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Resource.type\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Resource\"], baseName' = FName \"type'\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 2}, wireTag = WireTag {getWireTag = 16}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = True, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 14}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.Value.Type\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\",MName \"Value\"], baseName = MName \"Type\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Resource.scalar\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Resource\"], baseName' = FName \"scalar\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 3}, wireTag = WireTag {getWireTag = 26}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.Value.Scalar\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\",MName \"Value\"], baseName = MName \"Scalar\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Resource.ranges\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Resource\"], baseName' = FName \"ranges\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 4}, wireTag = WireTag {getWireTag = 34}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.Value.Ranges\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\",MName \"Value\"], baseName = MName \"Ranges\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Resource.set\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Resource\"], baseName' = FName \"set\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 5}, wireTag = WireTag {getWireTag = 42}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.Value.Set\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\",MName \"Value\"], baseName = MName \"Set\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Resource.role\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Resource\"], baseName' = FName \"role\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 6}, wireTag = WireTag {getWireTag = 50}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 9}, typeName = Nothing, hsRawDefault = Just \"*\", hsDefault = Just (HsDef'ByteString \"*\")},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Resource.allocation_info\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Resource\"], baseName' = FName \"allocation_info\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 11}, wireTag = WireTag {getWireTag = 90}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.Resource.AllocationInfo\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\",MName \"Resource\"], baseName = MName \"AllocationInfo\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Resource.reservation\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Resource\"], baseName' = FName \"reservation\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 8}, wireTag = WireTag {getWireTag = 66}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.Resource.ReservationInfo\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\",MName \"Resource\"], baseName = MName \"ReservationInfo\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Resource.reservations\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Resource\"], baseName' = FName \"reservations\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 13}, wireTag = WireTag {getWireTag = 106}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = True, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.Resource.ReservationInfo\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\",MName \"Resource\"], baseName = MName \"ReservationInfo\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Resource.disk\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Resource\"], baseName' = FName \"disk\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 7}, wireTag = WireTag {getWireTag = 58}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.Resource.DiskInfo\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\",MName \"Resource\"], baseName = MName \"DiskInfo\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Resource.revocable\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Resource\"], baseName' = FName \"revocable\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 9}, wireTag = WireTag {getWireTag = 74}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.Resource.RevocableInfo\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\",MName \"Resource\"], baseName = MName \"RevocableInfo\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Resource.shared\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Resource\"], baseName' = FName \"shared\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 10}, wireTag = WireTag {getWireTag = 82}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.Resource.SharedInfo\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\",MName \"Resource\"], baseName = MName \"SharedInfo\"}), hsRawDefault = Nothing, hsDefault = Nothing}], descOneofs = fromList [], keys = fromList [], extRanges = [], knownKeys = fromList [], storeUnknown = False, lazyFields = False, makeLenses = False, jsonInstances = True}"
+      "DescriptorInfo {descName = ProtoName {protobufName = FIName \".mesos.v1.Resource\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"Resource\"}, descFilePath = [\"Mesos\",\"V1\",\"Protos\",\"Resource.hs\"], isGroup = False, fields = fromList [FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Resource.provider_id\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Resource\"], baseName' = FName \"provider_id\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 12}, wireTag = WireTag {getWireTag = 98}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.ResourceProviderID\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"ResourceProviderID\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Resource.name\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Resource\"], baseName' = FName \"name\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 1}, wireTag = WireTag {getWireTag = 10}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = True, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 9}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Resource.type\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Resource\"], baseName' = FName \"type'\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 2}, wireTag = WireTag {getWireTag = 16}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = True, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 14}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.Value.Type\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\",MName \"Value\"], baseName = MName \"Type\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Resource.scalar\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Resource\"], baseName' = FName \"scalar\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 3}, wireTag = WireTag {getWireTag = 26}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.Value.Scalar\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\",MName \"Value\"], baseName = MName \"Scalar\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Resource.ranges\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Resource\"], baseName' = FName \"ranges\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 4}, wireTag = WireTag {getWireTag = 34}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.Value.Ranges\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\",MName \"Value\"], baseName = MName \"Ranges\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Resource.set\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Resource\"], baseName' = FName \"set\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 5}, wireTag = WireTag {getWireTag = 42}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.Value.Set\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\",MName \"Value\"], baseName = MName \"Set\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Resource.role\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Resource\"], baseName' = FName \"role\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 6}, wireTag = WireTag {getWireTag = 50}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 9}, typeName = Nothing, hsRawDefault = Just \"*\", hsDefault = Just (HsDef'ByteString \"*\")},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Resource.allocation_info\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Resource\"], baseName' = FName \"allocation_info\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 11}, wireTag = WireTag {getWireTag = 90}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.Resource.AllocationInfo\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\",MName \"Resource\"], baseName = MName \"AllocationInfo\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Resource.reservation\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Resource\"], baseName' = FName \"reservation\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 8}, wireTag = WireTag {getWireTag = 66}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.Resource.ReservationInfo\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\",MName \"Resource\"], baseName = MName \"ReservationInfo\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Resource.reservations\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Resource\"], baseName' = FName \"reservations\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 13}, wireTag = WireTag {getWireTag = 106}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = True, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.Resource.ReservationInfo\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\",MName \"Resource\"], baseName = MName \"ReservationInfo\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Resource.disk\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Resource\"], baseName' = FName \"disk\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 7}, wireTag = WireTag {getWireTag = 58}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.Resource.DiskInfo\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\",MName \"Resource\"], baseName = MName \"DiskInfo\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Resource.revocable\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Resource\"], baseName' = FName \"revocable\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 9}, wireTag = WireTag {getWireTag = 74}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.Resource.RevocableInfo\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\",MName \"Resource\"], baseName = MName \"RevocableInfo\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Resource.shared\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Resource\"], baseName' = FName \"shared\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 10}, wireTag = WireTag {getWireTag = 82}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.Resource.SharedInfo\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\",MName \"Resource\"], baseName = MName \"SharedInfo\"}), hsRawDefault = Nothing, hsDefault = Nothing}], descOneofs = fromList [], keys = fromList [], extRanges = [], knownKeys = fromList [], storeUnknown = False, lazyFields = False, makeLenses = True, jsonInstances = True}"
 
 instance P'.TextType Resource where
   tellT = P'.tellSubMessage
@@ -189,90 +196,90 @@ instance P'.TextType Resource where
 instance P'.TextMsg Resource where
   textPut msg
    = do
-       P'.tellT "provider_id" (provider_id msg)
-       P'.tellT "name" (name msg)
-       P'.tellT "type" (type' msg)
-       P'.tellT "scalar" (scalar msg)
-       P'.tellT "ranges" (ranges msg)
-       P'.tellT "set" (set msg)
-       P'.tellT "role" (role msg)
-       P'.tellT "allocation_info" (allocation_info msg)
-       P'.tellT "reservation" (reservation msg)
-       P'.tellT "reservations" (reservations msg)
-       P'.tellT "disk" (disk msg)
-       P'.tellT "revocable" (revocable msg)
-       P'.tellT "shared" (shared msg)
+       P'.tellT "provider_id" (_provider_id msg)
+       P'.tellT "name" (_name msg)
+       P'.tellT "type" (_type' msg)
+       P'.tellT "scalar" (_scalar msg)
+       P'.tellT "ranges" (_ranges msg)
+       P'.tellT "set" (_set msg)
+       P'.tellT "role" (_role msg)
+       P'.tellT "allocation_info" (_allocation_info msg)
+       P'.tellT "reservation" (_reservation msg)
+       P'.tellT "reservations" (_reservations msg)
+       P'.tellT "disk" (_disk msg)
+       P'.tellT "revocable" (_revocable msg)
+       P'.tellT "shared" (_shared msg)
   textGet
    = do
        mods <- P'.sepEndBy
                 (P'.choice
-                  [parse'provider_id, parse'name, parse'type', parse'scalar, parse'ranges, parse'set, parse'role,
-                   parse'allocation_info, parse'reservation, parse'reservations, parse'disk, parse'revocable, parse'shared])
+                  [parse'_provider_id, parse'_name, parse'_type', parse'_scalar, parse'_ranges, parse'_set, parse'_role,
+                   parse'_allocation_info, parse'_reservation, parse'_reservations, parse'_disk, parse'_revocable, parse'_shared])
                 P'.spaces
        Prelude'.return (Prelude'.foldl (\ v f -> f v) P'.defaultValue mods)
     where
-        parse'provider_id
+        parse'_provider_id
          = P'.try
             (do
                v <- P'.getT "provider_id"
-               Prelude'.return (\ o -> o{provider_id = v}))
-        parse'name
+               Prelude'.return (\ o -> o{_provider_id = v}))
+        parse'_name
          = P'.try
             (do
                v <- P'.getT "name"
-               Prelude'.return (\ o -> o{name = v}))
-        parse'type'
+               Prelude'.return (\ o -> o{_name = v}))
+        parse'_type'
          = P'.try
             (do
                v <- P'.getT "type"
-               Prelude'.return (\ o -> o{type' = v}))
-        parse'scalar
+               Prelude'.return (\ o -> o{_type' = v}))
+        parse'_scalar
          = P'.try
             (do
                v <- P'.getT "scalar"
-               Prelude'.return (\ o -> o{scalar = v}))
-        parse'ranges
+               Prelude'.return (\ o -> o{_scalar = v}))
+        parse'_ranges
          = P'.try
             (do
                v <- P'.getT "ranges"
-               Prelude'.return (\ o -> o{ranges = v}))
-        parse'set
+               Prelude'.return (\ o -> o{_ranges = v}))
+        parse'_set
          = P'.try
             (do
                v <- P'.getT "set"
-               Prelude'.return (\ o -> o{set = v}))
-        parse'role
+               Prelude'.return (\ o -> o{_set = v}))
+        parse'_role
          = P'.try
             (do
                v <- P'.getT "role"
-               Prelude'.return (\ o -> o{role = v}))
-        parse'allocation_info
+               Prelude'.return (\ o -> o{_role = v}))
+        parse'_allocation_info
          = P'.try
             (do
                v <- P'.getT "allocation_info"
-               Prelude'.return (\ o -> o{allocation_info = v}))
-        parse'reservation
+               Prelude'.return (\ o -> o{_allocation_info = v}))
+        parse'_reservation
          = P'.try
             (do
                v <- P'.getT "reservation"
-               Prelude'.return (\ o -> o{reservation = v}))
-        parse'reservations
+               Prelude'.return (\ o -> o{_reservation = v}))
+        parse'_reservations
          = P'.try
             (do
                v <- P'.getT "reservations"
-               Prelude'.return (\ o -> o{reservations = P'.append (reservations o) v}))
-        parse'disk
+               Prelude'.return (\ o -> o{_reservations = P'.append (_reservations o) v}))
+        parse'_disk
          = P'.try
             (do
                v <- P'.getT "disk"
-               Prelude'.return (\ o -> o{disk = v}))
-        parse'revocable
+               Prelude'.return (\ o -> o{_disk = v}))
+        parse'_revocable
          = P'.try
             (do
                v <- P'.getT "revocable"
-               Prelude'.return (\ o -> o{revocable = v}))
-        parse'shared
+               Prelude'.return (\ o -> o{_revocable = v}))
+        parse'_shared
          = P'.try
             (do
                v <- P'.getT "shared"
-               Prelude'.return (\ o -> o{shared = v}))
+               Prelude'.return (\ o -> o{_shared = v}))

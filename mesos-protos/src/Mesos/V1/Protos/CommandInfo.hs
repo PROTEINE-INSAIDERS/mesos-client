@@ -1,19 +1,23 @@
-{-# LANGUAGE BangPatterns, DeriveDataTypeable, DeriveGeneric, FlexibleInstances, MultiParamTypeClasses, OverloadedStrings #-}
+{-# LANGUAGE TemplateHaskell, BangPatterns, DeriveDataTypeable, DeriveGeneric, FlexibleInstances, MultiParamTypeClasses,
+ OverloadedStrings #-}
 {-# OPTIONS_GHC  -fno-warn-unused-imports #-}
-module Mesos.V1.Protos.CommandInfo (CommandInfo(..)) where
+module Mesos.V1.Protos.CommandInfo (CommandInfo(..), uris, environment, shell, value, arguments, user) where
 import Prelude ((+), (/), (++), (.))
 import qualified Prelude as Prelude'
 import qualified Data.Typeable as Prelude'
 import qualified GHC.Generics as Prelude'
 import qualified Data.Data as Prelude'
 import qualified Text.ProtocolBuffers.Header as P'
+import qualified Control.Lens.TH
 import qualified Mesos.V1.Protos.CommandInfo.URI as Protos.CommandInfo (URI)
 import qualified Mesos.V1.Protos.Environment as Protos (Environment)
 
-data CommandInfo = CommandInfo{uris :: !(P'.Seq Protos.CommandInfo.URI), environment :: !(P'.Maybe Protos.Environment),
-                               shell :: !(P'.Maybe P'.Bool), value :: !(P'.Maybe P'.Utf8), arguments :: !(P'.Seq P'.Utf8),
-                               user :: !(P'.Maybe P'.Utf8)}
+data CommandInfo = CommandInfo{_uris :: !(P'.Seq Protos.CommandInfo.URI), _environment :: !(P'.Maybe Protos.Environment),
+                               _shell :: !(P'.Maybe P'.Bool), _value :: !(P'.Maybe P'.Utf8), _arguments :: !(P'.Seq P'.Utf8),
+                               _user :: !(P'.Maybe P'.Utf8)}
                    deriving (Prelude'.Show, Prelude'.Eq, Prelude'.Ord, Prelude'.Typeable, Prelude'.Data, Prelude'.Generic)
+
+Control.Lens.TH.makeLenses ''CommandInfo
 
 instance P'.ToJSON CommandInfo where
   toJSON msg
@@ -41,8 +45,8 @@ instance P'.FromJSON CommandInfo where
                         (P'.explicitParseFieldMaybe (Prelude'.mapM P'.parseJSON P'.<=< P'.parseJSON) o "arguments")
           user <- P'.explicitParseFieldMaybe P'.parseJSON o "user"
           Prelude'.return
-           P'.defaultValue{uris = uris, environment = environment, shell = shell, value = value, arguments = arguments,
-                           user = user})
+           P'.defaultValue{_uris = uris, _environment = environment, _shell = shell, _value = value, _arguments = arguments,
+                           _user = user})
 
 instance P'.Mergeable CommandInfo where
   mergeAppend (CommandInfo x'1 x'2 x'3 x'4 x'5 x'6) (CommandInfo y'1 y'2 y'3 y'4 y'5 y'6)
@@ -90,14 +94,14 @@ instance P'.Wire CommandInfo where
     where
         update'Self wire'Tag old'Self
          = case wire'Tag of
-             10 -> Prelude'.fmap (\ !new'Field -> old'Self{uris = P'.append (uris old'Self) new'Field}) (P'.wireGet 11)
+             10 -> Prelude'.fmap (\ !new'Field -> old'Self{_uris = P'.append (_uris old'Self) new'Field}) (P'.wireGet 11)
              18 -> Prelude'.fmap
-                    (\ !new'Field -> old'Self{environment = P'.mergeAppend (environment old'Self) (Prelude'.Just new'Field)})
+                    (\ !new'Field -> old'Self{_environment = P'.mergeAppend (_environment old'Self) (Prelude'.Just new'Field)})
                     (P'.wireGet 11)
-             48 -> Prelude'.fmap (\ !new'Field -> old'Self{shell = Prelude'.Just new'Field}) (P'.wireGet 8)
-             26 -> Prelude'.fmap (\ !new'Field -> old'Self{value = Prelude'.Just new'Field}) (P'.wireGet 9)
-             58 -> Prelude'.fmap (\ !new'Field -> old'Self{arguments = P'.append (arguments old'Self) new'Field}) (P'.wireGet 9)
-             42 -> Prelude'.fmap (\ !new'Field -> old'Self{user = Prelude'.Just new'Field}) (P'.wireGet 9)
+             48 -> Prelude'.fmap (\ !new'Field -> old'Self{_shell = Prelude'.Just new'Field}) (P'.wireGet 8)
+             26 -> Prelude'.fmap (\ !new'Field -> old'Self{_value = Prelude'.Just new'Field}) (P'.wireGet 9)
+             58 -> Prelude'.fmap (\ !new'Field -> old'Self{_arguments = P'.append (_arguments old'Self) new'Field}) (P'.wireGet 9)
+             42 -> Prelude'.fmap (\ !new'Field -> old'Self{_user = Prelude'.Just new'Field}) (P'.wireGet 9)
              _ -> let (field'Number, wire'Type) = P'.splitWireTag wire'Tag in P'.unknown field'Number wire'Type old'Self
 
 instance P'.MessageAPI msg' (msg' -> CommandInfo) CommandInfo where
@@ -109,7 +113,7 @@ instance P'.ReflectDescriptor CommandInfo where
   getMessageInfo _ = P'.GetMessageInfo (P'.fromDistinctAscList []) (P'.fromDistinctAscList [10, 18, 26, 42, 48, 58])
   reflectDescriptorInfo _
    = Prelude'.read
-      "DescriptorInfo {descName = ProtoName {protobufName = FIName \".mesos.v1.CommandInfo\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"CommandInfo\"}, descFilePath = [\"Mesos\",\"V1\",\"Protos\",\"CommandInfo.hs\"], isGroup = False, fields = fromList [FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.CommandInfo.uris\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"CommandInfo\"], baseName' = FName \"uris\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 1}, wireTag = WireTag {getWireTag = 10}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = True, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.CommandInfo.URI\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\",MName \"CommandInfo\"], baseName = MName \"URI\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.CommandInfo.environment\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"CommandInfo\"], baseName' = FName \"environment\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 2}, wireTag = WireTag {getWireTag = 18}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.Environment\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"Environment\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.CommandInfo.shell\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"CommandInfo\"], baseName' = FName \"shell\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 6}, wireTag = WireTag {getWireTag = 48}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 8}, typeName = Nothing, hsRawDefault = Just \"true\", hsDefault = Just (HsDef'Bool True)},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.CommandInfo.value\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"CommandInfo\"], baseName' = FName \"value\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 3}, wireTag = WireTag {getWireTag = 26}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 9}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.CommandInfo.arguments\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"CommandInfo\"], baseName' = FName \"arguments\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 7}, wireTag = WireTag {getWireTag = 58}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = True, mightPack = False, typeCode = FieldType {getFieldType = 9}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.CommandInfo.user\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"CommandInfo\"], baseName' = FName \"user\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 5}, wireTag = WireTag {getWireTag = 42}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 9}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing}], descOneofs = fromList [], keys = fromList [], extRanges = [], knownKeys = fromList [], storeUnknown = False, lazyFields = False, makeLenses = False, jsonInstances = True}"
+      "DescriptorInfo {descName = ProtoName {protobufName = FIName \".mesos.v1.CommandInfo\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"CommandInfo\"}, descFilePath = [\"Mesos\",\"V1\",\"Protos\",\"CommandInfo.hs\"], isGroup = False, fields = fromList [FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.CommandInfo.uris\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"CommandInfo\"], baseName' = FName \"uris\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 1}, wireTag = WireTag {getWireTag = 10}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = True, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.CommandInfo.URI\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\",MName \"CommandInfo\"], baseName = MName \"URI\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.CommandInfo.environment\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"CommandInfo\"], baseName' = FName \"environment\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 2}, wireTag = WireTag {getWireTag = 18}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.Environment\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"Environment\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.CommandInfo.shell\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"CommandInfo\"], baseName' = FName \"shell\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 6}, wireTag = WireTag {getWireTag = 48}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 8}, typeName = Nothing, hsRawDefault = Just \"true\", hsDefault = Just (HsDef'Bool True)},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.CommandInfo.value\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"CommandInfo\"], baseName' = FName \"value\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 3}, wireTag = WireTag {getWireTag = 26}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 9}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.CommandInfo.arguments\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"CommandInfo\"], baseName' = FName \"arguments\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 7}, wireTag = WireTag {getWireTag = 58}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = True, mightPack = False, typeCode = FieldType {getFieldType = 9}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.CommandInfo.user\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"CommandInfo\"], baseName' = FName \"user\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 5}, wireTag = WireTag {getWireTag = 42}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 9}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing}], descOneofs = fromList [], keys = fromList [], extRanges = [], knownKeys = fromList [], storeUnknown = False, lazyFields = False, makeLenses = True, jsonInstances = True}"
 
 instance P'.TextType CommandInfo where
   tellT = P'.tellSubMessage
@@ -118,45 +122,45 @@ instance P'.TextType CommandInfo where
 instance P'.TextMsg CommandInfo where
   textPut msg
    = do
-       P'.tellT "uris" (uris msg)
-       P'.tellT "environment" (environment msg)
-       P'.tellT "shell" (shell msg)
-       P'.tellT "value" (value msg)
-       P'.tellT "arguments" (arguments msg)
-       P'.tellT "user" (user msg)
+       P'.tellT "uris" (_uris msg)
+       P'.tellT "environment" (_environment msg)
+       P'.tellT "shell" (_shell msg)
+       P'.tellT "value" (_value msg)
+       P'.tellT "arguments" (_arguments msg)
+       P'.tellT "user" (_user msg)
   textGet
    = do
-       mods <- P'.sepEndBy (P'.choice [parse'uris, parse'environment, parse'shell, parse'value, parse'arguments, parse'user])
+       mods <- P'.sepEndBy (P'.choice [parse'_uris, parse'_environment, parse'_shell, parse'_value, parse'_arguments, parse'_user])
                 P'.spaces
        Prelude'.return (Prelude'.foldl (\ v f -> f v) P'.defaultValue mods)
     where
-        parse'uris
+        parse'_uris
          = P'.try
             (do
                v <- P'.getT "uris"
-               Prelude'.return (\ o -> o{uris = P'.append (uris o) v}))
-        parse'environment
+               Prelude'.return (\ o -> o{_uris = P'.append (_uris o) v}))
+        parse'_environment
          = P'.try
             (do
                v <- P'.getT "environment"
-               Prelude'.return (\ o -> o{environment = v}))
-        parse'shell
+               Prelude'.return (\ o -> o{_environment = v}))
+        parse'_shell
          = P'.try
             (do
                v <- P'.getT "shell"
-               Prelude'.return (\ o -> o{shell = v}))
-        parse'value
+               Prelude'.return (\ o -> o{_shell = v}))
+        parse'_value
          = P'.try
             (do
                v <- P'.getT "value"
-               Prelude'.return (\ o -> o{value = v}))
-        parse'arguments
+               Prelude'.return (\ o -> o{_value = v}))
+        parse'_arguments
          = P'.try
             (do
                v <- P'.getT "arguments"
-               Prelude'.return (\ o -> o{arguments = P'.append (arguments o) v}))
-        parse'user
+               Prelude'.return (\ o -> o{_arguments = P'.append (_arguments o) v}))
+        parse'_user
          = P'.try
             (do
                v <- P'.getT "user"
-               Prelude'.return (\ o -> o{user = v}))
+               Prelude'.return (\ o -> o{_user = v}))

@@ -1,18 +1,22 @@
-{-# LANGUAGE BangPatterns, DeriveDataTypeable, DeriveGeneric, FlexibleInstances, MultiParamTypeClasses, OverloadedStrings #-}
+{-# LANGUAGE TemplateHaskell, BangPatterns, DeriveDataTypeable, DeriveGeneric, FlexibleInstances, MultiParamTypeClasses,
+ OverloadedStrings #-}
 {-# OPTIONS_GHC  -fno-warn-unused-imports #-}
-module Mesos.V1.Protos.Offer.Operation.CreateDisk (CreateDisk(..)) where
+module Mesos.V1.Protos.Offer.Operation.CreateDisk (CreateDisk(..), source, target_type, target_profile) where
 import Prelude ((+), (/), (++), (.))
 import qualified Prelude as Prelude'
 import qualified Data.Typeable as Prelude'
 import qualified GHC.Generics as Prelude'
 import qualified Data.Data as Prelude'
 import qualified Text.ProtocolBuffers.Header as P'
+import qualified Control.Lens.TH
 import qualified Mesos.V1.Protos.Resource as Protos (Resource)
 import qualified Mesos.V1.Protos.Resource.DiskInfo.Source.Type as Protos.Resource.DiskInfo.Source (Type)
 
-data CreateDisk = CreateDisk{source :: !(Protos.Resource), target_type :: !(Protos.Resource.DiskInfo.Source.Type),
-                             target_profile :: !(P'.Maybe P'.Utf8)}
+data CreateDisk = CreateDisk{_source :: !(Protos.Resource), _target_type :: !(Protos.Resource.DiskInfo.Source.Type),
+                             _target_profile :: !(P'.Maybe P'.Utf8)}
                   deriving (Prelude'.Show, Prelude'.Eq, Prelude'.Ord, Prelude'.Typeable, Prelude'.Data, Prelude'.Generic)
+
+Control.Lens.TH.makeLenses ''CreateDisk
 
 instance P'.ToJSON CreateDisk where
   toJSON msg
@@ -29,7 +33,7 @@ instance P'.FromJSON CreateDisk where
           source <- P'.explicitParseField P'.parseJSON o "source"
           target_type <- P'.explicitParseField P'.parseJSON o "target_type"
           target_profile <- P'.explicitParseFieldMaybe P'.parseJSON o "target_profile"
-          Prelude'.return P'.defaultValue{source = source, target_type = target_type, target_profile = target_profile})
+          Prelude'.return P'.defaultValue{_source = source, _target_type = target_type, _target_profile = target_profile})
 
 instance P'.Mergeable CreateDisk where
   mergeAppend (CreateDisk x'1 x'2 x'3) (CreateDisk y'1 y'2 y'3)
@@ -69,9 +73,9 @@ instance P'.Wire CreateDisk where
     where
         update'Self wire'Tag old'Self
          = case wire'Tag of
-             10 -> Prelude'.fmap (\ !new'Field -> old'Self{source = P'.mergeAppend (source old'Self) (new'Field)}) (P'.wireGet 11)
-             16 -> Prelude'.fmap (\ !new'Field -> old'Self{target_type = new'Field}) (P'.wireGet 14)
-             26 -> Prelude'.fmap (\ !new'Field -> old'Self{target_profile = Prelude'.Just new'Field}) (P'.wireGet 9)
+             10 -> Prelude'.fmap (\ !new'Field -> old'Self{_source = P'.mergeAppend (_source old'Self) (new'Field)}) (P'.wireGet 11)
+             16 -> Prelude'.fmap (\ !new'Field -> old'Self{_target_type = new'Field}) (P'.wireGet 14)
+             26 -> Prelude'.fmap (\ !new'Field -> old'Self{_target_profile = Prelude'.Just new'Field}) (P'.wireGet 9)
              _ -> let (field'Number, wire'Type) = P'.splitWireTag wire'Tag in P'.unknown field'Number wire'Type old'Self
 
 instance P'.MessageAPI msg' (msg' -> CreateDisk) CreateDisk where
@@ -83,7 +87,7 @@ instance P'.ReflectDescriptor CreateDisk where
   getMessageInfo _ = P'.GetMessageInfo (P'.fromDistinctAscList [10, 16]) (P'.fromDistinctAscList [10, 16, 26])
   reflectDescriptorInfo _
    = Prelude'.read
-      "DescriptorInfo {descName = ProtoName {protobufName = FIName \".mesos.v1.Offer.Operation.CreateDisk\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\",MName \"Offer\",MName \"Operation\"], baseName = MName \"CreateDisk\"}, descFilePath = [\"Mesos\",\"V1\",\"Protos\",\"Offer\",\"Operation\",\"CreateDisk.hs\"], isGroup = False, fields = fromList [FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Offer.Operation.CreateDisk.source\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Offer\",MName \"Operation\",MName \"CreateDisk\"], baseName' = FName \"source\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 1}, wireTag = WireTag {getWireTag = 10}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = True, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.Resource\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"Resource\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Offer.Operation.CreateDisk.target_type\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Offer\",MName \"Operation\",MName \"CreateDisk\"], baseName' = FName \"target_type\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 2}, wireTag = WireTag {getWireTag = 16}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = True, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 14}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.Resource.DiskInfo.Source.Type\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\",MName \"Resource\",MName \"DiskInfo\",MName \"Source\"], baseName = MName \"Type\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Offer.Operation.CreateDisk.target_profile\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Offer\",MName \"Operation\",MName \"CreateDisk\"], baseName' = FName \"target_profile\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 3}, wireTag = WireTag {getWireTag = 26}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 9}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing}], descOneofs = fromList [], keys = fromList [], extRanges = [], knownKeys = fromList [], storeUnknown = False, lazyFields = False, makeLenses = False, jsonInstances = True}"
+      "DescriptorInfo {descName = ProtoName {protobufName = FIName \".mesos.v1.Offer.Operation.CreateDisk\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\",MName \"Offer\",MName \"Operation\"], baseName = MName \"CreateDisk\"}, descFilePath = [\"Mesos\",\"V1\",\"Protos\",\"Offer\",\"Operation\",\"CreateDisk.hs\"], isGroup = False, fields = fromList [FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Offer.Operation.CreateDisk.source\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Offer\",MName \"Operation\",MName \"CreateDisk\"], baseName' = FName \"source\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 1}, wireTag = WireTag {getWireTag = 10}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = True, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.Resource\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"Resource\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Offer.Operation.CreateDisk.target_type\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Offer\",MName \"Operation\",MName \"CreateDisk\"], baseName' = FName \"target_type\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 2}, wireTag = WireTag {getWireTag = 16}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = True, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 14}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.Resource.DiskInfo.Source.Type\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\",MName \"Resource\",MName \"DiskInfo\",MName \"Source\"], baseName = MName \"Type\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Offer.Operation.CreateDisk.target_profile\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Offer\",MName \"Operation\",MName \"CreateDisk\"], baseName' = FName \"target_profile\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 3}, wireTag = WireTag {getWireTag = 26}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 9}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing}], descOneofs = fromList [], keys = fromList [], extRanges = [], knownKeys = fromList [], storeUnknown = False, lazyFields = False, makeLenses = True, jsonInstances = True}"
 
 instance P'.TextType CreateDisk where
   tellT = P'.tellSubMessage
@@ -92,26 +96,26 @@ instance P'.TextType CreateDisk where
 instance P'.TextMsg CreateDisk where
   textPut msg
    = do
-       P'.tellT "source" (source msg)
-       P'.tellT "target_type" (target_type msg)
-       P'.tellT "target_profile" (target_profile msg)
+       P'.tellT "source" (_source msg)
+       P'.tellT "target_type" (_target_type msg)
+       P'.tellT "target_profile" (_target_profile msg)
   textGet
    = do
-       mods <- P'.sepEndBy (P'.choice [parse'source, parse'target_type, parse'target_profile]) P'.spaces
+       mods <- P'.sepEndBy (P'.choice [parse'_source, parse'_target_type, parse'_target_profile]) P'.spaces
        Prelude'.return (Prelude'.foldl (\ v f -> f v) P'.defaultValue mods)
     where
-        parse'source
+        parse'_source
          = P'.try
             (do
                v <- P'.getT "source"
-               Prelude'.return (\ o -> o{source = v}))
-        parse'target_type
+               Prelude'.return (\ o -> o{_source = v}))
+        parse'_target_type
          = P'.try
             (do
                v <- P'.getT "target_type"
-               Prelude'.return (\ o -> o{target_type = v}))
-        parse'target_profile
+               Prelude'.return (\ o -> o{_target_type = v}))
+        parse'_target_profile
          = P'.try
             (do
                v <- P'.getT "target_profile"
-               Prelude'.return (\ o -> o{target_profile = v}))
+               Prelude'.return (\ o -> o{_target_profile = v}))

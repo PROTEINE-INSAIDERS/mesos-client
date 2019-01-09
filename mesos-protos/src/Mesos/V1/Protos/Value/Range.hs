@@ -1,15 +1,19 @@
-{-# LANGUAGE BangPatterns, DeriveDataTypeable, DeriveGeneric, FlexibleInstances, MultiParamTypeClasses, OverloadedStrings #-}
+{-# LANGUAGE TemplateHaskell, BangPatterns, DeriveDataTypeable, DeriveGeneric, FlexibleInstances, MultiParamTypeClasses,
+ OverloadedStrings #-}
 {-# OPTIONS_GHC  -fno-warn-unused-imports #-}
-module Mesos.V1.Protos.Value.Range (Range(..)) where
+module Mesos.V1.Protos.Value.Range (Range(..), begin, end) where
 import Prelude ((+), (/), (++), (.))
 import qualified Prelude as Prelude'
 import qualified Data.Typeable as Prelude'
 import qualified GHC.Generics as Prelude'
 import qualified Data.Data as Prelude'
 import qualified Text.ProtocolBuffers.Header as P'
+import qualified Control.Lens.TH
 
-data Range = Range{begin :: !(P'.Word64), end :: !(P'.Word64)}
+data Range = Range{_begin :: !(P'.Word64), _end :: !(P'.Word64)}
              deriving (Prelude'.Show, Prelude'.Eq, Prelude'.Ord, Prelude'.Typeable, Prelude'.Data, Prelude'.Generic)
+
+Control.Lens.TH.makeLenses ''Range
 
 instance P'.ToJSON Range where
   toJSON msg
@@ -23,7 +27,7 @@ instance P'.FromJSON Range where
         do
           begin <- P'.explicitParseField (P'.parseJSONReadWithPayload "uint64") o "begin"
           end <- P'.explicitParseField (P'.parseJSONReadWithPayload "uint64") o "end"
-          Prelude'.return P'.defaultValue{begin = begin, end = end})
+          Prelude'.return P'.defaultValue{_begin = begin, _end = end})
 
 instance P'.Mergeable Range where
   mergeAppend (Range x'1 x'2) (Range y'1 y'2) = Range (P'.mergeAppend x'1 y'1) (P'.mergeAppend x'2 y'2)
@@ -61,8 +65,8 @@ instance P'.Wire Range where
     where
         update'Self wire'Tag old'Self
          = case wire'Tag of
-             8 -> Prelude'.fmap (\ !new'Field -> old'Self{begin = new'Field}) (P'.wireGet 4)
-             16 -> Prelude'.fmap (\ !new'Field -> old'Self{end = new'Field}) (P'.wireGet 4)
+             8 -> Prelude'.fmap (\ !new'Field -> old'Self{_begin = new'Field}) (P'.wireGet 4)
+             16 -> Prelude'.fmap (\ !new'Field -> old'Self{_end = new'Field}) (P'.wireGet 4)
              _ -> let (field'Number, wire'Type) = P'.splitWireTag wire'Tag in P'.unknown field'Number wire'Type old'Self
 
 instance P'.MessageAPI msg' (msg' -> Range) Range where
@@ -74,7 +78,7 @@ instance P'.ReflectDescriptor Range where
   getMessageInfo _ = P'.GetMessageInfo (P'.fromDistinctAscList [8, 16]) (P'.fromDistinctAscList [8, 16])
   reflectDescriptorInfo _
    = Prelude'.read
-      "DescriptorInfo {descName = ProtoName {protobufName = FIName \".mesos.v1.Value.Range\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\",MName \"Value\"], baseName = MName \"Range\"}, descFilePath = [\"Mesos\",\"V1\",\"Protos\",\"Value\",\"Range.hs\"], isGroup = False, fields = fromList [FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Value.Range.begin\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Value\",MName \"Range\"], baseName' = FName \"begin\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 1}, wireTag = WireTag {getWireTag = 8}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = True, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Value.Range.end\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Value\",MName \"Range\"], baseName' = FName \"end\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 2}, wireTag = WireTag {getWireTag = 16}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = True, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing}], descOneofs = fromList [], keys = fromList [], extRanges = [], knownKeys = fromList [], storeUnknown = False, lazyFields = False, makeLenses = False, jsonInstances = True}"
+      "DescriptorInfo {descName = ProtoName {protobufName = FIName \".mesos.v1.Value.Range\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\",MName \"Value\"], baseName = MName \"Range\"}, descFilePath = [\"Mesos\",\"V1\",\"Protos\",\"Value\",\"Range.hs\"], isGroup = False, fields = fromList [FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Value.Range.begin\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Value\",MName \"Range\"], baseName' = FName \"begin\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 1}, wireTag = WireTag {getWireTag = 8}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = True, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Value.Range.end\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Value\",MName \"Range\"], baseName' = FName \"end\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 2}, wireTag = WireTag {getWireTag = 16}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = True, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing}], descOneofs = fromList [], keys = fromList [], extRanges = [], knownKeys = fromList [], storeUnknown = False, lazyFields = False, makeLenses = True, jsonInstances = True}"
 
 instance P'.TextType Range where
   tellT = P'.tellSubMessage
@@ -83,20 +87,20 @@ instance P'.TextType Range where
 instance P'.TextMsg Range where
   textPut msg
    = do
-       P'.tellT "begin" (begin msg)
-       P'.tellT "end" (end msg)
+       P'.tellT "begin" (_begin msg)
+       P'.tellT "end" (_end msg)
   textGet
    = do
-       mods <- P'.sepEndBy (P'.choice [parse'begin, parse'end]) P'.spaces
+       mods <- P'.sepEndBy (P'.choice [parse'_begin, parse'_end]) P'.spaces
        Prelude'.return (Prelude'.foldl (\ v f -> f v) P'.defaultValue mods)
     where
-        parse'begin
+        parse'_begin
          = P'.try
             (do
                v <- P'.getT "begin"
-               Prelude'.return (\ o -> o{begin = v}))
-        parse'end
+               Prelude'.return (\ o -> o{_begin = v}))
+        parse'_end
          = P'.try
             (do
                v <- P'.getT "end"
-               Prelude'.return (\ o -> o{end = v}))
+               Prelude'.return (\ o -> o{_end = v}))

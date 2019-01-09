@@ -1,19 +1,23 @@
-{-# LANGUAGE BangPatterns, DeriveDataTypeable, DeriveGeneric, FlexibleInstances, MultiParamTypeClasses, OverloadedStrings #-}
+{-# LANGUAGE TemplateHaskell, BangPatterns, DeriveDataTypeable, DeriveGeneric, FlexibleInstances, MultiParamTypeClasses,
+ OverloadedStrings #-}
 {-# OPTIONS_GHC  -fno-warn-unused-imports #-}
-module Mesos.V1.Scheduler.Protos.Call.Accept (Accept(..)) where
+module Mesos.V1.Scheduler.Protos.Call.Accept (Accept(..), offer_ids, operations, filters) where
 import Prelude ((+), (/), (++), (.))
 import qualified Prelude as Prelude'
 import qualified Data.Typeable as Prelude'
 import qualified GHC.Generics as Prelude'
 import qualified Data.Data as Prelude'
 import qualified Text.ProtocolBuffers.Header as P'
+import qualified Control.Lens.TH
 import qualified Mesos.V1.Protos.Filters as Protos (Filters)
 import qualified Mesos.V1.Protos.Offer.Operation as Protos.Offer (Operation)
 import qualified Mesos.V1.Protos.OfferID as Protos (OfferID)
 
-data Accept = Accept{offer_ids :: !(P'.Seq Protos.OfferID), operations :: !(P'.Seq Protos.Offer.Operation),
-                     filters :: !(P'.Maybe Protos.Filters)}
+data Accept = Accept{_offer_ids :: !(P'.Seq Protos.OfferID), _operations :: !(P'.Seq Protos.Offer.Operation),
+                     _filters :: !(P'.Maybe Protos.Filters)}
               deriving (Prelude'.Show, Prelude'.Eq, Prelude'.Ord, Prelude'.Typeable, Prelude'.Data, Prelude'.Generic)
+
+Control.Lens.TH.makeLenses ''Accept
 
 instance P'.ToJSON Accept where
   toJSON msg
@@ -33,7 +37,7 @@ instance P'.FromJSON Accept where
           operations <- Prelude'.fmap (Prelude'.maybe Prelude'.mempty Prelude'.id)
                          (P'.explicitParseFieldMaybe (Prelude'.mapM P'.parseJSON P'.<=< P'.parseJSON) o "operations")
           filters <- P'.explicitParseFieldMaybe P'.parseJSON o "filters"
-          Prelude'.return P'.defaultValue{offer_ids = offer_ids, operations = operations, filters = filters})
+          Prelude'.return P'.defaultValue{_offer_ids = offer_ids, _operations = operations, _filters = filters})
 
 instance P'.Mergeable Accept where
   mergeAppend (Accept x'1 x'2 x'3) (Accept y'1 y'2 y'3)
@@ -74,9 +78,10 @@ instance P'.Wire Accept where
     where
         update'Self wire'Tag old'Self
          = case wire'Tag of
-             10 -> Prelude'.fmap (\ !new'Field -> old'Self{offer_ids = P'.append (offer_ids old'Self) new'Field}) (P'.wireGet 11)
-             18 -> Prelude'.fmap (\ !new'Field -> old'Self{operations = P'.append (operations old'Self) new'Field}) (P'.wireGet 11)
-             26 -> Prelude'.fmap (\ !new'Field -> old'Self{filters = P'.mergeAppend (filters old'Self) (Prelude'.Just new'Field)})
+             10 -> Prelude'.fmap (\ !new'Field -> old'Self{_offer_ids = P'.append (_offer_ids old'Self) new'Field}) (P'.wireGet 11)
+             18 -> Prelude'.fmap (\ !new'Field -> old'Self{_operations = P'.append (_operations old'Self) new'Field})
+                    (P'.wireGet 11)
+             26 -> Prelude'.fmap (\ !new'Field -> old'Self{_filters = P'.mergeAppend (_filters old'Self) (Prelude'.Just new'Field)})
                     (P'.wireGet 11)
              _ -> let (field'Number, wire'Type) = P'.splitWireTag wire'Tag in P'.unknown field'Number wire'Type old'Self
 
@@ -89,7 +94,7 @@ instance P'.ReflectDescriptor Accept where
   getMessageInfo _ = P'.GetMessageInfo (P'.fromDistinctAscList []) (P'.fromDistinctAscList [10, 18, 26])
   reflectDescriptorInfo _
    = Prelude'.read
-      "DescriptorInfo {descName = ProtoName {protobufName = FIName \".mesos.v1.scheduler.Call.Accept\", haskellPrefix = [MName \"Mesos\",MName \"V1\",MName \"Scheduler\"], parentModule = [MName \"Protos\",MName \"Call\"], baseName = MName \"Accept\"}, descFilePath = [\"Mesos\",\"V1\",\"Scheduler\",\"Protos\",\"Call\",\"Accept.hs\"], isGroup = False, fields = fromList [FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.scheduler.Call.Accept.offer_ids\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Scheduler\"], parentModule' = [MName \"Protos\",MName \"Call\",MName \"Accept\"], baseName' = FName \"offer_ids\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 1}, wireTag = WireTag {getWireTag = 10}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = True, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.OfferID\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"OfferID\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.scheduler.Call.Accept.operations\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Scheduler\"], parentModule' = [MName \"Protos\",MName \"Call\",MName \"Accept\"], baseName' = FName \"operations\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 2}, wireTag = WireTag {getWireTag = 18}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = True, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.Offer.Operation\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\",MName \"Offer\"], baseName = MName \"Operation\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.scheduler.Call.Accept.filters\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Scheduler\"], parentModule' = [MName \"Protos\",MName \"Call\",MName \"Accept\"], baseName' = FName \"filters\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 3}, wireTag = WireTag {getWireTag = 26}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.Filters\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"Filters\"}), hsRawDefault = Nothing, hsDefault = Nothing}], descOneofs = fromList [], keys = fromList [], extRanges = [], knownKeys = fromList [], storeUnknown = False, lazyFields = False, makeLenses = False, jsonInstances = True}"
+      "DescriptorInfo {descName = ProtoName {protobufName = FIName \".mesos.v1.scheduler.Call.Accept\", haskellPrefix = [MName \"Mesos\",MName \"V1\",MName \"Scheduler\"], parentModule = [MName \"Protos\",MName \"Call\"], baseName = MName \"Accept\"}, descFilePath = [\"Mesos\",\"V1\",\"Scheduler\",\"Protos\",\"Call\",\"Accept.hs\"], isGroup = False, fields = fromList [FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.scheduler.Call.Accept.offer_ids\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Scheduler\"], parentModule' = [MName \"Protos\",MName \"Call\",MName \"Accept\"], baseName' = FName \"offer_ids\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 1}, wireTag = WireTag {getWireTag = 10}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = True, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.OfferID\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"OfferID\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.scheduler.Call.Accept.operations\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Scheduler\"], parentModule' = [MName \"Protos\",MName \"Call\",MName \"Accept\"], baseName' = FName \"operations\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 2}, wireTag = WireTag {getWireTag = 18}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = True, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.Offer.Operation\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\",MName \"Offer\"], baseName = MName \"Operation\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.scheduler.Call.Accept.filters\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Scheduler\"], parentModule' = [MName \"Protos\",MName \"Call\",MName \"Accept\"], baseName' = FName \"filters\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 3}, wireTag = WireTag {getWireTag = 26}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.Filters\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"Filters\"}), hsRawDefault = Nothing, hsDefault = Nothing}], descOneofs = fromList [], keys = fromList [], extRanges = [], knownKeys = fromList [], storeUnknown = False, lazyFields = False, makeLenses = True, jsonInstances = True}"
 
 instance P'.TextType Accept where
   tellT = P'.tellSubMessage
@@ -98,26 +103,26 @@ instance P'.TextType Accept where
 instance P'.TextMsg Accept where
   textPut msg
    = do
-       P'.tellT "offer_ids" (offer_ids msg)
-       P'.tellT "operations" (operations msg)
-       P'.tellT "filters" (filters msg)
+       P'.tellT "offer_ids" (_offer_ids msg)
+       P'.tellT "operations" (_operations msg)
+       P'.tellT "filters" (_filters msg)
   textGet
    = do
-       mods <- P'.sepEndBy (P'.choice [parse'offer_ids, parse'operations, parse'filters]) P'.spaces
+       mods <- P'.sepEndBy (P'.choice [parse'_offer_ids, parse'_operations, parse'_filters]) P'.spaces
        Prelude'.return (Prelude'.foldl (\ v f -> f v) P'.defaultValue mods)
     where
-        parse'offer_ids
+        parse'_offer_ids
          = P'.try
             (do
                v <- P'.getT "offer_ids"
-               Prelude'.return (\ o -> o{offer_ids = P'.append (offer_ids o) v}))
-        parse'operations
+               Prelude'.return (\ o -> o{_offer_ids = P'.append (_offer_ids o) v}))
+        parse'_operations
          = P'.try
             (do
                v <- P'.getT "operations"
-               Prelude'.return (\ o -> o{operations = P'.append (operations o) v}))
-        parse'filters
+               Prelude'.return (\ o -> o{_operations = P'.append (_operations o) v}))
+        parse'_filters
          = P'.try
             (do
                v <- P'.getT "filters"
-               Prelude'.return (\ o -> o{filters = v}))
+               Prelude'.return (\ o -> o{_filters = v}))

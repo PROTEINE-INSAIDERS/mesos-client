@@ -1,15 +1,19 @@
-{-# LANGUAGE BangPatterns, DeriveDataTypeable, DeriveGeneric, FlexibleInstances, MultiParamTypeClasses, OverloadedStrings #-}
+{-# LANGUAGE TemplateHaskell, BangPatterns, DeriveDataTypeable, DeriveGeneric, FlexibleInstances, MultiParamTypeClasses,
+ OverloadedStrings #-}
 {-# OPTIONS_GHC  -fno-warn-unused-imports #-}
-module Mesos.V1.Protos.CgroupInfo.NetCls (NetCls(..)) where
+module Mesos.V1.Protos.CgroupInfo.NetCls (NetCls(..), classid) where
 import Prelude ((+), (/), (++), (.))
 import qualified Prelude as Prelude'
 import qualified Data.Typeable as Prelude'
 import qualified GHC.Generics as Prelude'
 import qualified Data.Data as Prelude'
 import qualified Text.ProtocolBuffers.Header as P'
+import qualified Control.Lens.TH
 
-data NetCls = NetCls{classid :: !(P'.Maybe P'.Word32)}
+data NetCls = NetCls{_classid :: !(P'.Maybe P'.Word32)}
               deriving (Prelude'.Show, Prelude'.Eq, Prelude'.Ord, Prelude'.Typeable, Prelude'.Data, Prelude'.Generic)
+
+Control.Lens.TH.makeLenses ''NetCls
 
 instance P'.ToJSON NetCls where
   toJSON msg = P'.objectNoEmpty ([("classid", P'.toJSON (Prelude'.fmap P'.toJSON (classid msg)))] ++ Prelude'.concat [])
@@ -20,7 +24,7 @@ instance P'.FromJSON NetCls where
       (\ o ->
         do
           classid <- P'.explicitParseFieldMaybe P'.parseJSON o "classid"
-          Prelude'.return P'.defaultValue{classid = classid})
+          Prelude'.return P'.defaultValue{_classid = classid})
 
 instance P'.Mergeable NetCls where
   mergeAppend (NetCls x'1) (NetCls y'1) = NetCls (P'.mergeAppend x'1 y'1)
@@ -58,7 +62,7 @@ instance P'.Wire NetCls where
     where
         update'Self wire'Tag old'Self
          = case wire'Tag of
-             8 -> Prelude'.fmap (\ !new'Field -> old'Self{classid = Prelude'.Just new'Field}) (P'.wireGet 13)
+             8 -> Prelude'.fmap (\ !new'Field -> old'Self{_classid = Prelude'.Just new'Field}) (P'.wireGet 13)
              _ -> let (field'Number, wire'Type) = P'.splitWireTag wire'Tag in P'.unknown field'Number wire'Type old'Self
 
 instance P'.MessageAPI msg' (msg' -> NetCls) NetCls where
@@ -70,7 +74,7 @@ instance P'.ReflectDescriptor NetCls where
   getMessageInfo _ = P'.GetMessageInfo (P'.fromDistinctAscList []) (P'.fromDistinctAscList [8])
   reflectDescriptorInfo _
    = Prelude'.read
-      "DescriptorInfo {descName = ProtoName {protobufName = FIName \".mesos.v1.CgroupInfo.NetCls\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\",MName \"CgroupInfo\"], baseName = MName \"NetCls\"}, descFilePath = [\"Mesos\",\"V1\",\"Protos\",\"CgroupInfo\",\"NetCls.hs\"], isGroup = False, fields = fromList [FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.CgroupInfo.NetCls.classid\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"CgroupInfo\",MName \"NetCls\"], baseName' = FName \"classid\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 1}, wireTag = WireTag {getWireTag = 8}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 13}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing}], descOneofs = fromList [], keys = fromList [], extRanges = [], knownKeys = fromList [], storeUnknown = False, lazyFields = False, makeLenses = False, jsonInstances = True}"
+      "DescriptorInfo {descName = ProtoName {protobufName = FIName \".mesos.v1.CgroupInfo.NetCls\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\",MName \"CgroupInfo\"], baseName = MName \"NetCls\"}, descFilePath = [\"Mesos\",\"V1\",\"Protos\",\"CgroupInfo\",\"NetCls.hs\"], isGroup = False, fields = fromList [FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.CgroupInfo.NetCls.classid\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"CgroupInfo\",MName \"NetCls\"], baseName' = FName \"classid\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 1}, wireTag = WireTag {getWireTag = 8}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 13}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing}], descOneofs = fromList [], keys = fromList [], extRanges = [], knownKeys = fromList [], storeUnknown = False, lazyFields = False, makeLenses = True, jsonInstances = True}"
 
 instance P'.TextType NetCls where
   tellT = P'.tellSubMessage
@@ -79,14 +83,14 @@ instance P'.TextType NetCls where
 instance P'.TextMsg NetCls where
   textPut msg
    = do
-       P'.tellT "classid" (classid msg)
+       P'.tellT "classid" (_classid msg)
   textGet
    = do
-       mods <- P'.sepEndBy (P'.choice [parse'classid]) P'.spaces
+       mods <- P'.sepEndBy (P'.choice [parse'_classid]) P'.spaces
        Prelude'.return (Prelude'.foldl (\ v f -> f v) P'.defaultValue mods)
     where
-        parse'classid
+        parse'_classid
          = P'.try
             (do
                v <- P'.getT "classid"
-               Prelude'.return (\ o -> o{classid = v}))
+               Prelude'.return (\ o -> o{_classid = v}))

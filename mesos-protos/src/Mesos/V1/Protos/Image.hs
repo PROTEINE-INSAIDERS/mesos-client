@@ -1,19 +1,23 @@
-{-# LANGUAGE BangPatterns, DeriveDataTypeable, DeriveGeneric, FlexibleInstances, MultiParamTypeClasses, OverloadedStrings #-}
+{-# LANGUAGE TemplateHaskell, BangPatterns, DeriveDataTypeable, DeriveGeneric, FlexibleInstances, MultiParamTypeClasses,
+ OverloadedStrings #-}
 {-# OPTIONS_GHC  -fno-warn-unused-imports #-}
-module Mesos.V1.Protos.Image (Image(..)) where
+module Mesos.V1.Protos.Image (Image(..), type', appc, docker, cached) where
 import Prelude ((+), (/), (++), (.))
 import qualified Prelude as Prelude'
 import qualified Data.Typeable as Prelude'
 import qualified GHC.Generics as Prelude'
 import qualified Data.Data as Prelude'
 import qualified Text.ProtocolBuffers.Header as P'
+import qualified Control.Lens.TH
 import qualified Mesos.V1.Protos.Image.Appc as Protos.Image (Appc)
 import qualified Mesos.V1.Protos.Image.Docker as Protos.Image (Docker)
 import qualified Mesos.V1.Protos.Image.Type as Protos.Image (Type)
 
-data Image = Image{type' :: !(Protos.Image.Type), appc :: !(P'.Maybe Protos.Image.Appc), docker :: !(P'.Maybe Protos.Image.Docker),
-                   cached :: !(P'.Maybe P'.Bool)}
+data Image = Image{_type' :: !(Protos.Image.Type), _appc :: !(P'.Maybe Protos.Image.Appc),
+                   _docker :: !(P'.Maybe Protos.Image.Docker), _cached :: !(P'.Maybe P'.Bool)}
              deriving (Prelude'.Show, Prelude'.Eq, Prelude'.Ord, Prelude'.Typeable, Prelude'.Data, Prelude'.Generic)
+
+Control.Lens.TH.makeLenses ''Image
 
 instance P'.ToJSON Image where
   toJSON msg
@@ -33,7 +37,7 @@ instance P'.FromJSON Image where
           cached <- do
                       tmp <- P'.explicitParseFieldMaybe P'.parseJSONBool o "cached"
                       Prelude'.return (Prelude'.maybe (Prelude'.Just (Prelude'.True)) Prelude'.Just tmp)
-          Prelude'.return P'.defaultValue{type' = type', appc = appc, docker = docker, cached = cached})
+          Prelude'.return P'.defaultValue{_type' = type', _appc = appc, _docker = docker, _cached = cached})
 
 instance P'.Mergeable Image where
   mergeAppend (Image x'1 x'2 x'3 x'4) (Image y'1 y'2 y'3 y'4)
@@ -75,12 +79,12 @@ instance P'.Wire Image where
     where
         update'Self wire'Tag old'Self
          = case wire'Tag of
-             8 -> Prelude'.fmap (\ !new'Field -> old'Self{type' = new'Field}) (P'.wireGet 14)
-             18 -> Prelude'.fmap (\ !new'Field -> old'Self{appc = P'.mergeAppend (appc old'Self) (Prelude'.Just new'Field)})
+             8 -> Prelude'.fmap (\ !new'Field -> old'Self{_type' = new'Field}) (P'.wireGet 14)
+             18 -> Prelude'.fmap (\ !new'Field -> old'Self{_appc = P'.mergeAppend (_appc old'Self) (Prelude'.Just new'Field)})
                     (P'.wireGet 11)
-             26 -> Prelude'.fmap (\ !new'Field -> old'Self{docker = P'.mergeAppend (docker old'Self) (Prelude'.Just new'Field)})
+             26 -> Prelude'.fmap (\ !new'Field -> old'Self{_docker = P'.mergeAppend (_docker old'Self) (Prelude'.Just new'Field)})
                     (P'.wireGet 11)
-             32 -> Prelude'.fmap (\ !new'Field -> old'Self{cached = Prelude'.Just new'Field}) (P'.wireGet 8)
+             32 -> Prelude'.fmap (\ !new'Field -> old'Self{_cached = Prelude'.Just new'Field}) (P'.wireGet 8)
              _ -> let (field'Number, wire'Type) = P'.splitWireTag wire'Tag in P'.unknown field'Number wire'Type old'Self
 
 instance P'.MessageAPI msg' (msg' -> Image) Image where
@@ -92,7 +96,7 @@ instance P'.ReflectDescriptor Image where
   getMessageInfo _ = P'.GetMessageInfo (P'.fromDistinctAscList [8]) (P'.fromDistinctAscList [8, 18, 26, 32])
   reflectDescriptorInfo _
    = Prelude'.read
-      "DescriptorInfo {descName = ProtoName {protobufName = FIName \".mesos.v1.Image\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"Image\"}, descFilePath = [\"Mesos\",\"V1\",\"Protos\",\"Image.hs\"], isGroup = False, fields = fromList [FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Image.type\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Image\"], baseName' = FName \"type'\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 1}, wireTag = WireTag {getWireTag = 8}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = True, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 14}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.Image.Type\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\",MName \"Image\"], baseName = MName \"Type\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Image.appc\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Image\"], baseName' = FName \"appc\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 2}, wireTag = WireTag {getWireTag = 18}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.Image.Appc\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\",MName \"Image\"], baseName = MName \"Appc\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Image.docker\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Image\"], baseName' = FName \"docker\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 3}, wireTag = WireTag {getWireTag = 26}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.Image.Docker\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\",MName \"Image\"], baseName = MName \"Docker\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Image.cached\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Image\"], baseName' = FName \"cached\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 4}, wireTag = WireTag {getWireTag = 32}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 8}, typeName = Nothing, hsRawDefault = Just \"true\", hsDefault = Just (HsDef'Bool True)}], descOneofs = fromList [], keys = fromList [], extRanges = [], knownKeys = fromList [], storeUnknown = False, lazyFields = False, makeLenses = False, jsonInstances = True}"
+      "DescriptorInfo {descName = ProtoName {protobufName = FIName \".mesos.v1.Image\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"Image\"}, descFilePath = [\"Mesos\",\"V1\",\"Protos\",\"Image.hs\"], isGroup = False, fields = fromList [FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Image.type\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Image\"], baseName' = FName \"type'\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 1}, wireTag = WireTag {getWireTag = 8}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = True, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 14}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.Image.Type\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\",MName \"Image\"], baseName = MName \"Type\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Image.appc\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Image\"], baseName' = FName \"appc\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 2}, wireTag = WireTag {getWireTag = 18}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.Image.Appc\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\",MName \"Image\"], baseName = MName \"Appc\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Image.docker\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Image\"], baseName' = FName \"docker\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 3}, wireTag = WireTag {getWireTag = 26}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.Image.Docker\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\",MName \"Image\"], baseName = MName \"Docker\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Image.cached\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Image\"], baseName' = FName \"cached\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 4}, wireTag = WireTag {getWireTag = 32}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 8}, typeName = Nothing, hsRawDefault = Just \"true\", hsDefault = Just (HsDef'Bool True)}], descOneofs = fromList [], keys = fromList [], extRanges = [], knownKeys = fromList [], storeUnknown = False, lazyFields = False, makeLenses = True, jsonInstances = True}"
 
 instance P'.TextType Image where
   tellT = P'.tellSubMessage
@@ -101,32 +105,32 @@ instance P'.TextType Image where
 instance P'.TextMsg Image where
   textPut msg
    = do
-       P'.tellT "type" (type' msg)
-       P'.tellT "appc" (appc msg)
-       P'.tellT "docker" (docker msg)
-       P'.tellT "cached" (cached msg)
+       P'.tellT "type" (_type' msg)
+       P'.tellT "appc" (_appc msg)
+       P'.tellT "docker" (_docker msg)
+       P'.tellT "cached" (_cached msg)
   textGet
    = do
-       mods <- P'.sepEndBy (P'.choice [parse'type', parse'appc, parse'docker, parse'cached]) P'.spaces
+       mods <- P'.sepEndBy (P'.choice [parse'_type', parse'_appc, parse'_docker, parse'_cached]) P'.spaces
        Prelude'.return (Prelude'.foldl (\ v f -> f v) P'.defaultValue mods)
     where
-        parse'type'
+        parse'_type'
          = P'.try
             (do
                v <- P'.getT "type"
-               Prelude'.return (\ o -> o{type' = v}))
-        parse'appc
+               Prelude'.return (\ o -> o{_type' = v}))
+        parse'_appc
          = P'.try
             (do
                v <- P'.getT "appc"
-               Prelude'.return (\ o -> o{appc = v}))
-        parse'docker
+               Prelude'.return (\ o -> o{_appc = v}))
+        parse'_docker
          = P'.try
             (do
                v <- P'.getT "docker"
-               Prelude'.return (\ o -> o{docker = v}))
-        parse'cached
+               Prelude'.return (\ o -> o{_docker = v}))
+        parse'_cached
          = P'.try
             (do
                v <- P'.getT "cached"
-               Prelude'.return (\ o -> o{cached = v}))
+               Prelude'.return (\ o -> o{_cached = v}))

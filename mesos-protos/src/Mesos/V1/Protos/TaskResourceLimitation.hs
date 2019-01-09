@@ -1,17 +1,21 @@
-{-# LANGUAGE BangPatterns, DeriveDataTypeable, DeriveGeneric, FlexibleInstances, MultiParamTypeClasses, OverloadedStrings #-}
+{-# LANGUAGE TemplateHaskell, BangPatterns, DeriveDataTypeable, DeriveGeneric, FlexibleInstances, MultiParamTypeClasses,
+ OverloadedStrings #-}
 {-# OPTIONS_GHC  -fno-warn-unused-imports #-}
-module Mesos.V1.Protos.TaskResourceLimitation (TaskResourceLimitation(..)) where
+module Mesos.V1.Protos.TaskResourceLimitation (TaskResourceLimitation(..), resources) where
 import Prelude ((+), (/), (++), (.))
 import qualified Prelude as Prelude'
 import qualified Data.Typeable as Prelude'
 import qualified GHC.Generics as Prelude'
 import qualified Data.Data as Prelude'
 import qualified Text.ProtocolBuffers.Header as P'
+import qualified Control.Lens.TH
 import qualified Mesos.V1.Protos.Resource as Protos (Resource)
 
-data TaskResourceLimitation = TaskResourceLimitation{resources :: !(P'.Seq Protos.Resource)}
+data TaskResourceLimitation = TaskResourceLimitation{_resources :: !(P'.Seq Protos.Resource)}
                               deriving (Prelude'.Show, Prelude'.Eq, Prelude'.Ord, Prelude'.Typeable, Prelude'.Data,
                                         Prelude'.Generic)
+
+Control.Lens.TH.makeLenses ''TaskResourceLimitation
 
 instance P'.ToJSON TaskResourceLimitation where
   toJSON msg = P'.objectNoEmpty ([("resources", P'.toJSON (Prelude'.fmap P'.toJSON (resources msg)))] ++ Prelude'.concat [])
@@ -23,7 +27,7 @@ instance P'.FromJSON TaskResourceLimitation where
         do
           resources <- Prelude'.fmap (Prelude'.maybe Prelude'.mempty Prelude'.id)
                         (P'.explicitParseFieldMaybe (Prelude'.mapM P'.parseJSON P'.<=< P'.parseJSON) o "resources")
-          Prelude'.return P'.defaultValue{resources = resources})
+          Prelude'.return P'.defaultValue{_resources = resources})
 
 instance P'.Mergeable TaskResourceLimitation where
   mergeAppend (TaskResourceLimitation x'1) (TaskResourceLimitation y'1) = TaskResourceLimitation (P'.mergeAppend x'1 y'1)
@@ -61,7 +65,7 @@ instance P'.Wire TaskResourceLimitation where
     where
         update'Self wire'Tag old'Self
          = case wire'Tag of
-             10 -> Prelude'.fmap (\ !new'Field -> old'Self{resources = P'.append (resources old'Self) new'Field}) (P'.wireGet 11)
+             10 -> Prelude'.fmap (\ !new'Field -> old'Self{_resources = P'.append (_resources old'Self) new'Field}) (P'.wireGet 11)
              _ -> let (field'Number, wire'Type) = P'.splitWireTag wire'Tag in P'.unknown field'Number wire'Type old'Self
 
 instance P'.MessageAPI msg' (msg' -> TaskResourceLimitation) TaskResourceLimitation where
@@ -73,7 +77,7 @@ instance P'.ReflectDescriptor TaskResourceLimitation where
   getMessageInfo _ = P'.GetMessageInfo (P'.fromDistinctAscList []) (P'.fromDistinctAscList [10])
   reflectDescriptorInfo _
    = Prelude'.read
-      "DescriptorInfo {descName = ProtoName {protobufName = FIName \".mesos.v1.TaskResourceLimitation\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"TaskResourceLimitation\"}, descFilePath = [\"Mesos\",\"V1\",\"Protos\",\"TaskResourceLimitation.hs\"], isGroup = False, fields = fromList [FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.TaskResourceLimitation.resources\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"TaskResourceLimitation\"], baseName' = FName \"resources\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 1}, wireTag = WireTag {getWireTag = 10}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = True, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.Resource\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"Resource\"}), hsRawDefault = Nothing, hsDefault = Nothing}], descOneofs = fromList [], keys = fromList [], extRanges = [], knownKeys = fromList [], storeUnknown = False, lazyFields = False, makeLenses = False, jsonInstances = True}"
+      "DescriptorInfo {descName = ProtoName {protobufName = FIName \".mesos.v1.TaskResourceLimitation\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"TaskResourceLimitation\"}, descFilePath = [\"Mesos\",\"V1\",\"Protos\",\"TaskResourceLimitation.hs\"], isGroup = False, fields = fromList [FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.TaskResourceLimitation.resources\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"TaskResourceLimitation\"], baseName' = FName \"resources\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 1}, wireTag = WireTag {getWireTag = 10}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = True, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.Resource\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"Resource\"}), hsRawDefault = Nothing, hsDefault = Nothing}], descOneofs = fromList [], keys = fromList [], extRanges = [], knownKeys = fromList [], storeUnknown = False, lazyFields = False, makeLenses = True, jsonInstances = True}"
 
 instance P'.TextType TaskResourceLimitation where
   tellT = P'.tellSubMessage
@@ -82,14 +86,14 @@ instance P'.TextType TaskResourceLimitation where
 instance P'.TextMsg TaskResourceLimitation where
   textPut msg
    = do
-       P'.tellT "resources" (resources msg)
+       P'.tellT "resources" (_resources msg)
   textGet
    = do
-       mods <- P'.sepEndBy (P'.choice [parse'resources]) P'.spaces
+       mods <- P'.sepEndBy (P'.choice [parse'_resources]) P'.spaces
        Prelude'.return (Prelude'.foldl (\ v f -> f v) P'.defaultValue mods)
     where
-        parse'resources
+        parse'_resources
          = P'.try
             (do
                v <- P'.getT "resources"
-               Prelude'.return (\ o -> o{resources = P'.append (resources o) v}))
+               Prelude'.return (\ o -> o{_resources = P'.append (_resources o) v}))

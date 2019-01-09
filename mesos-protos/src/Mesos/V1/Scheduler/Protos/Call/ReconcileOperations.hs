@@ -1,16 +1,20 @@
-{-# LANGUAGE BangPatterns, DeriveDataTypeable, DeriveGeneric, FlexibleInstances, MultiParamTypeClasses, OverloadedStrings #-}
+{-# LANGUAGE TemplateHaskell, BangPatterns, DeriveDataTypeable, DeriveGeneric, FlexibleInstances, MultiParamTypeClasses,
+ OverloadedStrings #-}
 {-# OPTIONS_GHC  -fno-warn-unused-imports #-}
-module Mesos.V1.Scheduler.Protos.Call.ReconcileOperations (ReconcileOperations(..)) where
+module Mesos.V1.Scheduler.Protos.Call.ReconcileOperations (ReconcileOperations(..), operations) where
 import Prelude ((+), (/), (++), (.))
 import qualified Prelude as Prelude'
 import qualified Data.Typeable as Prelude'
 import qualified GHC.Generics as Prelude'
 import qualified Data.Data as Prelude'
 import qualified Text.ProtocolBuffers.Header as P'
+import qualified Control.Lens.TH
 import qualified Mesos.V1.Scheduler.Protos.Call.ReconcileOperations.Operation as Protos.Call.ReconcileOperations (Operation)
 
-data ReconcileOperations = ReconcileOperations{operations :: !(P'.Seq Protos.Call.ReconcileOperations.Operation)}
+data ReconcileOperations = ReconcileOperations{_operations :: !(P'.Seq Protos.Call.ReconcileOperations.Operation)}
                            deriving (Prelude'.Show, Prelude'.Eq, Prelude'.Ord, Prelude'.Typeable, Prelude'.Data, Prelude'.Generic)
+
+Control.Lens.TH.makeLenses ''ReconcileOperations
 
 instance P'.ToJSON ReconcileOperations where
   toJSON msg = P'.objectNoEmpty ([("operations", P'.toJSON (Prelude'.fmap P'.toJSON (operations msg)))] ++ Prelude'.concat [])
@@ -22,7 +26,7 @@ instance P'.FromJSON ReconcileOperations where
         do
           operations <- Prelude'.fmap (Prelude'.maybe Prelude'.mempty Prelude'.id)
                          (P'.explicitParseFieldMaybe (Prelude'.mapM P'.parseJSON P'.<=< P'.parseJSON) o "operations")
-          Prelude'.return P'.defaultValue{operations = operations})
+          Prelude'.return P'.defaultValue{_operations = operations})
 
 instance P'.Mergeable ReconcileOperations where
   mergeAppend (ReconcileOperations x'1) (ReconcileOperations y'1) = ReconcileOperations (P'.mergeAppend x'1 y'1)
@@ -60,7 +64,8 @@ instance P'.Wire ReconcileOperations where
     where
         update'Self wire'Tag old'Self
          = case wire'Tag of
-             10 -> Prelude'.fmap (\ !new'Field -> old'Self{operations = P'.append (operations old'Self) new'Field}) (P'.wireGet 11)
+             10 -> Prelude'.fmap (\ !new'Field -> old'Self{_operations = P'.append (_operations old'Self) new'Field})
+                    (P'.wireGet 11)
              _ -> let (field'Number, wire'Type) = P'.splitWireTag wire'Tag in P'.unknown field'Number wire'Type old'Self
 
 instance P'.MessageAPI msg' (msg' -> ReconcileOperations) ReconcileOperations where
@@ -72,7 +77,7 @@ instance P'.ReflectDescriptor ReconcileOperations where
   getMessageInfo _ = P'.GetMessageInfo (P'.fromDistinctAscList []) (P'.fromDistinctAscList [10])
   reflectDescriptorInfo _
    = Prelude'.read
-      "DescriptorInfo {descName = ProtoName {protobufName = FIName \".mesos.v1.scheduler.Call.ReconcileOperations\", haskellPrefix = [MName \"Mesos\",MName \"V1\",MName \"Scheduler\"], parentModule = [MName \"Protos\",MName \"Call\"], baseName = MName \"ReconcileOperations\"}, descFilePath = [\"Mesos\",\"V1\",\"Scheduler\",\"Protos\",\"Call\",\"ReconcileOperations.hs\"], isGroup = False, fields = fromList [FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.scheduler.Call.ReconcileOperations.operations\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Scheduler\"], parentModule' = [MName \"Protos\",MName \"Call\",MName \"ReconcileOperations\"], baseName' = FName \"operations\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 1}, wireTag = WireTag {getWireTag = 10}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = True, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.scheduler.Call.ReconcileOperations.Operation\", haskellPrefix = [MName \"Mesos\",MName \"V1\",MName \"Scheduler\"], parentModule = [MName \"Protos\",MName \"Call\",MName \"ReconcileOperations\"], baseName = MName \"Operation\"}), hsRawDefault = Nothing, hsDefault = Nothing}], descOneofs = fromList [], keys = fromList [], extRanges = [], knownKeys = fromList [], storeUnknown = False, lazyFields = False, makeLenses = False, jsonInstances = True}"
+      "DescriptorInfo {descName = ProtoName {protobufName = FIName \".mesos.v1.scheduler.Call.ReconcileOperations\", haskellPrefix = [MName \"Mesos\",MName \"V1\",MName \"Scheduler\"], parentModule = [MName \"Protos\",MName \"Call\"], baseName = MName \"ReconcileOperations\"}, descFilePath = [\"Mesos\",\"V1\",\"Scheduler\",\"Protos\",\"Call\",\"ReconcileOperations.hs\"], isGroup = False, fields = fromList [FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.scheduler.Call.ReconcileOperations.operations\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Scheduler\"], parentModule' = [MName \"Protos\",MName \"Call\",MName \"ReconcileOperations\"], baseName' = FName \"operations\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 1}, wireTag = WireTag {getWireTag = 10}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = True, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.scheduler.Call.ReconcileOperations.Operation\", haskellPrefix = [MName \"Mesos\",MName \"V1\",MName \"Scheduler\"], parentModule = [MName \"Protos\",MName \"Call\",MName \"ReconcileOperations\"], baseName = MName \"Operation\"}), hsRawDefault = Nothing, hsDefault = Nothing}], descOneofs = fromList [], keys = fromList [], extRanges = [], knownKeys = fromList [], storeUnknown = False, lazyFields = False, makeLenses = True, jsonInstances = True}"
 
 instance P'.TextType ReconcileOperations where
   tellT = P'.tellSubMessage
@@ -81,14 +86,14 @@ instance P'.TextType ReconcileOperations where
 instance P'.TextMsg ReconcileOperations where
   textPut msg
    = do
-       P'.tellT "operations" (operations msg)
+       P'.tellT "operations" (_operations msg)
   textGet
    = do
-       mods <- P'.sepEndBy (P'.choice [parse'operations]) P'.spaces
+       mods <- P'.sepEndBy (P'.choice [parse'_operations]) P'.spaces
        Prelude'.return (Prelude'.foldl (\ v f -> f v) P'.defaultValue mods)
     where
-        parse'operations
+        parse'_operations
          = P'.try
             (do
                v <- P'.getT "operations"
-               Prelude'.return (\ o -> o{operations = P'.append (operations o) v}))
+               Prelude'.return (\ o -> o{_operations = P'.append (_operations o) v}))

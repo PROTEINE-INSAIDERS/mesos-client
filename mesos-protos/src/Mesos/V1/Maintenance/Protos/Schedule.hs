@@ -1,16 +1,20 @@
-{-# LANGUAGE BangPatterns, DeriveDataTypeable, DeriveGeneric, FlexibleInstances, MultiParamTypeClasses, OverloadedStrings #-}
+{-# LANGUAGE TemplateHaskell, BangPatterns, DeriveDataTypeable, DeriveGeneric, FlexibleInstances, MultiParamTypeClasses,
+ OverloadedStrings #-}
 {-# OPTIONS_GHC  -fno-warn-unused-imports #-}
-module Mesos.V1.Maintenance.Protos.Schedule (Schedule(..)) where
+module Mesos.V1.Maintenance.Protos.Schedule (Schedule(..), windows) where
 import Prelude ((+), (/), (++), (.))
 import qualified Prelude as Prelude'
 import qualified Data.Typeable as Prelude'
 import qualified GHC.Generics as Prelude'
 import qualified Data.Data as Prelude'
 import qualified Text.ProtocolBuffers.Header as P'
+import qualified Control.Lens.TH
 import qualified Mesos.V1.Maintenance.Protos.Window as Protos (Window)
 
-data Schedule = Schedule{windows :: !(P'.Seq Protos.Window)}
+data Schedule = Schedule{_windows :: !(P'.Seq Protos.Window)}
                 deriving (Prelude'.Show, Prelude'.Eq, Prelude'.Ord, Prelude'.Typeable, Prelude'.Data, Prelude'.Generic)
+
+Control.Lens.TH.makeLenses ''Schedule
 
 instance P'.ToJSON Schedule where
   toJSON msg = P'.objectNoEmpty ([("windows", P'.toJSON (Prelude'.fmap P'.toJSON (windows msg)))] ++ Prelude'.concat [])
@@ -22,7 +26,7 @@ instance P'.FromJSON Schedule where
         do
           windows <- Prelude'.fmap (Prelude'.maybe Prelude'.mempty Prelude'.id)
                       (P'.explicitParseFieldMaybe (Prelude'.mapM P'.parseJSON P'.<=< P'.parseJSON) o "windows")
-          Prelude'.return P'.defaultValue{windows = windows})
+          Prelude'.return P'.defaultValue{_windows = windows})
 
 instance P'.Mergeable Schedule where
   mergeAppend (Schedule x'1) (Schedule y'1) = Schedule (P'.mergeAppend x'1 y'1)
@@ -60,7 +64,7 @@ instance P'.Wire Schedule where
     where
         update'Self wire'Tag old'Self
          = case wire'Tag of
-             10 -> Prelude'.fmap (\ !new'Field -> old'Self{windows = P'.append (windows old'Self) new'Field}) (P'.wireGet 11)
+             10 -> Prelude'.fmap (\ !new'Field -> old'Self{_windows = P'.append (_windows old'Self) new'Field}) (P'.wireGet 11)
              _ -> let (field'Number, wire'Type) = P'.splitWireTag wire'Tag in P'.unknown field'Number wire'Type old'Self
 
 instance P'.MessageAPI msg' (msg' -> Schedule) Schedule where
@@ -72,7 +76,7 @@ instance P'.ReflectDescriptor Schedule where
   getMessageInfo _ = P'.GetMessageInfo (P'.fromDistinctAscList []) (P'.fromDistinctAscList [10])
   reflectDescriptorInfo _
    = Prelude'.read
-      "DescriptorInfo {descName = ProtoName {protobufName = FIName \".mesos.v1.maintenance.Schedule\", haskellPrefix = [MName \"Mesos\",MName \"V1\",MName \"Maintenance\"], parentModule = [MName \"Protos\"], baseName = MName \"Schedule\"}, descFilePath = [\"Mesos\",\"V1\",\"Maintenance\",\"Protos\",\"Schedule.hs\"], isGroup = False, fields = fromList [FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.maintenance.Schedule.windows\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Maintenance\"], parentModule' = [MName \"Protos\",MName \"Schedule\"], baseName' = FName \"windows\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 1}, wireTag = WireTag {getWireTag = 10}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = True, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.maintenance.Window\", haskellPrefix = [MName \"Mesos\",MName \"V1\",MName \"Maintenance\"], parentModule = [MName \"Protos\"], baseName = MName \"Window\"}), hsRawDefault = Nothing, hsDefault = Nothing}], descOneofs = fromList [], keys = fromList [], extRanges = [], knownKeys = fromList [], storeUnknown = False, lazyFields = False, makeLenses = False, jsonInstances = True}"
+      "DescriptorInfo {descName = ProtoName {protobufName = FIName \".mesos.v1.maintenance.Schedule\", haskellPrefix = [MName \"Mesos\",MName \"V1\",MName \"Maintenance\"], parentModule = [MName \"Protos\"], baseName = MName \"Schedule\"}, descFilePath = [\"Mesos\",\"V1\",\"Maintenance\",\"Protos\",\"Schedule.hs\"], isGroup = False, fields = fromList [FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.maintenance.Schedule.windows\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Maintenance\"], parentModule' = [MName \"Protos\",MName \"Schedule\"], baseName' = FName \"windows\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 1}, wireTag = WireTag {getWireTag = 10}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = True, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.maintenance.Window\", haskellPrefix = [MName \"Mesos\",MName \"V1\",MName \"Maintenance\"], parentModule = [MName \"Protos\"], baseName = MName \"Window\"}), hsRawDefault = Nothing, hsDefault = Nothing}], descOneofs = fromList [], keys = fromList [], extRanges = [], knownKeys = fromList [], storeUnknown = False, lazyFields = False, makeLenses = True, jsonInstances = True}"
 
 instance P'.TextType Schedule where
   tellT = P'.tellSubMessage
@@ -81,14 +85,14 @@ instance P'.TextType Schedule where
 instance P'.TextMsg Schedule where
   textPut msg
    = do
-       P'.tellT "windows" (windows msg)
+       P'.tellT "windows" (_windows msg)
   textGet
    = do
-       mods <- P'.sepEndBy (P'.choice [parse'windows]) P'.spaces
+       mods <- P'.sepEndBy (P'.choice [parse'_windows]) P'.spaces
        Prelude'.return (Prelude'.foldl (\ v f -> f v) P'.defaultValue mods)
     where
-        parse'windows
+        parse'_windows
          = P'.try
             (do
                v <- P'.getT "windows"
-               Prelude'.return (\ o -> o{windows = P'.append (windows o) v}))
+               Prelude'.return (\ o -> o{_windows = P'.append (_windows o) v}))

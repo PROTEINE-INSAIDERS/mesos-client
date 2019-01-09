@@ -1,15 +1,19 @@
-{-# LANGUAGE BangPatterns, DeriveDataTypeable, DeriveGeneric, FlexibleInstances, MultiParamTypeClasses, OverloadedStrings #-}
+{-# LANGUAGE TemplateHaskell, BangPatterns, DeriveDataTypeable, DeriveGeneric, FlexibleInstances, MultiParamTypeClasses,
+ OverloadedStrings #-}
 {-# OPTIONS_GHC  -fno-warn-unused-imports #-}
-module Mesos.V1.Protos.CheckInfo.Tcp (Tcp(..)) where
+module Mesos.V1.Protos.CheckInfo.Tcp (Tcp(..), port) where
 import Prelude ((+), (/), (++), (.))
 import qualified Prelude as Prelude'
 import qualified Data.Typeable as Prelude'
 import qualified GHC.Generics as Prelude'
 import qualified Data.Data as Prelude'
 import qualified Text.ProtocolBuffers.Header as P'
+import qualified Control.Lens.TH
 
-data Tcp = Tcp{port :: !(P'.Word32)}
+data Tcp = Tcp{_port :: !(P'.Word32)}
            deriving (Prelude'.Show, Prelude'.Eq, Prelude'.Ord, Prelude'.Typeable, Prelude'.Data, Prelude'.Generic)
+
+Control.Lens.TH.makeLenses ''Tcp
 
 instance P'.ToJSON Tcp where
   toJSON msg = P'.objectNoEmpty ([("port", P'.toJSON (port msg))] ++ Prelude'.concat [])
@@ -20,7 +24,7 @@ instance P'.FromJSON Tcp where
       (\ o ->
         do
           port <- P'.explicitParseField P'.parseJSON o "port"
-          Prelude'.return P'.defaultValue{port = port})
+          Prelude'.return P'.defaultValue{_port = port})
 
 instance P'.Mergeable Tcp where
   mergeAppend (Tcp x'1) (Tcp y'1) = Tcp (P'.mergeAppend x'1 y'1)
@@ -58,7 +62,7 @@ instance P'.Wire Tcp where
     where
         update'Self wire'Tag old'Self
          = case wire'Tag of
-             8 -> Prelude'.fmap (\ !new'Field -> old'Self{port = new'Field}) (P'.wireGet 13)
+             8 -> Prelude'.fmap (\ !new'Field -> old'Self{_port = new'Field}) (P'.wireGet 13)
              _ -> let (field'Number, wire'Type) = P'.splitWireTag wire'Tag in P'.unknown field'Number wire'Type old'Self
 
 instance P'.MessageAPI msg' (msg' -> Tcp) Tcp where
@@ -70,7 +74,7 @@ instance P'.ReflectDescriptor Tcp where
   getMessageInfo _ = P'.GetMessageInfo (P'.fromDistinctAscList [8]) (P'.fromDistinctAscList [8])
   reflectDescriptorInfo _
    = Prelude'.read
-      "DescriptorInfo {descName = ProtoName {protobufName = FIName \".mesos.v1.CheckInfo.Tcp\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\",MName \"CheckInfo\"], baseName = MName \"Tcp\"}, descFilePath = [\"Mesos\",\"V1\",\"Protos\",\"CheckInfo\",\"Tcp.hs\"], isGroup = False, fields = fromList [FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.CheckInfo.Tcp.port\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"CheckInfo\",MName \"Tcp\"], baseName' = FName \"port\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 1}, wireTag = WireTag {getWireTag = 8}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = True, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 13}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing}], descOneofs = fromList [], keys = fromList [], extRanges = [], knownKeys = fromList [], storeUnknown = False, lazyFields = False, makeLenses = False, jsonInstances = True}"
+      "DescriptorInfo {descName = ProtoName {protobufName = FIName \".mesos.v1.CheckInfo.Tcp\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\",MName \"CheckInfo\"], baseName = MName \"Tcp\"}, descFilePath = [\"Mesos\",\"V1\",\"Protos\",\"CheckInfo\",\"Tcp.hs\"], isGroup = False, fields = fromList [FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.CheckInfo.Tcp.port\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"CheckInfo\",MName \"Tcp\"], baseName' = FName \"port\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 1}, wireTag = WireTag {getWireTag = 8}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = True, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 13}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing}], descOneofs = fromList [], keys = fromList [], extRanges = [], knownKeys = fromList [], storeUnknown = False, lazyFields = False, makeLenses = True, jsonInstances = True}"
 
 instance P'.TextType Tcp where
   tellT = P'.tellSubMessage
@@ -79,14 +83,14 @@ instance P'.TextType Tcp where
 instance P'.TextMsg Tcp where
   textPut msg
    = do
-       P'.tellT "port" (port msg)
+       P'.tellT "port" (_port msg)
   textGet
    = do
-       mods <- P'.sepEndBy (P'.choice [parse'port]) P'.spaces
+       mods <- P'.sepEndBy (P'.choice [parse'_port]) P'.spaces
        Prelude'.return (Prelude'.foldl (\ v f -> f v) P'.defaultValue mods)
     where
-        parse'port
+        parse'_port
          = P'.try
             (do
                v <- P'.getT "port"
-               Prelude'.return (\ o -> o{port = v}))
+               Prelude'.return (\ o -> o{_port = v}))

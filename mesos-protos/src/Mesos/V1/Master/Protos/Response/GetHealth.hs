@@ -1,15 +1,19 @@
-{-# LANGUAGE BangPatterns, DeriveDataTypeable, DeriveGeneric, FlexibleInstances, MultiParamTypeClasses, OverloadedStrings #-}
+{-# LANGUAGE TemplateHaskell, BangPatterns, DeriveDataTypeable, DeriveGeneric, FlexibleInstances, MultiParamTypeClasses,
+ OverloadedStrings #-}
 {-# OPTIONS_GHC  -fno-warn-unused-imports #-}
-module Mesos.V1.Master.Protos.Response.GetHealth (GetHealth(..)) where
+module Mesos.V1.Master.Protos.Response.GetHealth (GetHealth(..), healthy) where
 import Prelude ((+), (/), (++), (.))
 import qualified Prelude as Prelude'
 import qualified Data.Typeable as Prelude'
 import qualified GHC.Generics as Prelude'
 import qualified Data.Data as Prelude'
 import qualified Text.ProtocolBuffers.Header as P'
+import qualified Control.Lens.TH
 
-data GetHealth = GetHealth{healthy :: !(P'.Bool)}
+data GetHealth = GetHealth{_healthy :: !(P'.Bool)}
                  deriving (Prelude'.Show, Prelude'.Eq, Prelude'.Ord, Prelude'.Typeable, Prelude'.Data, Prelude'.Generic)
+
+Control.Lens.TH.makeLenses ''GetHealth
 
 instance P'.ToJSON GetHealth where
   toJSON msg = P'.objectNoEmpty ([("healthy", P'.toJSON (healthy msg))] ++ Prelude'.concat [])
@@ -20,7 +24,7 @@ instance P'.FromJSON GetHealth where
       (\ o ->
         do
           healthy <- P'.explicitParseField P'.parseJSONBool o "healthy"
-          Prelude'.return P'.defaultValue{healthy = healthy})
+          Prelude'.return P'.defaultValue{_healthy = healthy})
 
 instance P'.Mergeable GetHealth where
   mergeAppend (GetHealth x'1) (GetHealth y'1) = GetHealth (P'.mergeAppend x'1 y'1)
@@ -58,7 +62,7 @@ instance P'.Wire GetHealth where
     where
         update'Self wire'Tag old'Self
          = case wire'Tag of
-             8 -> Prelude'.fmap (\ !new'Field -> old'Self{healthy = new'Field}) (P'.wireGet 8)
+             8 -> Prelude'.fmap (\ !new'Field -> old'Self{_healthy = new'Field}) (P'.wireGet 8)
              _ -> let (field'Number, wire'Type) = P'.splitWireTag wire'Tag in P'.unknown field'Number wire'Type old'Self
 
 instance P'.MessageAPI msg' (msg' -> GetHealth) GetHealth where
@@ -70,7 +74,7 @@ instance P'.ReflectDescriptor GetHealth where
   getMessageInfo _ = P'.GetMessageInfo (P'.fromDistinctAscList [8]) (P'.fromDistinctAscList [8])
   reflectDescriptorInfo _
    = Prelude'.read
-      "DescriptorInfo {descName = ProtoName {protobufName = FIName \".mesos.v1.master.Response.GetHealth\", haskellPrefix = [MName \"Mesos\",MName \"V1\",MName \"Master\"], parentModule = [MName \"Protos\",MName \"Response\"], baseName = MName \"GetHealth\"}, descFilePath = [\"Mesos\",\"V1\",\"Master\",\"Protos\",\"Response\",\"GetHealth.hs\"], isGroup = False, fields = fromList [FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.master.Response.GetHealth.healthy\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Master\"], parentModule' = [MName \"Protos\",MName \"Response\",MName \"GetHealth\"], baseName' = FName \"healthy\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 1}, wireTag = WireTag {getWireTag = 8}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = True, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 8}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing}], descOneofs = fromList [], keys = fromList [], extRanges = [], knownKeys = fromList [], storeUnknown = False, lazyFields = False, makeLenses = False, jsonInstances = True}"
+      "DescriptorInfo {descName = ProtoName {protobufName = FIName \".mesos.v1.master.Response.GetHealth\", haskellPrefix = [MName \"Mesos\",MName \"V1\",MName \"Master\"], parentModule = [MName \"Protos\",MName \"Response\"], baseName = MName \"GetHealth\"}, descFilePath = [\"Mesos\",\"V1\",\"Master\",\"Protos\",\"Response\",\"GetHealth.hs\"], isGroup = False, fields = fromList [FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.master.Response.GetHealth.healthy\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Master\"], parentModule' = [MName \"Protos\",MName \"Response\",MName \"GetHealth\"], baseName' = FName \"healthy\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 1}, wireTag = WireTag {getWireTag = 8}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = True, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 8}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing}], descOneofs = fromList [], keys = fromList [], extRanges = [], knownKeys = fromList [], storeUnknown = False, lazyFields = False, makeLenses = True, jsonInstances = True}"
 
 instance P'.TextType GetHealth where
   tellT = P'.tellSubMessage
@@ -79,14 +83,14 @@ instance P'.TextType GetHealth where
 instance P'.TextMsg GetHealth where
   textPut msg
    = do
-       P'.tellT "healthy" (healthy msg)
+       P'.tellT "healthy" (_healthy msg)
   textGet
    = do
-       mods <- P'.sepEndBy (P'.choice [parse'healthy]) P'.spaces
+       mods <- P'.sepEndBy (P'.choice [parse'_healthy]) P'.spaces
        Prelude'.return (Prelude'.foldl (\ v f -> f v) P'.defaultValue mods)
     where
-        parse'healthy
+        parse'_healthy
          = P'.try
             (do
                v <- P'.getT "healthy"
-               Prelude'.return (\ o -> o{healthy = v}))
+               Prelude'.return (\ o -> o{_healthy = v}))
