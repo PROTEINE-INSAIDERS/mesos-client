@@ -7,7 +7,11 @@
 import Data.Proxy
 import           Data.Aeson
 import           Data.Either
+<<<<<<< HEAD
 import Mesos.HTTP.Client.Internal
+=======
+import           Mesos.HTTP.Client.Internal    as M
+>>>>>>> 6e6b1b1cc0c57732d46bdce56b12c4eeadba2304
 import qualified Mesos.V1.Master               as Master
 import qualified Mesos.V1.Master.Protos.Response
                                                as Master
