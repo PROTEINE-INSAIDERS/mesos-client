@@ -1,4 +1,5 @@
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE FlexibleContexts  #-}
 
 module Mesos.V1.Client.HTTP.Internal where
 
@@ -17,6 +18,7 @@ import qualified Data.ByteString.Lazy          as LBS
 import qualified Data.Conduit.Combinators      as Conduit
 import           Data.Maybe
 import           Data.Typeable
+import           Mesos.V1.Internal
 import           Network.HTTP.Client            ( Manager )
 import           Network.HTTP.Simple
 import           Network.HTTP.Types
@@ -176,14 +178,12 @@ logger name = awaitForever $ \i -> do
   liftIO $ putStrLn $ name ++ ": " ++ show i 
   yield i
 
-stream :: (MonadUnliftIO m, Show b) => Endpoint -> RequestEncoder a -> ResponseDecoder b -> a -> m ()
-stream endpoint encoder decoder msg = do
+-- TODO: make more specific (accept only subscribe calls specific for the current endpoint).
+subscribe :: (MonadUnliftIO m, Show (SubscribeEvent a)) => Endpoint -> RequestEncoder a -> ResponseDecoder (SubscribeEvent a) -> a -> ConduitT (SubscribeEvent a) Void m r -> m r
+subscribe endpoint encoder decoder msg sink = do
   let request = prepareRequest endpoint encoder (accept decoder) msg
   httpSink request $ \_ -> recordIOTransformer 
                         .| logger "RecordIO" 
                         .| decoderTransfomer (decode decoder) 
                         .| logger "Message" 
-                        .| sinkNull
-  return ()
-
--- TODO: фактически нам нужно 2 метода: call и subscribe. 
+                        .| sink 
