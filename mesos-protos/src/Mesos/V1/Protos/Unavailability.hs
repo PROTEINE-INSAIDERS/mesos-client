@@ -1,21 +1,17 @@
-{-# LANGUAGE TemplateHaskell, BangPatterns, DeriveDataTypeable, DeriveGeneric, FlexibleInstances, MultiParamTypeClasses,
- OverloadedStrings #-}
+{-# LANGUAGE BangPatterns, DeriveDataTypeable, DeriveGeneric, FlexibleInstances, MultiParamTypeClasses, OverloadedStrings #-}
 {-# OPTIONS_GHC  -fno-warn-unused-imports #-}
-module Mesos.V1.Protos.Unavailability (Unavailability(..), start, duration) where
+module Mesos.V1.Protos.Unavailability (Unavailability(..)) where
 import Prelude ((+), (/), (++), (.))
 import qualified Prelude as Prelude'
 import qualified Data.Typeable as Prelude'
 import qualified GHC.Generics as Prelude'
 import qualified Data.Data as Prelude'
 import qualified Text.ProtocolBuffers.Header as P'
-import qualified Control.Lens.TH
 import qualified Mesos.V1.Protos.DurationInfo as Protos (DurationInfo)
 import qualified Mesos.V1.Protos.TimeInfo as Protos (TimeInfo)
 
-data Unavailability = Unavailability{_start :: !(Protos.TimeInfo), _duration :: !(P'.Maybe Protos.DurationInfo)}
+data Unavailability = Unavailability{start :: !(Protos.TimeInfo), duration :: !(P'.Maybe Protos.DurationInfo)}
                       deriving (Prelude'.Show, Prelude'.Eq, Prelude'.Ord, Prelude'.Typeable, Prelude'.Data, Prelude'.Generic)
-
-Control.Lens.TH.makeLenses ''Unavailability
 
 instance P'.ToJSON Unavailability where
   toJSON msg
@@ -29,7 +25,7 @@ instance P'.FromJSON Unavailability where
         do
           start <- P'.explicitParseField P'.parseJSON o "start"
           duration <- P'.explicitParseFieldMaybe P'.parseJSON o "duration"
-          Prelude'.return P'.defaultValue{_start = start, _duration = duration})
+          Prelude'.return P'.defaultValue{start = start, duration = duration})
 
 instance P'.Mergeable Unavailability where
   mergeAppend (Unavailability x'1 x'2) (Unavailability y'1 y'2) = Unavailability (P'.mergeAppend x'1 y'1) (P'.mergeAppend x'2 y'2)
@@ -67,9 +63,8 @@ instance P'.Wire Unavailability where
     where
         update'Self wire'Tag old'Self
          = case wire'Tag of
-             10 -> Prelude'.fmap (\ !new'Field -> old'Self{_start = P'.mergeAppend (_start old'Self) (new'Field)}) (P'.wireGet 11)
-             18 -> Prelude'.fmap
-                    (\ !new'Field -> old'Self{_duration = P'.mergeAppend (_duration old'Self) (Prelude'.Just new'Field)})
+             10 -> Prelude'.fmap (\ !new'Field -> old'Self{start = P'.mergeAppend (start old'Self) (new'Field)}) (P'.wireGet 11)
+             18 -> Prelude'.fmap (\ !new'Field -> old'Self{duration = P'.mergeAppend (duration old'Self) (Prelude'.Just new'Field)})
                     (P'.wireGet 11)
              _ -> let (field'Number, wire'Type) = P'.splitWireTag wire'Tag in P'.unknown field'Number wire'Type old'Self
 
@@ -82,7 +77,7 @@ instance P'.ReflectDescriptor Unavailability where
   getMessageInfo _ = P'.GetMessageInfo (P'.fromDistinctAscList [10]) (P'.fromDistinctAscList [10, 18])
   reflectDescriptorInfo _
    = Prelude'.read
-      "DescriptorInfo {descName = ProtoName {protobufName = FIName \".mesos.v1.Unavailability\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"Unavailability\"}, descFilePath = [\"Mesos\",\"V1\",\"Protos\",\"Unavailability.hs\"], isGroup = False, fields = fromList [FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Unavailability.start\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Unavailability\"], baseName' = FName \"start\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 1}, wireTag = WireTag {getWireTag = 10}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = True, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.TimeInfo\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"TimeInfo\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Unavailability.duration\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Unavailability\"], baseName' = FName \"duration\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 2}, wireTag = WireTag {getWireTag = 18}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.DurationInfo\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"DurationInfo\"}), hsRawDefault = Nothing, hsDefault = Nothing}], descOneofs = fromList [], keys = fromList [], extRanges = [], knownKeys = fromList [], storeUnknown = False, lazyFields = False, makeLenses = True, jsonInstances = True}"
+      "DescriptorInfo {descName = ProtoName {protobufName = FIName \".mesos.v1.Unavailability\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"Unavailability\"}, descFilePath = [\"Mesos\",\"V1\",\"Protos\",\"Unavailability.hs\"], isGroup = False, fields = fromList [FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Unavailability.start\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Unavailability\"], baseName' = FName \"start\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 1}, wireTag = WireTag {getWireTag = 10}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = True, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.TimeInfo\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"TimeInfo\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Unavailability.duration\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Unavailability\"], baseName' = FName \"duration\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 2}, wireTag = WireTag {getWireTag = 18}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.DurationInfo\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"DurationInfo\"}), hsRawDefault = Nothing, hsDefault = Nothing}], descOneofs = fromList [], keys = fromList [], extRanges = [], knownKeys = fromList [], storeUnknown = False, lazyFields = False, makeLenses = False, jsonInstances = True}"
 
 instance P'.TextType Unavailability where
   tellT = P'.tellSubMessage
@@ -91,20 +86,20 @@ instance P'.TextType Unavailability where
 instance P'.TextMsg Unavailability where
   textPut msg
    = do
-       P'.tellT "start" (_start msg)
-       P'.tellT "duration" (_duration msg)
+       P'.tellT "start" (start msg)
+       P'.tellT "duration" (duration msg)
   textGet
    = do
-       mods <- P'.sepEndBy (P'.choice [parse'_start, parse'_duration]) P'.spaces
+       mods <- P'.sepEndBy (P'.choice [parse'start, parse'duration]) P'.spaces
        Prelude'.return (Prelude'.foldl (\ v f -> f v) P'.defaultValue mods)
     where
-        parse'_start
+        parse'start
          = P'.try
             (do
                v <- P'.getT "start"
-               Prelude'.return (\ o -> o{_start = v}))
-        parse'_duration
+               Prelude'.return (\ o -> o{start = v}))
+        parse'duration
          = P'.try
             (do
                v <- P'.getT "duration"
-               Prelude'.return (\ o -> o{_duration = v}))
+               Prelude'.return (\ o -> o{duration = v}))

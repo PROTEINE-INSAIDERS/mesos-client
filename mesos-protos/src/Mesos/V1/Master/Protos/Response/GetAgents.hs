@@ -1,21 +1,17 @@
-{-# LANGUAGE TemplateHaskell, BangPatterns, DeriveDataTypeable, DeriveGeneric, FlexibleInstances, MultiParamTypeClasses,
- OverloadedStrings #-}
+{-# LANGUAGE BangPatterns, DeriveDataTypeable, DeriveGeneric, FlexibleInstances, MultiParamTypeClasses, OverloadedStrings #-}
 {-# OPTIONS_GHC  -fno-warn-unused-imports #-}
-module Mesos.V1.Master.Protos.Response.GetAgents (GetAgents(..), agents, recovered_agents) where
+module Mesos.V1.Master.Protos.Response.GetAgents (GetAgents(..)) where
 import Prelude ((+), (/), (++), (.))
 import qualified Prelude as Prelude'
 import qualified Data.Typeable as Prelude'
 import qualified GHC.Generics as Prelude'
 import qualified Data.Data as Prelude'
 import qualified Text.ProtocolBuffers.Header as P'
-import qualified Control.Lens.TH
 import qualified Mesos.V1.Master.Protos.Response.GetAgents.Agent as Protos.Response.GetAgents (Agent)
 import qualified Mesos.V1.Protos.AgentInfo as Protos (AgentInfo)
 
-data GetAgents = GetAgents{_agents :: !(P'.Seq Protos.Response.GetAgents.Agent), _recovered_agents :: !(P'.Seq Protos.AgentInfo)}
+data GetAgents = GetAgents{agents :: !(P'.Seq Protos.Response.GetAgents.Agent), recovered_agents :: !(P'.Seq Protos.AgentInfo)}
                  deriving (Prelude'.Show, Prelude'.Eq, Prelude'.Ord, Prelude'.Typeable, Prelude'.Data, Prelude'.Generic)
-
-Control.Lens.TH.makeLenses ''GetAgents
 
 instance P'.ToJSON GetAgents where
   toJSON msg
@@ -33,7 +29,7 @@ instance P'.FromJSON GetAgents where
                      (P'.explicitParseFieldMaybe (Prelude'.mapM P'.parseJSON P'.<=< P'.parseJSON) o "agents")
           recovered_agents <- Prelude'.fmap (Prelude'.maybe Prelude'.mempty Prelude'.id)
                                (P'.explicitParseFieldMaybe (Prelude'.mapM P'.parseJSON P'.<=< P'.parseJSON) o "recovered_agents")
-          Prelude'.return P'.defaultValue{_agents = agents, _recovered_agents = recovered_agents})
+          Prelude'.return P'.defaultValue{agents = agents, recovered_agents = recovered_agents})
 
 instance P'.Mergeable GetAgents where
   mergeAppend (GetAgents x'1 x'2) (GetAgents y'1 y'2) = GetAgents (P'.mergeAppend x'1 y'1) (P'.mergeAppend x'2 y'2)
@@ -71,8 +67,8 @@ instance P'.Wire GetAgents where
     where
         update'Self wire'Tag old'Self
          = case wire'Tag of
-             10 -> Prelude'.fmap (\ !new'Field -> old'Self{_agents = P'.append (_agents old'Self) new'Field}) (P'.wireGet 11)
-             18 -> Prelude'.fmap (\ !new'Field -> old'Self{_recovered_agents = P'.append (_recovered_agents old'Self) new'Field})
+             10 -> Prelude'.fmap (\ !new'Field -> old'Self{agents = P'.append (agents old'Self) new'Field}) (P'.wireGet 11)
+             18 -> Prelude'.fmap (\ !new'Field -> old'Self{recovered_agents = P'.append (recovered_agents old'Self) new'Field})
                     (P'.wireGet 11)
              _ -> let (field'Number, wire'Type) = P'.splitWireTag wire'Tag in P'.unknown field'Number wire'Type old'Self
 
@@ -85,7 +81,7 @@ instance P'.ReflectDescriptor GetAgents where
   getMessageInfo _ = P'.GetMessageInfo (P'.fromDistinctAscList []) (P'.fromDistinctAscList [10, 18])
   reflectDescriptorInfo _
    = Prelude'.read
-      "DescriptorInfo {descName = ProtoName {protobufName = FIName \".mesos.v1.master.Response.GetAgents\", haskellPrefix = [MName \"Mesos\",MName \"V1\",MName \"Master\"], parentModule = [MName \"Protos\",MName \"Response\"], baseName = MName \"GetAgents\"}, descFilePath = [\"Mesos\",\"V1\",\"Master\",\"Protos\",\"Response\",\"GetAgents.hs\"], isGroup = False, fields = fromList [FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.master.Response.GetAgents.agents\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Master\"], parentModule' = [MName \"Protos\",MName \"Response\",MName \"GetAgents\"], baseName' = FName \"agents\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 1}, wireTag = WireTag {getWireTag = 10}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = True, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.master.Response.GetAgents.Agent\", haskellPrefix = [MName \"Mesos\",MName \"V1\",MName \"Master\"], parentModule = [MName \"Protos\",MName \"Response\",MName \"GetAgents\"], baseName = MName \"Agent\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.master.Response.GetAgents.recovered_agents\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Master\"], parentModule' = [MName \"Protos\",MName \"Response\",MName \"GetAgents\"], baseName' = FName \"recovered_agents\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 2}, wireTag = WireTag {getWireTag = 18}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = True, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.AgentInfo\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"AgentInfo\"}), hsRawDefault = Nothing, hsDefault = Nothing}], descOneofs = fromList [], keys = fromList [], extRanges = [], knownKeys = fromList [], storeUnknown = False, lazyFields = False, makeLenses = True, jsonInstances = True}"
+      "DescriptorInfo {descName = ProtoName {protobufName = FIName \".mesos.v1.master.Response.GetAgents\", haskellPrefix = [MName \"Mesos\",MName \"V1\",MName \"Master\"], parentModule = [MName \"Protos\",MName \"Response\"], baseName = MName \"GetAgents\"}, descFilePath = [\"Mesos\",\"V1\",\"Master\",\"Protos\",\"Response\",\"GetAgents.hs\"], isGroup = False, fields = fromList [FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.master.Response.GetAgents.agents\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Master\"], parentModule' = [MName \"Protos\",MName \"Response\",MName \"GetAgents\"], baseName' = FName \"agents\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 1}, wireTag = WireTag {getWireTag = 10}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = True, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.master.Response.GetAgents.Agent\", haskellPrefix = [MName \"Mesos\",MName \"V1\",MName \"Master\"], parentModule = [MName \"Protos\",MName \"Response\",MName \"GetAgents\"], baseName = MName \"Agent\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.master.Response.GetAgents.recovered_agents\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Master\"], parentModule' = [MName \"Protos\",MName \"Response\",MName \"GetAgents\"], baseName' = FName \"recovered_agents\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 2}, wireTag = WireTag {getWireTag = 18}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = True, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.AgentInfo\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"AgentInfo\"}), hsRawDefault = Nothing, hsDefault = Nothing}], descOneofs = fromList [], keys = fromList [], extRanges = [], knownKeys = fromList [], storeUnknown = False, lazyFields = False, makeLenses = False, jsonInstances = True}"
 
 instance P'.TextType GetAgents where
   tellT = P'.tellSubMessage
@@ -94,20 +90,20 @@ instance P'.TextType GetAgents where
 instance P'.TextMsg GetAgents where
   textPut msg
    = do
-       P'.tellT "agents" (_agents msg)
-       P'.tellT "recovered_agents" (_recovered_agents msg)
+       P'.tellT "agents" (agents msg)
+       P'.tellT "recovered_agents" (recovered_agents msg)
   textGet
    = do
-       mods <- P'.sepEndBy (P'.choice [parse'_agents, parse'_recovered_agents]) P'.spaces
+       mods <- P'.sepEndBy (P'.choice [parse'agents, parse'recovered_agents]) P'.spaces
        Prelude'.return (Prelude'.foldl (\ v f -> f v) P'.defaultValue mods)
     where
-        parse'_agents
+        parse'agents
          = P'.try
             (do
                v <- P'.getT "agents"
-               Prelude'.return (\ o -> o{_agents = P'.append (_agents o) v}))
-        parse'_recovered_agents
+               Prelude'.return (\ o -> o{agents = P'.append (agents o) v}))
+        parse'recovered_agents
          = P'.try
             (do
                v <- P'.getT "recovered_agents"
-               Prelude'.return (\ o -> o{_recovered_agents = P'.append (_recovered_agents o) v}))
+               Prelude'.return (\ o -> o{recovered_agents = P'.append (recovered_agents o) v}))

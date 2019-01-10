@@ -1,20 +1,16 @@
-{-# LANGUAGE TemplateHaskell, BangPatterns, DeriveDataTypeable, DeriveGeneric, FlexibleInstances, MultiParamTypeClasses,
- OverloadedStrings #-}
+{-# LANGUAGE BangPatterns, DeriveDataTypeable, DeriveGeneric, FlexibleInstances, MultiParamTypeClasses, OverloadedStrings #-}
 {-# OPTIONS_GHC  -fno-warn-unused-imports #-}
-module Mesos.V1.Protos.Volume.Source.SandboxPath (SandboxPath(..), type', path) where
+module Mesos.V1.Protos.Volume.Source.SandboxPath (SandboxPath(..)) where
 import Prelude ((+), (/), (++), (.))
 import qualified Prelude as Prelude'
 import qualified Data.Typeable as Prelude'
 import qualified GHC.Generics as Prelude'
 import qualified Data.Data as Prelude'
 import qualified Text.ProtocolBuffers.Header as P'
-import qualified Control.Lens.TH
 import qualified Mesos.V1.Protos.Volume.Source.SandboxPath.Type as Protos.Volume.Source.SandboxPath (Type)
 
-data SandboxPath = SandboxPath{_type' :: !(P'.Maybe Protos.Volume.Source.SandboxPath.Type), _path :: !(P'.Utf8)}
+data SandboxPath = SandboxPath{type' :: !(P'.Maybe Protos.Volume.Source.SandboxPath.Type), path :: !(P'.Utf8)}
                    deriving (Prelude'.Show, Prelude'.Eq, Prelude'.Ord, Prelude'.Typeable, Prelude'.Data, Prelude'.Generic)
-
-Control.Lens.TH.makeLenses ''SandboxPath
 
 instance P'.ToJSON SandboxPath where
   toJSON msg
@@ -28,7 +24,7 @@ instance P'.FromJSON SandboxPath where
         do
           type' <- P'.explicitParseFieldMaybe P'.parseJSON o "type"
           path <- P'.explicitParseField P'.parseJSON o "path"
-          Prelude'.return P'.defaultValue{_type' = type', _path = path})
+          Prelude'.return P'.defaultValue{type' = type', path = path})
 
 instance P'.Mergeable SandboxPath where
   mergeAppend (SandboxPath x'1 x'2) (SandboxPath y'1 y'2) = SandboxPath (P'.mergeAppend x'1 y'1) (P'.mergeAppend x'2 y'2)
@@ -66,8 +62,8 @@ instance P'.Wire SandboxPath where
     where
         update'Self wire'Tag old'Self
          = case wire'Tag of
-             8 -> Prelude'.fmap (\ !new'Field -> old'Self{_type' = Prelude'.Just new'Field}) (P'.wireGet 14)
-             18 -> Prelude'.fmap (\ !new'Field -> old'Self{_path = new'Field}) (P'.wireGet 9)
+             8 -> Prelude'.fmap (\ !new'Field -> old'Self{type' = Prelude'.Just new'Field}) (P'.wireGet 14)
+             18 -> Prelude'.fmap (\ !new'Field -> old'Self{path = new'Field}) (P'.wireGet 9)
              _ -> let (field'Number, wire'Type) = P'.splitWireTag wire'Tag in P'.unknown field'Number wire'Type old'Self
 
 instance P'.MessageAPI msg' (msg' -> SandboxPath) SandboxPath where
@@ -79,7 +75,7 @@ instance P'.ReflectDescriptor SandboxPath where
   getMessageInfo _ = P'.GetMessageInfo (P'.fromDistinctAscList [18]) (P'.fromDistinctAscList [8, 18])
   reflectDescriptorInfo _
    = Prelude'.read
-      "DescriptorInfo {descName = ProtoName {protobufName = FIName \".mesos.v1.Volume.Source.SandboxPath\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\",MName \"Volume\",MName \"Source\"], baseName = MName \"SandboxPath\"}, descFilePath = [\"Mesos\",\"V1\",\"Protos\",\"Volume\",\"Source\",\"SandboxPath.hs\"], isGroup = False, fields = fromList [FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Volume.Source.SandboxPath.type\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Volume\",MName \"Source\",MName \"SandboxPath\"], baseName' = FName \"type'\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 1}, wireTag = WireTag {getWireTag = 8}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 14}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.Volume.Source.SandboxPath.Type\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\",MName \"Volume\",MName \"Source\",MName \"SandboxPath\"], baseName = MName \"Type\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Volume.Source.SandboxPath.path\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Volume\",MName \"Source\",MName \"SandboxPath\"], baseName' = FName \"path\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 2}, wireTag = WireTag {getWireTag = 18}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = True, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 9}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing}], descOneofs = fromList [], keys = fromList [], extRanges = [], knownKeys = fromList [], storeUnknown = False, lazyFields = False, makeLenses = True, jsonInstances = True}"
+      "DescriptorInfo {descName = ProtoName {protobufName = FIName \".mesos.v1.Volume.Source.SandboxPath\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\",MName \"Volume\",MName \"Source\"], baseName = MName \"SandboxPath\"}, descFilePath = [\"Mesos\",\"V1\",\"Protos\",\"Volume\",\"Source\",\"SandboxPath.hs\"], isGroup = False, fields = fromList [FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Volume.Source.SandboxPath.type\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Volume\",MName \"Source\",MName \"SandboxPath\"], baseName' = FName \"type'\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 1}, wireTag = WireTag {getWireTag = 8}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 14}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.Volume.Source.SandboxPath.Type\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\",MName \"Volume\",MName \"Source\",MName \"SandboxPath\"], baseName = MName \"Type\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Volume.Source.SandboxPath.path\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Volume\",MName \"Source\",MName \"SandboxPath\"], baseName' = FName \"path\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 2}, wireTag = WireTag {getWireTag = 18}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = True, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 9}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing}], descOneofs = fromList [], keys = fromList [], extRanges = [], knownKeys = fromList [], storeUnknown = False, lazyFields = False, makeLenses = False, jsonInstances = True}"
 
 instance P'.TextType SandboxPath where
   tellT = P'.tellSubMessage
@@ -88,20 +84,20 @@ instance P'.TextType SandboxPath where
 instance P'.TextMsg SandboxPath where
   textPut msg
    = do
-       P'.tellT "type" (_type' msg)
-       P'.tellT "path" (_path msg)
+       P'.tellT "type" (type' msg)
+       P'.tellT "path" (path msg)
   textGet
    = do
-       mods <- P'.sepEndBy (P'.choice [parse'_type', parse'_path]) P'.spaces
+       mods <- P'.sepEndBy (P'.choice [parse'type', parse'path]) P'.spaces
        Prelude'.return (Prelude'.foldl (\ v f -> f v) P'.defaultValue mods)
     where
-        parse'_type'
+        parse'type'
          = P'.try
             (do
                v <- P'.getT "type"
-               Prelude'.return (\ o -> o{_type' = v}))
-        parse'_path
+               Prelude'.return (\ o -> o{type' = v}))
+        parse'path
          = P'.try
             (do
                v <- P'.getT "path"
-               Prelude'.return (\ o -> o{_path = v}))
+               Prelude'.return (\ o -> o{path = v}))

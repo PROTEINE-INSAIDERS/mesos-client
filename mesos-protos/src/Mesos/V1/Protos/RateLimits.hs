@@ -1,21 +1,17 @@
-{-# LANGUAGE TemplateHaskell, BangPatterns, DeriveDataTypeable, DeriveGeneric, FlexibleInstances, MultiParamTypeClasses,
- OverloadedStrings #-}
+{-# LANGUAGE BangPatterns, DeriveDataTypeable, DeriveGeneric, FlexibleInstances, MultiParamTypeClasses, OverloadedStrings #-}
 {-# OPTIONS_GHC  -fno-warn-unused-imports #-}
-module Mesos.V1.Protos.RateLimits (RateLimits(..), limits, aggregate_default_qps, aggregate_default_capacity) where
+module Mesos.V1.Protos.RateLimits (RateLimits(..)) where
 import Prelude ((+), (/), (++), (.))
 import qualified Prelude as Prelude'
 import qualified Data.Typeable as Prelude'
 import qualified GHC.Generics as Prelude'
 import qualified Data.Data as Prelude'
 import qualified Text.ProtocolBuffers.Header as P'
-import qualified Control.Lens.TH
 import qualified Mesos.V1.Protos.RateLimit as Protos (RateLimit)
 
-data RateLimits = RateLimits{_limits :: !(P'.Seq Protos.RateLimit), _aggregate_default_qps :: !(P'.Maybe P'.Double),
-                             _aggregate_default_capacity :: !(P'.Maybe P'.Word64)}
+data RateLimits = RateLimits{limits :: !(P'.Seq Protos.RateLimit), aggregate_default_qps :: !(P'.Maybe P'.Double),
+                             aggregate_default_capacity :: !(P'.Maybe P'.Word64)}
                   deriving (Prelude'.Show, Prelude'.Eq, Prelude'.Ord, Prelude'.Typeable, Prelude'.Data, Prelude'.Generic)
-
-Control.Lens.TH.makeLenses ''RateLimits
 
 instance P'.ToJSON RateLimits where
   toJSON msg
@@ -36,8 +32,8 @@ instance P'.FromJSON RateLimits where
           aggregate_default_capacity <- P'.explicitParseFieldMaybe (P'.parseJSONReadWithPayload "uint64") o
                                          "aggregate_default_capacity"
           Prelude'.return
-           P'.defaultValue{_limits = limits, _aggregate_default_qps = aggregate_default_qps,
-                           _aggregate_default_capacity = aggregate_default_capacity})
+           P'.defaultValue{limits = limits, aggregate_default_qps = aggregate_default_qps,
+                           aggregate_default_capacity = aggregate_default_capacity})
 
 instance P'.Mergeable RateLimits where
   mergeAppend (RateLimits x'1 x'2 x'3) (RateLimits y'1 y'2 y'3)
@@ -77,9 +73,9 @@ instance P'.Wire RateLimits where
     where
         update'Self wire'Tag old'Self
          = case wire'Tag of
-             10 -> Prelude'.fmap (\ !new'Field -> old'Self{_limits = P'.append (_limits old'Self) new'Field}) (P'.wireGet 11)
-             17 -> Prelude'.fmap (\ !new'Field -> old'Self{_aggregate_default_qps = Prelude'.Just new'Field}) (P'.wireGet 1)
-             24 -> Prelude'.fmap (\ !new'Field -> old'Self{_aggregate_default_capacity = Prelude'.Just new'Field}) (P'.wireGet 4)
+             10 -> Prelude'.fmap (\ !new'Field -> old'Self{limits = P'.append (limits old'Self) new'Field}) (P'.wireGet 11)
+             17 -> Prelude'.fmap (\ !new'Field -> old'Self{aggregate_default_qps = Prelude'.Just new'Field}) (P'.wireGet 1)
+             24 -> Prelude'.fmap (\ !new'Field -> old'Self{aggregate_default_capacity = Prelude'.Just new'Field}) (P'.wireGet 4)
              _ -> let (field'Number, wire'Type) = P'.splitWireTag wire'Tag in P'.unknown field'Number wire'Type old'Self
 
 instance P'.MessageAPI msg' (msg' -> RateLimits) RateLimits where
@@ -91,7 +87,7 @@ instance P'.ReflectDescriptor RateLimits where
   getMessageInfo _ = P'.GetMessageInfo (P'.fromDistinctAscList []) (P'.fromDistinctAscList [10, 17, 24])
   reflectDescriptorInfo _
    = Prelude'.read
-      "DescriptorInfo {descName = ProtoName {protobufName = FIName \".mesos.v1.RateLimits\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"RateLimits\"}, descFilePath = [\"Mesos\",\"V1\",\"Protos\",\"RateLimits.hs\"], isGroup = False, fields = fromList [FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.RateLimits.limits\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"RateLimits\"], baseName' = FName \"limits\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 1}, wireTag = WireTag {getWireTag = 10}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = True, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.RateLimit\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"RateLimit\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.RateLimits.aggregate_default_qps\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"RateLimits\"], baseName' = FName \"aggregate_default_qps\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 2}, wireTag = WireTag {getWireTag = 17}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 1}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.RateLimits.aggregate_default_capacity\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"RateLimits\"], baseName' = FName \"aggregate_default_capacity\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 3}, wireTag = WireTag {getWireTag = 24}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing}], descOneofs = fromList [], keys = fromList [], extRanges = [], knownKeys = fromList [], storeUnknown = False, lazyFields = False, makeLenses = True, jsonInstances = True}"
+      "DescriptorInfo {descName = ProtoName {protobufName = FIName \".mesos.v1.RateLimits\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"RateLimits\"}, descFilePath = [\"Mesos\",\"V1\",\"Protos\",\"RateLimits.hs\"], isGroup = False, fields = fromList [FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.RateLimits.limits\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"RateLimits\"], baseName' = FName \"limits\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 1}, wireTag = WireTag {getWireTag = 10}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = True, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.RateLimit\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"RateLimit\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.RateLimits.aggregate_default_qps\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"RateLimits\"], baseName' = FName \"aggregate_default_qps\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 2}, wireTag = WireTag {getWireTag = 17}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 1}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.RateLimits.aggregate_default_capacity\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"RateLimits\"], baseName' = FName \"aggregate_default_capacity\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 3}, wireTag = WireTag {getWireTag = 24}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing}], descOneofs = fromList [], keys = fromList [], extRanges = [], knownKeys = fromList [], storeUnknown = False, lazyFields = False, makeLenses = False, jsonInstances = True}"
 
 instance P'.TextType RateLimits where
   tellT = P'.tellSubMessage
@@ -100,26 +96,26 @@ instance P'.TextType RateLimits where
 instance P'.TextMsg RateLimits where
   textPut msg
    = do
-       P'.tellT "limits" (_limits msg)
-       P'.tellT "aggregate_default_qps" (_aggregate_default_qps msg)
-       P'.tellT "aggregate_default_capacity" (_aggregate_default_capacity msg)
+       P'.tellT "limits" (limits msg)
+       P'.tellT "aggregate_default_qps" (aggregate_default_qps msg)
+       P'.tellT "aggregate_default_capacity" (aggregate_default_capacity msg)
   textGet
    = do
-       mods <- P'.sepEndBy (P'.choice [parse'_limits, parse'_aggregate_default_qps, parse'_aggregate_default_capacity]) P'.spaces
+       mods <- P'.sepEndBy (P'.choice [parse'limits, parse'aggregate_default_qps, parse'aggregate_default_capacity]) P'.spaces
        Prelude'.return (Prelude'.foldl (\ v f -> f v) P'.defaultValue mods)
     where
-        parse'_limits
+        parse'limits
          = P'.try
             (do
                v <- P'.getT "limits"
-               Prelude'.return (\ o -> o{_limits = P'.append (_limits o) v}))
-        parse'_aggregate_default_qps
+               Prelude'.return (\ o -> o{limits = P'.append (limits o) v}))
+        parse'aggregate_default_qps
          = P'.try
             (do
                v <- P'.getT "aggregate_default_qps"
-               Prelude'.return (\ o -> o{_aggregate_default_qps = v}))
-        parse'_aggregate_default_capacity
+               Prelude'.return (\ o -> o{aggregate_default_qps = v}))
+        parse'aggregate_default_capacity
          = P'.try
             (do
                v <- P'.getT "aggregate_default_capacity"
-               Prelude'.return (\ o -> o{_aggregate_default_capacity = v}))
+               Prelude'.return (\ o -> o{aggregate_default_capacity = v}))

@@ -1,25 +1,20 @@
-{-# LANGUAGE TemplateHaskell, BangPatterns, DeriveDataTypeable, DeriveGeneric, FlexibleInstances, MultiParamTypeClasses,
- OverloadedStrings #-}
+{-# LANGUAGE BangPatterns, DeriveDataTypeable, DeriveGeneric, FlexibleInstances, MultiParamTypeClasses, OverloadedStrings #-}
 {-# OPTIONS_GHC  -fno-warn-unused-imports #-}
-module Mesos.V1.Protos.MasterInfo (MasterInfo(..), id, ip, port, pid, hostname, version, address, domain, capabilities) where
+module Mesos.V1.Protos.MasterInfo (MasterInfo(..)) where
 import Prelude ((+), (/), (++), (.))
 import qualified Prelude as Prelude'
 import qualified Data.Typeable as Prelude'
 import qualified GHC.Generics as Prelude'
 import qualified Data.Data as Prelude'
 import qualified Text.ProtocolBuffers.Header as P'
-import qualified Control.Lens.TH
 import qualified Mesos.V1.Protos.Address as Protos (Address)
 import qualified Mesos.V1.Protos.DomainInfo as Protos (DomainInfo)
 import qualified Mesos.V1.Protos.MasterInfo.Capability as Protos.MasterInfo (Capability)
 
-data MasterInfo = MasterInfo{_id :: !(P'.Utf8), _ip :: !(P'.Word32), _port :: !(P'.Word32), _pid :: !(P'.Maybe P'.Utf8),
-                             _hostname :: !(P'.Maybe P'.Utf8), _version :: !(P'.Maybe P'.Utf8),
-                             _address :: !(P'.Maybe Protos.Address), _domain :: !(P'.Maybe Protos.DomainInfo),
-                             _capabilities :: !(P'.Seq Protos.MasterInfo.Capability)}
+data MasterInfo = MasterInfo{id :: !(P'.Utf8), ip :: !(P'.Word32), port :: !(P'.Word32), pid :: !(P'.Maybe P'.Utf8),
+                             hostname :: !(P'.Maybe P'.Utf8), version :: !(P'.Maybe P'.Utf8), address :: !(P'.Maybe Protos.Address),
+                             domain :: !(P'.Maybe Protos.DomainInfo), capabilities :: !(P'.Seq Protos.MasterInfo.Capability)}
                   deriving (Prelude'.Show, Prelude'.Eq, Prelude'.Ord, Prelude'.Typeable, Prelude'.Data, Prelude'.Generic)
-
-Control.Lens.TH.makeLenses ''MasterInfo
 
 instance P'.ToJSON MasterInfo where
   toJSON msg
@@ -50,8 +45,8 @@ instance P'.FromJSON MasterInfo where
           capabilities <- Prelude'.fmap (Prelude'.maybe Prelude'.mempty Prelude'.id)
                            (P'.explicitParseFieldMaybe (Prelude'.mapM P'.parseJSON P'.<=< P'.parseJSON) o "capabilities")
           Prelude'.return
-           P'.defaultValue{_id = id, _ip = ip, _port = port, _pid = pid, _hostname = hostname, _version = version,
-                           _address = address, _domain = domain, _capabilities = capabilities})
+           P'.defaultValue{id = id, ip = ip, port = port, pid = pid, hostname = hostname, version = version, address = address,
+                           domain = domain, capabilities = capabilities})
 
 instance P'.Mergeable MasterInfo where
   mergeAppend (MasterInfo x'1 x'2 x'3 x'4 x'5 x'6 x'7 x'8 x'9) (MasterInfo y'1 y'2 y'3 y'4 y'5 y'6 y'7 y'8 y'9)
@@ -107,17 +102,17 @@ instance P'.Wire MasterInfo where
     where
         update'Self wire'Tag old'Self
          = case wire'Tag of
-             10 -> Prelude'.fmap (\ !new'Field -> old'Self{_id = new'Field}) (P'.wireGet 9)
-             16 -> Prelude'.fmap (\ !new'Field -> old'Self{_ip = new'Field}) (P'.wireGet 13)
-             24 -> Prelude'.fmap (\ !new'Field -> old'Self{_port = new'Field}) (P'.wireGet 13)
-             34 -> Prelude'.fmap (\ !new'Field -> old'Self{_pid = Prelude'.Just new'Field}) (P'.wireGet 9)
-             42 -> Prelude'.fmap (\ !new'Field -> old'Self{_hostname = Prelude'.Just new'Field}) (P'.wireGet 9)
-             50 -> Prelude'.fmap (\ !new'Field -> old'Self{_version = Prelude'.Just new'Field}) (P'.wireGet 9)
-             58 -> Prelude'.fmap (\ !new'Field -> old'Self{_address = P'.mergeAppend (_address old'Self) (Prelude'.Just new'Field)})
+             10 -> Prelude'.fmap (\ !new'Field -> old'Self{id = new'Field}) (P'.wireGet 9)
+             16 -> Prelude'.fmap (\ !new'Field -> old'Self{ip = new'Field}) (P'.wireGet 13)
+             24 -> Prelude'.fmap (\ !new'Field -> old'Self{port = new'Field}) (P'.wireGet 13)
+             34 -> Prelude'.fmap (\ !new'Field -> old'Self{pid = Prelude'.Just new'Field}) (P'.wireGet 9)
+             42 -> Prelude'.fmap (\ !new'Field -> old'Self{hostname = Prelude'.Just new'Field}) (P'.wireGet 9)
+             50 -> Prelude'.fmap (\ !new'Field -> old'Self{version = Prelude'.Just new'Field}) (P'.wireGet 9)
+             58 -> Prelude'.fmap (\ !new'Field -> old'Self{address = P'.mergeAppend (address old'Self) (Prelude'.Just new'Field)})
                     (P'.wireGet 11)
-             66 -> Prelude'.fmap (\ !new'Field -> old'Self{_domain = P'.mergeAppend (_domain old'Self) (Prelude'.Just new'Field)})
+             66 -> Prelude'.fmap (\ !new'Field -> old'Self{domain = P'.mergeAppend (domain old'Self) (Prelude'.Just new'Field)})
                     (P'.wireGet 11)
-             74 -> Prelude'.fmap (\ !new'Field -> old'Self{_capabilities = P'.append (_capabilities old'Self) new'Field})
+             74 -> Prelude'.fmap (\ !new'Field -> old'Self{capabilities = P'.append (capabilities old'Self) new'Field})
                     (P'.wireGet 11)
              _ -> let (field'Number, wire'Type) = P'.splitWireTag wire'Tag in P'.unknown field'Number wire'Type old'Self
 
@@ -131,7 +126,7 @@ instance P'.ReflectDescriptor MasterInfo where
    = P'.GetMessageInfo (P'.fromDistinctAscList [10, 16, 24]) (P'.fromDistinctAscList [10, 16, 24, 34, 42, 50, 58, 66, 74])
   reflectDescriptorInfo _
    = Prelude'.read
-      "DescriptorInfo {descName = ProtoName {protobufName = FIName \".mesos.v1.MasterInfo\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"MasterInfo\"}, descFilePath = [\"Mesos\",\"V1\",\"Protos\",\"MasterInfo.hs\"], isGroup = False, fields = fromList [FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.MasterInfo.id\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"MasterInfo\"], baseName' = FName \"id\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 1}, wireTag = WireTag {getWireTag = 10}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = True, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 9}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.MasterInfo.ip\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"MasterInfo\"], baseName' = FName \"ip\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 2}, wireTag = WireTag {getWireTag = 16}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = True, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 13}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.MasterInfo.port\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"MasterInfo\"], baseName' = FName \"port\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 3}, wireTag = WireTag {getWireTag = 24}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = True, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 13}, typeName = Nothing, hsRawDefault = Just \"5050\", hsDefault = Just (HsDef'Integer 5050)},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.MasterInfo.pid\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"MasterInfo\"], baseName' = FName \"pid\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 4}, wireTag = WireTag {getWireTag = 34}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 9}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.MasterInfo.hostname\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"MasterInfo\"], baseName' = FName \"hostname\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 5}, wireTag = WireTag {getWireTag = 42}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 9}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.MasterInfo.version\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"MasterInfo\"], baseName' = FName \"version\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 6}, wireTag = WireTag {getWireTag = 50}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 9}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.MasterInfo.address\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"MasterInfo\"], baseName' = FName \"address\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 7}, wireTag = WireTag {getWireTag = 58}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.Address\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"Address\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.MasterInfo.domain\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"MasterInfo\"], baseName' = FName \"domain\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 8}, wireTag = WireTag {getWireTag = 66}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.DomainInfo\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"DomainInfo\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.MasterInfo.capabilities\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"MasterInfo\"], baseName' = FName \"capabilities\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 9}, wireTag = WireTag {getWireTag = 74}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = True, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.MasterInfo.Capability\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\",MName \"MasterInfo\"], baseName = MName \"Capability\"}), hsRawDefault = Nothing, hsDefault = Nothing}], descOneofs = fromList [], keys = fromList [], extRanges = [], knownKeys = fromList [], storeUnknown = False, lazyFields = False, makeLenses = True, jsonInstances = True}"
+      "DescriptorInfo {descName = ProtoName {protobufName = FIName \".mesos.v1.MasterInfo\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"MasterInfo\"}, descFilePath = [\"Mesos\",\"V1\",\"Protos\",\"MasterInfo.hs\"], isGroup = False, fields = fromList [FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.MasterInfo.id\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"MasterInfo\"], baseName' = FName \"id\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 1}, wireTag = WireTag {getWireTag = 10}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = True, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 9}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.MasterInfo.ip\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"MasterInfo\"], baseName' = FName \"ip\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 2}, wireTag = WireTag {getWireTag = 16}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = True, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 13}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.MasterInfo.port\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"MasterInfo\"], baseName' = FName \"port\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 3}, wireTag = WireTag {getWireTag = 24}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = True, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 13}, typeName = Nothing, hsRawDefault = Just \"5050\", hsDefault = Just (HsDef'Integer 5050)},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.MasterInfo.pid\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"MasterInfo\"], baseName' = FName \"pid\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 4}, wireTag = WireTag {getWireTag = 34}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 9}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.MasterInfo.hostname\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"MasterInfo\"], baseName' = FName \"hostname\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 5}, wireTag = WireTag {getWireTag = 42}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 9}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.MasterInfo.version\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"MasterInfo\"], baseName' = FName \"version\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 6}, wireTag = WireTag {getWireTag = 50}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 9}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.MasterInfo.address\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"MasterInfo\"], baseName' = FName \"address\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 7}, wireTag = WireTag {getWireTag = 58}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.Address\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"Address\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.MasterInfo.domain\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"MasterInfo\"], baseName' = FName \"domain\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 8}, wireTag = WireTag {getWireTag = 66}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.DomainInfo\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"DomainInfo\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.MasterInfo.capabilities\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"MasterInfo\"], baseName' = FName \"capabilities\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 9}, wireTag = WireTag {getWireTag = 74}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = True, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.MasterInfo.Capability\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\",MName \"MasterInfo\"], baseName = MName \"Capability\"}), hsRawDefault = Nothing, hsDefault = Nothing}], descOneofs = fromList [], keys = fromList [], extRanges = [], knownKeys = fromList [], storeUnknown = False, lazyFields = False, makeLenses = False, jsonInstances = True}"
 
 instance P'.TextType MasterInfo where
   tellT = P'.tellSubMessage
@@ -140,66 +135,66 @@ instance P'.TextType MasterInfo where
 instance P'.TextMsg MasterInfo where
   textPut msg
    = do
-       P'.tellT "id" (_id msg)
-       P'.tellT "ip" (_ip msg)
-       P'.tellT "port" (_port msg)
-       P'.tellT "pid" (_pid msg)
-       P'.tellT "hostname" (_hostname msg)
-       P'.tellT "version" (_version msg)
-       P'.tellT "address" (_address msg)
-       P'.tellT "domain" (_domain msg)
-       P'.tellT "capabilities" (_capabilities msg)
+       P'.tellT "id" (id msg)
+       P'.tellT "ip" (ip msg)
+       P'.tellT "port" (port msg)
+       P'.tellT "pid" (pid msg)
+       P'.tellT "hostname" (hostname msg)
+       P'.tellT "version" (version msg)
+       P'.tellT "address" (address msg)
+       P'.tellT "domain" (domain msg)
+       P'.tellT "capabilities" (capabilities msg)
   textGet
    = do
        mods <- P'.sepEndBy
                 (P'.choice
-                  [parse'_id, parse'_ip, parse'_port, parse'_pid, parse'_hostname, parse'_version, parse'_address, parse'_domain,
-                   parse'_capabilities])
+                  [parse'id, parse'ip, parse'port, parse'pid, parse'hostname, parse'version, parse'address, parse'domain,
+                   parse'capabilities])
                 P'.spaces
        Prelude'.return (Prelude'.foldl (\ v f -> f v) P'.defaultValue mods)
     where
-        parse'_id
+        parse'id
          = P'.try
             (do
                v <- P'.getT "id"
-               Prelude'.return (\ o -> o{_id = v}))
-        parse'_ip
+               Prelude'.return (\ o -> o{id = v}))
+        parse'ip
          = P'.try
             (do
                v <- P'.getT "ip"
-               Prelude'.return (\ o -> o{_ip = v}))
-        parse'_port
+               Prelude'.return (\ o -> o{ip = v}))
+        parse'port
          = P'.try
             (do
                v <- P'.getT "port"
-               Prelude'.return (\ o -> o{_port = v}))
-        parse'_pid
+               Prelude'.return (\ o -> o{port = v}))
+        parse'pid
          = P'.try
             (do
                v <- P'.getT "pid"
-               Prelude'.return (\ o -> o{_pid = v}))
-        parse'_hostname
+               Prelude'.return (\ o -> o{pid = v}))
+        parse'hostname
          = P'.try
             (do
                v <- P'.getT "hostname"
-               Prelude'.return (\ o -> o{_hostname = v}))
-        parse'_version
+               Prelude'.return (\ o -> o{hostname = v}))
+        parse'version
          = P'.try
             (do
                v <- P'.getT "version"
-               Prelude'.return (\ o -> o{_version = v}))
-        parse'_address
+               Prelude'.return (\ o -> o{version = v}))
+        parse'address
          = P'.try
             (do
                v <- P'.getT "address"
-               Prelude'.return (\ o -> o{_address = v}))
-        parse'_domain
+               Prelude'.return (\ o -> o{address = v}))
+        parse'domain
          = P'.try
             (do
                v <- P'.getT "domain"
-               Prelude'.return (\ o -> o{_domain = v}))
-        parse'_capabilities
+               Prelude'.return (\ o -> o{domain = v}))
+        parse'capabilities
          = P'.try
             (do
                v <- P'.getT "capabilities"
-               Prelude'.return (\ o -> o{_capabilities = P'.append (_capabilities o) v}))
+               Prelude'.return (\ o -> o{capabilities = P'.append (capabilities o) v}))

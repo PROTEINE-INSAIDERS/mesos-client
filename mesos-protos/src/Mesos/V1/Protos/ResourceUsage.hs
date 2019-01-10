@@ -1,21 +1,17 @@
-{-# LANGUAGE TemplateHaskell, BangPatterns, DeriveDataTypeable, DeriveGeneric, FlexibleInstances, MultiParamTypeClasses,
- OverloadedStrings #-}
+{-# LANGUAGE BangPatterns, DeriveDataTypeable, DeriveGeneric, FlexibleInstances, MultiParamTypeClasses, OverloadedStrings #-}
 {-# OPTIONS_GHC  -fno-warn-unused-imports #-}
-module Mesos.V1.Protos.ResourceUsage (ResourceUsage(..), executors, total) where
+module Mesos.V1.Protos.ResourceUsage (ResourceUsage(..)) where
 import Prelude ((+), (/), (++), (.))
 import qualified Prelude as Prelude'
 import qualified Data.Typeable as Prelude'
 import qualified GHC.Generics as Prelude'
 import qualified Data.Data as Prelude'
 import qualified Text.ProtocolBuffers.Header as P'
-import qualified Control.Lens.TH
 import qualified Mesos.V1.Protos.Resource as Protos (Resource)
 import qualified Mesos.V1.Protos.ResourceUsage.Executor as Protos.ResourceUsage (Executor)
 
-data ResourceUsage = ResourceUsage{_executors :: !(P'.Seq Protos.ResourceUsage.Executor), _total :: !(P'.Seq Protos.Resource)}
+data ResourceUsage = ResourceUsage{executors :: !(P'.Seq Protos.ResourceUsage.Executor), total :: !(P'.Seq Protos.Resource)}
                      deriving (Prelude'.Show, Prelude'.Eq, Prelude'.Ord, Prelude'.Typeable, Prelude'.Data, Prelude'.Generic)
-
-Control.Lens.TH.makeLenses ''ResourceUsage
 
 instance P'.ToJSON ResourceUsage where
   toJSON msg
@@ -33,7 +29,7 @@ instance P'.FromJSON ResourceUsage where
                         (P'.explicitParseFieldMaybe (Prelude'.mapM P'.parseJSON P'.<=< P'.parseJSON) o "executors")
           total <- Prelude'.fmap (Prelude'.maybe Prelude'.mempty Prelude'.id)
                     (P'.explicitParseFieldMaybe (Prelude'.mapM P'.parseJSON P'.<=< P'.parseJSON) o "total")
-          Prelude'.return P'.defaultValue{_executors = executors, _total = total})
+          Prelude'.return P'.defaultValue{executors = executors, total = total})
 
 instance P'.Mergeable ResourceUsage where
   mergeAppend (ResourceUsage x'1 x'2) (ResourceUsage y'1 y'2) = ResourceUsage (P'.mergeAppend x'1 y'1) (P'.mergeAppend x'2 y'2)
@@ -71,8 +67,8 @@ instance P'.Wire ResourceUsage where
     where
         update'Self wire'Tag old'Self
          = case wire'Tag of
-             10 -> Prelude'.fmap (\ !new'Field -> old'Self{_executors = P'.append (_executors old'Self) new'Field}) (P'.wireGet 11)
-             18 -> Prelude'.fmap (\ !new'Field -> old'Self{_total = P'.append (_total old'Self) new'Field}) (P'.wireGet 11)
+             10 -> Prelude'.fmap (\ !new'Field -> old'Self{executors = P'.append (executors old'Self) new'Field}) (P'.wireGet 11)
+             18 -> Prelude'.fmap (\ !new'Field -> old'Self{total = P'.append (total old'Self) new'Field}) (P'.wireGet 11)
              _ -> let (field'Number, wire'Type) = P'.splitWireTag wire'Tag in P'.unknown field'Number wire'Type old'Self
 
 instance P'.MessageAPI msg' (msg' -> ResourceUsage) ResourceUsage where
@@ -84,7 +80,7 @@ instance P'.ReflectDescriptor ResourceUsage where
   getMessageInfo _ = P'.GetMessageInfo (P'.fromDistinctAscList []) (P'.fromDistinctAscList [10, 18])
   reflectDescriptorInfo _
    = Prelude'.read
-      "DescriptorInfo {descName = ProtoName {protobufName = FIName \".mesos.v1.ResourceUsage\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"ResourceUsage\"}, descFilePath = [\"Mesos\",\"V1\",\"Protos\",\"ResourceUsage.hs\"], isGroup = False, fields = fromList [FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.ResourceUsage.executors\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"ResourceUsage\"], baseName' = FName \"executors\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 1}, wireTag = WireTag {getWireTag = 10}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = True, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.ResourceUsage.Executor\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\",MName \"ResourceUsage\"], baseName = MName \"Executor\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.ResourceUsage.total\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"ResourceUsage\"], baseName' = FName \"total\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 2}, wireTag = WireTag {getWireTag = 18}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = True, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.Resource\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"Resource\"}), hsRawDefault = Nothing, hsDefault = Nothing}], descOneofs = fromList [], keys = fromList [], extRanges = [], knownKeys = fromList [], storeUnknown = False, lazyFields = False, makeLenses = True, jsonInstances = True}"
+      "DescriptorInfo {descName = ProtoName {protobufName = FIName \".mesos.v1.ResourceUsage\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"ResourceUsage\"}, descFilePath = [\"Mesos\",\"V1\",\"Protos\",\"ResourceUsage.hs\"], isGroup = False, fields = fromList [FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.ResourceUsage.executors\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"ResourceUsage\"], baseName' = FName \"executors\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 1}, wireTag = WireTag {getWireTag = 10}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = True, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.ResourceUsage.Executor\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\",MName \"ResourceUsage\"], baseName = MName \"Executor\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.ResourceUsage.total\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"ResourceUsage\"], baseName' = FName \"total\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 2}, wireTag = WireTag {getWireTag = 18}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = True, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.Resource\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"Resource\"}), hsRawDefault = Nothing, hsDefault = Nothing}], descOneofs = fromList [], keys = fromList [], extRanges = [], knownKeys = fromList [], storeUnknown = False, lazyFields = False, makeLenses = False, jsonInstances = True}"
 
 instance P'.TextType ResourceUsage where
   tellT = P'.tellSubMessage
@@ -93,20 +89,20 @@ instance P'.TextType ResourceUsage where
 instance P'.TextMsg ResourceUsage where
   textPut msg
    = do
-       P'.tellT "executors" (_executors msg)
-       P'.tellT "total" (_total msg)
+       P'.tellT "executors" (executors msg)
+       P'.tellT "total" (total msg)
   textGet
    = do
-       mods <- P'.sepEndBy (P'.choice [parse'_executors, parse'_total]) P'.spaces
+       mods <- P'.sepEndBy (P'.choice [parse'executors, parse'total]) P'.spaces
        Prelude'.return (Prelude'.foldl (\ v f -> f v) P'.defaultValue mods)
     where
-        parse'_executors
+        parse'executors
          = P'.try
             (do
                v <- P'.getT "executors"
-               Prelude'.return (\ o -> o{_executors = P'.append (_executors o) v}))
-        parse'_total
+               Prelude'.return (\ o -> o{executors = P'.append (executors o) v}))
+        parse'total
          = P'.try
             (do
                v <- P'.getT "total"
-               Prelude'.return (\ o -> o{_total = P'.append (_total o) v}))
+               Prelude'.return (\ o -> o{total = P'.append (total o) v}))

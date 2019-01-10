@@ -1,19 +1,15 @@
-{-# LANGUAGE TemplateHaskell, BangPatterns, DeriveDataTypeable, DeriveGeneric, FlexibleInstances, MultiParamTypeClasses,
- OverloadedStrings #-}
+{-# LANGUAGE BangPatterns, DeriveDataTypeable, DeriveGeneric, FlexibleInstances, MultiParamTypeClasses, OverloadedStrings #-}
 {-# OPTIONS_GHC  -fno-warn-unused-imports #-}
-module Mesos.V1.Protos.RateLimit (RateLimit(..), qps, principal, capacity) where
+module Mesos.V1.Protos.RateLimit (RateLimit(..)) where
 import Prelude ((+), (/), (++), (.))
 import qualified Prelude as Prelude'
 import qualified Data.Typeable as Prelude'
 import qualified GHC.Generics as Prelude'
 import qualified Data.Data as Prelude'
 import qualified Text.ProtocolBuffers.Header as P'
-import qualified Control.Lens.TH
 
-data RateLimit = RateLimit{_qps :: !(P'.Maybe P'.Double), _principal :: !(P'.Utf8), _capacity :: !(P'.Maybe P'.Word64)}
+data RateLimit = RateLimit{qps :: !(P'.Maybe P'.Double), principal :: !(P'.Utf8), capacity :: !(P'.Maybe P'.Word64)}
                  deriving (Prelude'.Show, Prelude'.Eq, Prelude'.Ord, Prelude'.Typeable, Prelude'.Data, Prelude'.Generic)
-
-Control.Lens.TH.makeLenses ''RateLimit
 
 instance P'.ToJSON RateLimit where
   toJSON msg
@@ -30,7 +26,7 @@ instance P'.FromJSON RateLimit where
           qps <- P'.explicitParseFieldMaybe P'.parseJSON o "qps"
           principal <- P'.explicitParseField P'.parseJSON o "principal"
           capacity <- P'.explicitParseFieldMaybe (P'.parseJSONReadWithPayload "uint64") o "capacity"
-          Prelude'.return P'.defaultValue{_qps = qps, _principal = principal, _capacity = capacity})
+          Prelude'.return P'.defaultValue{qps = qps, principal = principal, capacity = capacity})
 
 instance P'.Mergeable RateLimit where
   mergeAppend (RateLimit x'1 x'2 x'3) (RateLimit y'1 y'2 y'3)
@@ -70,9 +66,9 @@ instance P'.Wire RateLimit where
     where
         update'Self wire'Tag old'Self
          = case wire'Tag of
-             9 -> Prelude'.fmap (\ !new'Field -> old'Self{_qps = Prelude'.Just new'Field}) (P'.wireGet 1)
-             18 -> Prelude'.fmap (\ !new'Field -> old'Self{_principal = new'Field}) (P'.wireGet 9)
-             24 -> Prelude'.fmap (\ !new'Field -> old'Self{_capacity = Prelude'.Just new'Field}) (P'.wireGet 4)
+             9 -> Prelude'.fmap (\ !new'Field -> old'Self{qps = Prelude'.Just new'Field}) (P'.wireGet 1)
+             18 -> Prelude'.fmap (\ !new'Field -> old'Self{principal = new'Field}) (P'.wireGet 9)
+             24 -> Prelude'.fmap (\ !new'Field -> old'Self{capacity = Prelude'.Just new'Field}) (P'.wireGet 4)
              _ -> let (field'Number, wire'Type) = P'.splitWireTag wire'Tag in P'.unknown field'Number wire'Type old'Self
 
 instance P'.MessageAPI msg' (msg' -> RateLimit) RateLimit where
@@ -84,7 +80,7 @@ instance P'.ReflectDescriptor RateLimit where
   getMessageInfo _ = P'.GetMessageInfo (P'.fromDistinctAscList [18]) (P'.fromDistinctAscList [9, 18, 24])
   reflectDescriptorInfo _
    = Prelude'.read
-      "DescriptorInfo {descName = ProtoName {protobufName = FIName \".mesos.v1.RateLimit\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"RateLimit\"}, descFilePath = [\"Mesos\",\"V1\",\"Protos\",\"RateLimit.hs\"], isGroup = False, fields = fromList [FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.RateLimit.qps\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"RateLimit\"], baseName' = FName \"qps\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 1}, wireTag = WireTag {getWireTag = 9}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 1}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.RateLimit.principal\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"RateLimit\"], baseName' = FName \"principal\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 2}, wireTag = WireTag {getWireTag = 18}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = True, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 9}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.RateLimit.capacity\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"RateLimit\"], baseName' = FName \"capacity\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 3}, wireTag = WireTag {getWireTag = 24}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing}], descOneofs = fromList [], keys = fromList [], extRanges = [], knownKeys = fromList [], storeUnknown = False, lazyFields = False, makeLenses = True, jsonInstances = True}"
+      "DescriptorInfo {descName = ProtoName {protobufName = FIName \".mesos.v1.RateLimit\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"RateLimit\"}, descFilePath = [\"Mesos\",\"V1\",\"Protos\",\"RateLimit.hs\"], isGroup = False, fields = fromList [FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.RateLimit.qps\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"RateLimit\"], baseName' = FName \"qps\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 1}, wireTag = WireTag {getWireTag = 9}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 1}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.RateLimit.principal\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"RateLimit\"], baseName' = FName \"principal\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 2}, wireTag = WireTag {getWireTag = 18}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = True, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 9}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.RateLimit.capacity\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"RateLimit\"], baseName' = FName \"capacity\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 3}, wireTag = WireTag {getWireTag = 24}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing}], descOneofs = fromList [], keys = fromList [], extRanges = [], knownKeys = fromList [], storeUnknown = False, lazyFields = False, makeLenses = False, jsonInstances = True}"
 
 instance P'.TextType RateLimit where
   tellT = P'.tellSubMessage
@@ -93,26 +89,26 @@ instance P'.TextType RateLimit where
 instance P'.TextMsg RateLimit where
   textPut msg
    = do
-       P'.tellT "qps" (_qps msg)
-       P'.tellT "principal" (_principal msg)
-       P'.tellT "capacity" (_capacity msg)
+       P'.tellT "qps" (qps msg)
+       P'.tellT "principal" (principal msg)
+       P'.tellT "capacity" (capacity msg)
   textGet
    = do
-       mods <- P'.sepEndBy (P'.choice [parse'_qps, parse'_principal, parse'_capacity]) P'.spaces
+       mods <- P'.sepEndBy (P'.choice [parse'qps, parse'principal, parse'capacity]) P'.spaces
        Prelude'.return (Prelude'.foldl (\ v f -> f v) P'.defaultValue mods)
     where
-        parse'_qps
+        parse'qps
          = P'.try
             (do
                v <- P'.getT "qps"
-               Prelude'.return (\ o -> o{_qps = v}))
-        parse'_principal
+               Prelude'.return (\ o -> o{qps = v}))
+        parse'principal
          = P'.try
             (do
                v <- P'.getT "principal"
-               Prelude'.return (\ o -> o{_principal = v}))
-        parse'_capacity
+               Prelude'.return (\ o -> o{principal = v}))
+        parse'capacity
          = P'.try
             (do
                v <- P'.getT "capacity"
-               Prelude'.return (\ o -> o{_capacity = v}))
+               Prelude'.return (\ o -> o{capacity = v}))

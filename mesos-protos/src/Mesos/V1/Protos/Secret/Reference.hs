@@ -1,19 +1,15 @@
-{-# LANGUAGE TemplateHaskell, BangPatterns, DeriveDataTypeable, DeriveGeneric, FlexibleInstances, MultiParamTypeClasses,
- OverloadedStrings #-}
+{-# LANGUAGE BangPatterns, DeriveDataTypeable, DeriveGeneric, FlexibleInstances, MultiParamTypeClasses, OverloadedStrings #-}
 {-# OPTIONS_GHC  -fno-warn-unused-imports #-}
-module Mesos.V1.Protos.Secret.Reference (Reference(..), name, key) where
+module Mesos.V1.Protos.Secret.Reference (Reference(..)) where
 import Prelude ((+), (/), (++), (.))
 import qualified Prelude as Prelude'
 import qualified Data.Typeable as Prelude'
 import qualified GHC.Generics as Prelude'
 import qualified Data.Data as Prelude'
 import qualified Text.ProtocolBuffers.Header as P'
-import qualified Control.Lens.TH
 
-data Reference = Reference{_name :: !(P'.Utf8), _key :: !(P'.Maybe P'.Utf8)}
+data Reference = Reference{name :: !(P'.Utf8), key :: !(P'.Maybe P'.Utf8)}
                  deriving (Prelude'.Show, Prelude'.Eq, Prelude'.Ord, Prelude'.Typeable, Prelude'.Data, Prelude'.Generic)
-
-Control.Lens.TH.makeLenses ''Reference
 
 instance P'.ToJSON Reference where
   toJSON msg
@@ -27,7 +23,7 @@ instance P'.FromJSON Reference where
         do
           name <- P'.explicitParseField P'.parseJSON o "name"
           key <- P'.explicitParseFieldMaybe P'.parseJSON o "key"
-          Prelude'.return P'.defaultValue{_name = name, _key = key})
+          Prelude'.return P'.defaultValue{name = name, key = key})
 
 instance P'.Mergeable Reference where
   mergeAppend (Reference x'1 x'2) (Reference y'1 y'2) = Reference (P'.mergeAppend x'1 y'1) (P'.mergeAppend x'2 y'2)
@@ -65,8 +61,8 @@ instance P'.Wire Reference where
     where
         update'Self wire'Tag old'Self
          = case wire'Tag of
-             10 -> Prelude'.fmap (\ !new'Field -> old'Self{_name = new'Field}) (P'.wireGet 9)
-             18 -> Prelude'.fmap (\ !new'Field -> old'Self{_key = Prelude'.Just new'Field}) (P'.wireGet 9)
+             10 -> Prelude'.fmap (\ !new'Field -> old'Self{name = new'Field}) (P'.wireGet 9)
+             18 -> Prelude'.fmap (\ !new'Field -> old'Self{key = Prelude'.Just new'Field}) (P'.wireGet 9)
              _ -> let (field'Number, wire'Type) = P'.splitWireTag wire'Tag in P'.unknown field'Number wire'Type old'Self
 
 instance P'.MessageAPI msg' (msg' -> Reference) Reference where
@@ -78,7 +74,7 @@ instance P'.ReflectDescriptor Reference where
   getMessageInfo _ = P'.GetMessageInfo (P'.fromDistinctAscList [10]) (P'.fromDistinctAscList [10, 18])
   reflectDescriptorInfo _
    = Prelude'.read
-      "DescriptorInfo {descName = ProtoName {protobufName = FIName \".mesos.v1.Secret.Reference\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\",MName \"Secret\"], baseName = MName \"Reference\"}, descFilePath = [\"Mesos\",\"V1\",\"Protos\",\"Secret\",\"Reference.hs\"], isGroup = False, fields = fromList [FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Secret.Reference.name\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Secret\",MName \"Reference\"], baseName' = FName \"name\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 1}, wireTag = WireTag {getWireTag = 10}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = True, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 9}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Secret.Reference.key\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Secret\",MName \"Reference\"], baseName' = FName \"key\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 2}, wireTag = WireTag {getWireTag = 18}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 9}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing}], descOneofs = fromList [], keys = fromList [], extRanges = [], knownKeys = fromList [], storeUnknown = False, lazyFields = False, makeLenses = True, jsonInstances = True}"
+      "DescriptorInfo {descName = ProtoName {protobufName = FIName \".mesos.v1.Secret.Reference\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\",MName \"Secret\"], baseName = MName \"Reference\"}, descFilePath = [\"Mesos\",\"V1\",\"Protos\",\"Secret\",\"Reference.hs\"], isGroup = False, fields = fromList [FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Secret.Reference.name\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Secret\",MName \"Reference\"], baseName' = FName \"name\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 1}, wireTag = WireTag {getWireTag = 10}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = True, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 9}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Secret.Reference.key\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Secret\",MName \"Reference\"], baseName' = FName \"key\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 2}, wireTag = WireTag {getWireTag = 18}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 9}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing}], descOneofs = fromList [], keys = fromList [], extRanges = [], knownKeys = fromList [], storeUnknown = False, lazyFields = False, makeLenses = False, jsonInstances = True}"
 
 instance P'.TextType Reference where
   tellT = P'.tellSubMessage
@@ -87,20 +83,20 @@ instance P'.TextType Reference where
 instance P'.TextMsg Reference where
   textPut msg
    = do
-       P'.tellT "name" (_name msg)
-       P'.tellT "key" (_key msg)
+       P'.tellT "name" (name msg)
+       P'.tellT "key" (key msg)
   textGet
    = do
-       mods <- P'.sepEndBy (P'.choice [parse'_name, parse'_key]) P'.spaces
+       mods <- P'.sepEndBy (P'.choice [parse'name, parse'key]) P'.spaces
        Prelude'.return (Prelude'.foldl (\ v f -> f v) P'.defaultValue mods)
     where
-        parse'_name
+        parse'name
          = P'.try
             (do
                v <- P'.getT "name"
-               Prelude'.return (\ o -> o{_name = v}))
-        parse'_key
+               Prelude'.return (\ o -> o{name = v}))
+        parse'key
          = P'.try
             (do
                v <- P'.getT "key"
-               Prelude'.return (\ o -> o{_key = v}))
+               Prelude'.return (\ o -> o{key = v}))

@@ -3,16 +3,12 @@
 {-# LANGUAGE DisambiguateRecordFields #-}
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE PolyKinds #-}
+{-# LANGUAGE TemplateHaskell #-}
 
 import Data.Proxy
 import           Data.Aeson
 import           Data.Either
-<<<<<<< HEAD
-import Mesos.HTTP.Client.Internal
-=======
-import           Mesos.HTTP.Client.Internal    as M
->>>>>>> 6e6b1b1cc0c57732d46bdce56b12c4eeadba2304
-import qualified Mesos.V1.Master               as Master
+import Mesos.V1.Client.HTTP.Internal
 import qualified Mesos.V1.Master.Protos.Response
                                                as Master
 import           Network.HTTP.Client            ( defaultManagerSettings
@@ -38,6 +34,19 @@ import           Mesos.V1.Protos.Labels
 import           Mesos.V1.Protos.Label
 import           Mesos.V1.Internal
 import Mesos.V1.Master.Protos.Call.Type as Master
+import Data.Label
+
+data Person = Person
+  { name   :: String
+  , age    :: Int
+  } deriving Show
+
+mkLabels [''Person]
+
+jan = Person "Jan" 71
+
+hisAge :: Int
+hisAge = get lAge jan
 
 -- import qualified Mesos.V1.Protos.FrameworkInfo as FrameworkInfo
 

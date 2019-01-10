@@ -1,20 +1,16 @@
-{-# LANGUAGE TemplateHaskell, BangPatterns, DeriveDataTypeable, DeriveGeneric, FlexibleInstances, MultiParamTypeClasses,
- OverloadedStrings #-}
+{-# LANGUAGE BangPatterns, DeriveDataTypeable, DeriveGeneric, FlexibleInstances, MultiParamTypeClasses, OverloadedStrings #-}
 {-# OPTIONS_GHC  -fno-warn-unused-imports #-}
-module Mesos.V1.Scheduler.Protos.Call.Reconcile (Reconcile(..), tasks) where
+module Mesos.V1.Scheduler.Protos.Call.Reconcile (Reconcile(..)) where
 import Prelude ((+), (/), (++), (.))
 import qualified Prelude as Prelude'
 import qualified Data.Typeable as Prelude'
 import qualified GHC.Generics as Prelude'
 import qualified Data.Data as Prelude'
 import qualified Text.ProtocolBuffers.Header as P'
-import qualified Control.Lens.TH
 import qualified Mesos.V1.Scheduler.Protos.Call.Reconcile.Task as Protos.Call.Reconcile (Task)
 
-data Reconcile = Reconcile{_tasks :: !(P'.Seq Protos.Call.Reconcile.Task)}
+data Reconcile = Reconcile{tasks :: !(P'.Seq Protos.Call.Reconcile.Task)}
                  deriving (Prelude'.Show, Prelude'.Eq, Prelude'.Ord, Prelude'.Typeable, Prelude'.Data, Prelude'.Generic)
-
-Control.Lens.TH.makeLenses ''Reconcile
 
 instance P'.ToJSON Reconcile where
   toJSON msg = P'.objectNoEmpty ([("tasks", P'.toJSON (Prelude'.fmap P'.toJSON (tasks msg)))] ++ Prelude'.concat [])
@@ -26,7 +22,7 @@ instance P'.FromJSON Reconcile where
         do
           tasks <- Prelude'.fmap (Prelude'.maybe Prelude'.mempty Prelude'.id)
                     (P'.explicitParseFieldMaybe (Prelude'.mapM P'.parseJSON P'.<=< P'.parseJSON) o "tasks")
-          Prelude'.return P'.defaultValue{_tasks = tasks})
+          Prelude'.return P'.defaultValue{tasks = tasks})
 
 instance P'.Mergeable Reconcile where
   mergeAppend (Reconcile x'1) (Reconcile y'1) = Reconcile (P'.mergeAppend x'1 y'1)
@@ -64,7 +60,7 @@ instance P'.Wire Reconcile where
     where
         update'Self wire'Tag old'Self
          = case wire'Tag of
-             10 -> Prelude'.fmap (\ !new'Field -> old'Self{_tasks = P'.append (_tasks old'Self) new'Field}) (P'.wireGet 11)
+             10 -> Prelude'.fmap (\ !new'Field -> old'Self{tasks = P'.append (tasks old'Self) new'Field}) (P'.wireGet 11)
              _ -> let (field'Number, wire'Type) = P'.splitWireTag wire'Tag in P'.unknown field'Number wire'Type old'Self
 
 instance P'.MessageAPI msg' (msg' -> Reconcile) Reconcile where
@@ -76,7 +72,7 @@ instance P'.ReflectDescriptor Reconcile where
   getMessageInfo _ = P'.GetMessageInfo (P'.fromDistinctAscList []) (P'.fromDistinctAscList [10])
   reflectDescriptorInfo _
    = Prelude'.read
-      "DescriptorInfo {descName = ProtoName {protobufName = FIName \".mesos.v1.scheduler.Call.Reconcile\", haskellPrefix = [MName \"Mesos\",MName \"V1\",MName \"Scheduler\"], parentModule = [MName \"Protos\",MName \"Call\"], baseName = MName \"Reconcile\"}, descFilePath = [\"Mesos\",\"V1\",\"Scheduler\",\"Protos\",\"Call\",\"Reconcile.hs\"], isGroup = False, fields = fromList [FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.scheduler.Call.Reconcile.tasks\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Scheduler\"], parentModule' = [MName \"Protos\",MName \"Call\",MName \"Reconcile\"], baseName' = FName \"tasks\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 1}, wireTag = WireTag {getWireTag = 10}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = True, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.scheduler.Call.Reconcile.Task\", haskellPrefix = [MName \"Mesos\",MName \"V1\",MName \"Scheduler\"], parentModule = [MName \"Protos\",MName \"Call\",MName \"Reconcile\"], baseName = MName \"Task\"}), hsRawDefault = Nothing, hsDefault = Nothing}], descOneofs = fromList [], keys = fromList [], extRanges = [], knownKeys = fromList [], storeUnknown = False, lazyFields = False, makeLenses = True, jsonInstances = True}"
+      "DescriptorInfo {descName = ProtoName {protobufName = FIName \".mesos.v1.scheduler.Call.Reconcile\", haskellPrefix = [MName \"Mesos\",MName \"V1\",MName \"Scheduler\"], parentModule = [MName \"Protos\",MName \"Call\"], baseName = MName \"Reconcile\"}, descFilePath = [\"Mesos\",\"V1\",\"Scheduler\",\"Protos\",\"Call\",\"Reconcile.hs\"], isGroup = False, fields = fromList [FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.scheduler.Call.Reconcile.tasks\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Scheduler\"], parentModule' = [MName \"Protos\",MName \"Call\",MName \"Reconcile\"], baseName' = FName \"tasks\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 1}, wireTag = WireTag {getWireTag = 10}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = True, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.scheduler.Call.Reconcile.Task\", haskellPrefix = [MName \"Mesos\",MName \"V1\",MName \"Scheduler\"], parentModule = [MName \"Protos\",MName \"Call\",MName \"Reconcile\"], baseName = MName \"Task\"}), hsRawDefault = Nothing, hsDefault = Nothing}], descOneofs = fromList [], keys = fromList [], extRanges = [], knownKeys = fromList [], storeUnknown = False, lazyFields = False, makeLenses = False, jsonInstances = True}"
 
 instance P'.TextType Reconcile where
   tellT = P'.tellSubMessage
@@ -85,14 +81,14 @@ instance P'.TextType Reconcile where
 instance P'.TextMsg Reconcile where
   textPut msg
    = do
-       P'.tellT "tasks" (_tasks msg)
+       P'.tellT "tasks" (tasks msg)
   textGet
    = do
-       mods <- P'.sepEndBy (P'.choice [parse'_tasks]) P'.spaces
+       mods <- P'.sepEndBy (P'.choice [parse'tasks]) P'.spaces
        Prelude'.return (Prelude'.foldl (\ v f -> f v) P'.defaultValue mods)
     where
-        parse'_tasks
+        parse'tasks
          = P'.try
             (do
                v <- P'.getT "tasks"
-               Prelude'.return (\ o -> o{_tasks = P'.append (_tasks o) v}))
+               Prelude'.return (\ o -> o{tasks = P'.append (tasks o) v}))

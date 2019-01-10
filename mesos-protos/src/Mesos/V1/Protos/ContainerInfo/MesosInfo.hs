@@ -1,20 +1,16 @@
-{-# LANGUAGE TemplateHaskell, BangPatterns, DeriveDataTypeable, DeriveGeneric, FlexibleInstances, MultiParamTypeClasses,
- OverloadedStrings #-}
+{-# LANGUAGE BangPatterns, DeriveDataTypeable, DeriveGeneric, FlexibleInstances, MultiParamTypeClasses, OverloadedStrings #-}
 {-# OPTIONS_GHC  -fno-warn-unused-imports #-}
-module Mesos.V1.Protos.ContainerInfo.MesosInfo (MesosInfo(..), image) where
+module Mesos.V1.Protos.ContainerInfo.MesosInfo (MesosInfo(..)) where
 import Prelude ((+), (/), (++), (.))
 import qualified Prelude as Prelude'
 import qualified Data.Typeable as Prelude'
 import qualified GHC.Generics as Prelude'
 import qualified Data.Data as Prelude'
 import qualified Text.ProtocolBuffers.Header as P'
-import qualified Control.Lens.TH
 import qualified Mesos.V1.Protos.Image as Protos (Image)
 
-data MesosInfo = MesosInfo{_image :: !(P'.Maybe Protos.Image)}
+data MesosInfo = MesosInfo{image :: !(P'.Maybe Protos.Image)}
                  deriving (Prelude'.Show, Prelude'.Eq, Prelude'.Ord, Prelude'.Typeable, Prelude'.Data, Prelude'.Generic)
-
-Control.Lens.TH.makeLenses ''MesosInfo
 
 instance P'.ToJSON MesosInfo where
   toJSON msg = P'.objectNoEmpty ([("image", P'.toJSON (Prelude'.fmap P'.toJSON (image msg)))] ++ Prelude'.concat [])
@@ -25,7 +21,7 @@ instance P'.FromJSON MesosInfo where
       (\ o ->
         do
           image <- P'.explicitParseFieldMaybe P'.parseJSON o "image"
-          Prelude'.return P'.defaultValue{_image = image})
+          Prelude'.return P'.defaultValue{image = image})
 
 instance P'.Mergeable MesosInfo where
   mergeAppend (MesosInfo x'1) (MesosInfo y'1) = MesosInfo (P'.mergeAppend x'1 y'1)
@@ -63,7 +59,7 @@ instance P'.Wire MesosInfo where
     where
         update'Self wire'Tag old'Self
          = case wire'Tag of
-             10 -> Prelude'.fmap (\ !new'Field -> old'Self{_image = P'.mergeAppend (_image old'Self) (Prelude'.Just new'Field)})
+             10 -> Prelude'.fmap (\ !new'Field -> old'Self{image = P'.mergeAppend (image old'Self) (Prelude'.Just new'Field)})
                     (P'.wireGet 11)
              _ -> let (field'Number, wire'Type) = P'.splitWireTag wire'Tag in P'.unknown field'Number wire'Type old'Self
 
@@ -76,7 +72,7 @@ instance P'.ReflectDescriptor MesosInfo where
   getMessageInfo _ = P'.GetMessageInfo (P'.fromDistinctAscList []) (P'.fromDistinctAscList [10])
   reflectDescriptorInfo _
    = Prelude'.read
-      "DescriptorInfo {descName = ProtoName {protobufName = FIName \".mesos.v1.ContainerInfo.MesosInfo\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\",MName \"ContainerInfo\"], baseName = MName \"MesosInfo\"}, descFilePath = [\"Mesos\",\"V1\",\"Protos\",\"ContainerInfo\",\"MesosInfo.hs\"], isGroup = False, fields = fromList [FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.ContainerInfo.MesosInfo.image\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"ContainerInfo\",MName \"MesosInfo\"], baseName' = FName \"image\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 1}, wireTag = WireTag {getWireTag = 10}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.Image\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"Image\"}), hsRawDefault = Nothing, hsDefault = Nothing}], descOneofs = fromList [], keys = fromList [], extRanges = [], knownKeys = fromList [], storeUnknown = False, lazyFields = False, makeLenses = True, jsonInstances = True}"
+      "DescriptorInfo {descName = ProtoName {protobufName = FIName \".mesos.v1.ContainerInfo.MesosInfo\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\",MName \"ContainerInfo\"], baseName = MName \"MesosInfo\"}, descFilePath = [\"Mesos\",\"V1\",\"Protos\",\"ContainerInfo\",\"MesosInfo.hs\"], isGroup = False, fields = fromList [FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.ContainerInfo.MesosInfo.image\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"ContainerInfo\",MName \"MesosInfo\"], baseName' = FName \"image\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 1}, wireTag = WireTag {getWireTag = 10}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.Image\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"Image\"}), hsRawDefault = Nothing, hsDefault = Nothing}], descOneofs = fromList [], keys = fromList [], extRanges = [], knownKeys = fromList [], storeUnknown = False, lazyFields = False, makeLenses = False, jsonInstances = True}"
 
 instance P'.TextType MesosInfo where
   tellT = P'.tellSubMessage
@@ -85,14 +81,14 @@ instance P'.TextType MesosInfo where
 instance P'.TextMsg MesosInfo where
   textPut msg
    = do
-       P'.tellT "image" (_image msg)
+       P'.tellT "image" (image msg)
   textGet
    = do
-       mods <- P'.sepEndBy (P'.choice [parse'_image]) P'.spaces
+       mods <- P'.sepEndBy (P'.choice [parse'image]) P'.spaces
        Prelude'.return (Prelude'.foldl (\ v f -> f v) P'.defaultValue mods)
     where
-        parse'_image
+        parse'image
          = P'.try
             (do
                v <- P'.getT "image"
-               Prelude'.return (\ o -> o{_image = v}))
+               Prelude'.return (\ o -> o{image = v}))

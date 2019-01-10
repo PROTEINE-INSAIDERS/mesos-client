@@ -1,25 +1,20 @@
-{-# LANGUAGE TemplateHaskell, BangPatterns, DeriveDataTypeable, DeriveGeneric, FlexibleInstances, MultiParamTypeClasses,
- OverloadedStrings #-}
+{-# LANGUAGE BangPatterns, DeriveDataTypeable, DeriveGeneric, FlexibleInstances, MultiParamTypeClasses, OverloadedStrings #-}
 {-# OPTIONS_GHC  -fno-warn-unused-imports #-}
-module Mesos.V1.Protos.TrafficControlStatistics
-       (TrafficControlStatistics(..), id, backlog, bytes, drops, overlimits, packets, qlen, ratebps, ratepps, requeues) where
+module Mesos.V1.Protos.TrafficControlStatistics (TrafficControlStatistics(..)) where
 import Prelude ((+), (/), (++), (.))
 import qualified Prelude as Prelude'
 import qualified Data.Typeable as Prelude'
 import qualified GHC.Generics as Prelude'
 import qualified Data.Data as Prelude'
 import qualified Text.ProtocolBuffers.Header as P'
-import qualified Control.Lens.TH
 
-data TrafficControlStatistics = TrafficControlStatistics{_id :: !(P'.Utf8), _backlog :: !(P'.Maybe P'.Word64),
-                                                         _bytes :: !(P'.Maybe P'.Word64), _drops :: !(P'.Maybe P'.Word64),
-                                                         _overlimits :: !(P'.Maybe P'.Word64), _packets :: !(P'.Maybe P'.Word64),
-                                                         _qlen :: !(P'.Maybe P'.Word64), _ratebps :: !(P'.Maybe P'.Word64),
-                                                         _ratepps :: !(P'.Maybe P'.Word64), _requeues :: !(P'.Maybe P'.Word64)}
+data TrafficControlStatistics = TrafficControlStatistics{id :: !(P'.Utf8), backlog :: !(P'.Maybe P'.Word64),
+                                                         bytes :: !(P'.Maybe P'.Word64), drops :: !(P'.Maybe P'.Word64),
+                                                         overlimits :: !(P'.Maybe P'.Word64), packets :: !(P'.Maybe P'.Word64),
+                                                         qlen :: !(P'.Maybe P'.Word64), ratebps :: !(P'.Maybe P'.Word64),
+                                                         ratepps :: !(P'.Maybe P'.Word64), requeues :: !(P'.Maybe P'.Word64)}
                                 deriving (Prelude'.Show, Prelude'.Eq, Prelude'.Ord, Prelude'.Typeable, Prelude'.Data,
                                           Prelude'.Generic)
-
-Control.Lens.TH.makeLenses ''TrafficControlStatistics
 
 instance P'.ToJSON TrafficControlStatistics where
   toJSON msg
@@ -51,8 +46,8 @@ instance P'.FromJSON TrafficControlStatistics where
           ratepps <- P'.explicitParseFieldMaybe (P'.parseJSONReadWithPayload "uint64") o "ratepps"
           requeues <- P'.explicitParseFieldMaybe (P'.parseJSONReadWithPayload "uint64") o "requeues"
           Prelude'.return
-           P'.defaultValue{_id = id, _backlog = backlog, _bytes = bytes, _drops = drops, _overlimits = overlimits,
-                           _packets = packets, _qlen = qlen, _ratebps = ratebps, _ratepps = ratepps, _requeues = requeues})
+           P'.defaultValue{id = id, backlog = backlog, bytes = bytes, drops = drops, overlimits = overlimits, packets = packets,
+                           qlen = qlen, ratebps = ratebps, ratepps = ratepps, requeues = requeues})
 
 instance P'.Mergeable TrafficControlStatistics where
   mergeAppend (TrafficControlStatistics x'1 x'2 x'3 x'4 x'5 x'6 x'7 x'8 x'9 x'10)
@@ -115,16 +110,16 @@ instance P'.Wire TrafficControlStatistics where
     where
         update'Self wire'Tag old'Self
          = case wire'Tag of
-             10 -> Prelude'.fmap (\ !new'Field -> old'Self{_id = new'Field}) (P'.wireGet 9)
-             16 -> Prelude'.fmap (\ !new'Field -> old'Self{_backlog = Prelude'.Just new'Field}) (P'.wireGet 4)
-             24 -> Prelude'.fmap (\ !new'Field -> old'Self{_bytes = Prelude'.Just new'Field}) (P'.wireGet 4)
-             32 -> Prelude'.fmap (\ !new'Field -> old'Self{_drops = Prelude'.Just new'Field}) (P'.wireGet 4)
-             40 -> Prelude'.fmap (\ !new'Field -> old'Self{_overlimits = Prelude'.Just new'Field}) (P'.wireGet 4)
-             48 -> Prelude'.fmap (\ !new'Field -> old'Self{_packets = Prelude'.Just new'Field}) (P'.wireGet 4)
-             56 -> Prelude'.fmap (\ !new'Field -> old'Self{_qlen = Prelude'.Just new'Field}) (P'.wireGet 4)
-             64 -> Prelude'.fmap (\ !new'Field -> old'Self{_ratebps = Prelude'.Just new'Field}) (P'.wireGet 4)
-             72 -> Prelude'.fmap (\ !new'Field -> old'Self{_ratepps = Prelude'.Just new'Field}) (P'.wireGet 4)
-             80 -> Prelude'.fmap (\ !new'Field -> old'Self{_requeues = Prelude'.Just new'Field}) (P'.wireGet 4)
+             10 -> Prelude'.fmap (\ !new'Field -> old'Self{id = new'Field}) (P'.wireGet 9)
+             16 -> Prelude'.fmap (\ !new'Field -> old'Self{backlog = Prelude'.Just new'Field}) (P'.wireGet 4)
+             24 -> Prelude'.fmap (\ !new'Field -> old'Self{bytes = Prelude'.Just new'Field}) (P'.wireGet 4)
+             32 -> Prelude'.fmap (\ !new'Field -> old'Self{drops = Prelude'.Just new'Field}) (P'.wireGet 4)
+             40 -> Prelude'.fmap (\ !new'Field -> old'Self{overlimits = Prelude'.Just new'Field}) (P'.wireGet 4)
+             48 -> Prelude'.fmap (\ !new'Field -> old'Self{packets = Prelude'.Just new'Field}) (P'.wireGet 4)
+             56 -> Prelude'.fmap (\ !new'Field -> old'Self{qlen = Prelude'.Just new'Field}) (P'.wireGet 4)
+             64 -> Prelude'.fmap (\ !new'Field -> old'Self{ratebps = Prelude'.Just new'Field}) (P'.wireGet 4)
+             72 -> Prelude'.fmap (\ !new'Field -> old'Self{ratepps = Prelude'.Just new'Field}) (P'.wireGet 4)
+             80 -> Prelude'.fmap (\ !new'Field -> old'Self{requeues = Prelude'.Just new'Field}) (P'.wireGet 4)
              _ -> let (field'Number, wire'Type) = P'.splitWireTag wire'Tag in P'.unknown field'Number wire'Type old'Self
 
 instance P'.MessageAPI msg' (msg' -> TrafficControlStatistics) TrafficControlStatistics where
@@ -137,7 +132,7 @@ instance P'.ReflectDescriptor TrafficControlStatistics where
    = P'.GetMessageInfo (P'.fromDistinctAscList [10]) (P'.fromDistinctAscList [10, 16, 24, 32, 40, 48, 56, 64, 72, 80])
   reflectDescriptorInfo _
    = Prelude'.read
-      "DescriptorInfo {descName = ProtoName {protobufName = FIName \".mesos.v1.TrafficControlStatistics\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"TrafficControlStatistics\"}, descFilePath = [\"Mesos\",\"V1\",\"Protos\",\"TrafficControlStatistics.hs\"], isGroup = False, fields = fromList [FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.TrafficControlStatistics.id\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"TrafficControlStatistics\"], baseName' = FName \"id\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 1}, wireTag = WireTag {getWireTag = 10}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = True, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 9}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.TrafficControlStatistics.backlog\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"TrafficControlStatistics\"], baseName' = FName \"backlog\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 2}, wireTag = WireTag {getWireTag = 16}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.TrafficControlStatistics.bytes\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"TrafficControlStatistics\"], baseName' = FName \"bytes\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 3}, wireTag = WireTag {getWireTag = 24}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.TrafficControlStatistics.drops\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"TrafficControlStatistics\"], baseName' = FName \"drops\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 4}, wireTag = WireTag {getWireTag = 32}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.TrafficControlStatistics.overlimits\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"TrafficControlStatistics\"], baseName' = FName \"overlimits\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 5}, wireTag = WireTag {getWireTag = 40}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.TrafficControlStatistics.packets\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"TrafficControlStatistics\"], baseName' = FName \"packets\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 6}, wireTag = WireTag {getWireTag = 48}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.TrafficControlStatistics.qlen\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"TrafficControlStatistics\"], baseName' = FName \"qlen\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 7}, wireTag = WireTag {getWireTag = 56}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.TrafficControlStatistics.ratebps\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"TrafficControlStatistics\"], baseName' = FName \"ratebps\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 8}, wireTag = WireTag {getWireTag = 64}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.TrafficControlStatistics.ratepps\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"TrafficControlStatistics\"], baseName' = FName \"ratepps\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 9}, wireTag = WireTag {getWireTag = 72}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.TrafficControlStatistics.requeues\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"TrafficControlStatistics\"], baseName' = FName \"requeues\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 10}, wireTag = WireTag {getWireTag = 80}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing}], descOneofs = fromList [], keys = fromList [], extRanges = [], knownKeys = fromList [], storeUnknown = False, lazyFields = False, makeLenses = True, jsonInstances = True}"
+      "DescriptorInfo {descName = ProtoName {protobufName = FIName \".mesos.v1.TrafficControlStatistics\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"TrafficControlStatistics\"}, descFilePath = [\"Mesos\",\"V1\",\"Protos\",\"TrafficControlStatistics.hs\"], isGroup = False, fields = fromList [FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.TrafficControlStatistics.id\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"TrafficControlStatistics\"], baseName' = FName \"id\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 1}, wireTag = WireTag {getWireTag = 10}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = True, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 9}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.TrafficControlStatistics.backlog\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"TrafficControlStatistics\"], baseName' = FName \"backlog\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 2}, wireTag = WireTag {getWireTag = 16}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.TrafficControlStatistics.bytes\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"TrafficControlStatistics\"], baseName' = FName \"bytes\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 3}, wireTag = WireTag {getWireTag = 24}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.TrafficControlStatistics.drops\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"TrafficControlStatistics\"], baseName' = FName \"drops\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 4}, wireTag = WireTag {getWireTag = 32}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.TrafficControlStatistics.overlimits\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"TrafficControlStatistics\"], baseName' = FName \"overlimits\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 5}, wireTag = WireTag {getWireTag = 40}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.TrafficControlStatistics.packets\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"TrafficControlStatistics\"], baseName' = FName \"packets\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 6}, wireTag = WireTag {getWireTag = 48}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.TrafficControlStatistics.qlen\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"TrafficControlStatistics\"], baseName' = FName \"qlen\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 7}, wireTag = WireTag {getWireTag = 56}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.TrafficControlStatistics.ratebps\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"TrafficControlStatistics\"], baseName' = FName \"ratebps\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 8}, wireTag = WireTag {getWireTag = 64}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.TrafficControlStatistics.ratepps\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"TrafficControlStatistics\"], baseName' = FName \"ratepps\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 9}, wireTag = WireTag {getWireTag = 72}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.TrafficControlStatistics.requeues\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"TrafficControlStatistics\"], baseName' = FName \"requeues\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 10}, wireTag = WireTag {getWireTag = 80}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing}], descOneofs = fromList [], keys = fromList [], extRanges = [], knownKeys = fromList [], storeUnknown = False, lazyFields = False, makeLenses = False, jsonInstances = True}"
 
 instance P'.TextType TrafficControlStatistics where
   tellT = P'.tellSubMessage
@@ -146,72 +141,72 @@ instance P'.TextType TrafficControlStatistics where
 instance P'.TextMsg TrafficControlStatistics where
   textPut msg
    = do
-       P'.tellT "id" (_id msg)
-       P'.tellT "backlog" (_backlog msg)
-       P'.tellT "bytes" (_bytes msg)
-       P'.tellT "drops" (_drops msg)
-       P'.tellT "overlimits" (_overlimits msg)
-       P'.tellT "packets" (_packets msg)
-       P'.tellT "qlen" (_qlen msg)
-       P'.tellT "ratebps" (_ratebps msg)
-       P'.tellT "ratepps" (_ratepps msg)
-       P'.tellT "requeues" (_requeues msg)
+       P'.tellT "id" (id msg)
+       P'.tellT "backlog" (backlog msg)
+       P'.tellT "bytes" (bytes msg)
+       P'.tellT "drops" (drops msg)
+       P'.tellT "overlimits" (overlimits msg)
+       P'.tellT "packets" (packets msg)
+       P'.tellT "qlen" (qlen msg)
+       P'.tellT "ratebps" (ratebps msg)
+       P'.tellT "ratepps" (ratepps msg)
+       P'.tellT "requeues" (requeues msg)
   textGet
    = do
        mods <- P'.sepEndBy
                 (P'.choice
-                  [parse'_id, parse'_backlog, parse'_bytes, parse'_drops, parse'_overlimits, parse'_packets, parse'_qlen,
-                   parse'_ratebps, parse'_ratepps, parse'_requeues])
+                  [parse'id, parse'backlog, parse'bytes, parse'drops, parse'overlimits, parse'packets, parse'qlen, parse'ratebps,
+                   parse'ratepps, parse'requeues])
                 P'.spaces
        Prelude'.return (Prelude'.foldl (\ v f -> f v) P'.defaultValue mods)
     where
-        parse'_id
+        parse'id
          = P'.try
             (do
                v <- P'.getT "id"
-               Prelude'.return (\ o -> o{_id = v}))
-        parse'_backlog
+               Prelude'.return (\ o -> o{id = v}))
+        parse'backlog
          = P'.try
             (do
                v <- P'.getT "backlog"
-               Prelude'.return (\ o -> o{_backlog = v}))
-        parse'_bytes
+               Prelude'.return (\ o -> o{backlog = v}))
+        parse'bytes
          = P'.try
             (do
                v <- P'.getT "bytes"
-               Prelude'.return (\ o -> o{_bytes = v}))
-        parse'_drops
+               Prelude'.return (\ o -> o{bytes = v}))
+        parse'drops
          = P'.try
             (do
                v <- P'.getT "drops"
-               Prelude'.return (\ o -> o{_drops = v}))
-        parse'_overlimits
+               Prelude'.return (\ o -> o{drops = v}))
+        parse'overlimits
          = P'.try
             (do
                v <- P'.getT "overlimits"
-               Prelude'.return (\ o -> o{_overlimits = v}))
-        parse'_packets
+               Prelude'.return (\ o -> o{overlimits = v}))
+        parse'packets
          = P'.try
             (do
                v <- P'.getT "packets"
-               Prelude'.return (\ o -> o{_packets = v}))
-        parse'_qlen
+               Prelude'.return (\ o -> o{packets = v}))
+        parse'qlen
          = P'.try
             (do
                v <- P'.getT "qlen"
-               Prelude'.return (\ o -> o{_qlen = v}))
-        parse'_ratebps
+               Prelude'.return (\ o -> o{qlen = v}))
+        parse'ratebps
          = P'.try
             (do
                v <- P'.getT "ratebps"
-               Prelude'.return (\ o -> o{_ratebps = v}))
-        parse'_ratepps
+               Prelude'.return (\ o -> o{ratebps = v}))
+        parse'ratepps
          = P'.try
             (do
                v <- P'.getT "ratepps"
-               Prelude'.return (\ o -> o{_ratepps = v}))
-        parse'_requeues
+               Prelude'.return (\ o -> o{ratepps = v}))
+        parse'requeues
          = P'.try
             (do
                v <- P'.getT "requeues"
-               Prelude'.return (\ o -> o{_requeues = v}))
+               Prelude'.return (\ o -> o{requeues = v}))

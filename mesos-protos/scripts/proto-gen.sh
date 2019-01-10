@@ -1,4 +1,4 @@
-hprotoc --json  --lenses -d ../src -I ../proto -p Mesos.V1 \
+hprotoc --json  -d ../src -I ../proto -p Mesos.V1 \
 -a ../proto/mesos/v1/allocator/allocator.proto=Mesos.V1.Allocator \
 -a ../proto/mesos/v1/maintenance/maintenance.proto=Mesos.V1.Maintenance \
 -a ../proto/mesos/v1/quota/quota.proto=Mesos.V1.Quota \

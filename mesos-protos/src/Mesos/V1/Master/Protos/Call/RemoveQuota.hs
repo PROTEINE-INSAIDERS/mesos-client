@@ -1,19 +1,15 @@
-{-# LANGUAGE TemplateHaskell, BangPatterns, DeriveDataTypeable, DeriveGeneric, FlexibleInstances, MultiParamTypeClasses,
- OverloadedStrings #-}
+{-# LANGUAGE BangPatterns, DeriveDataTypeable, DeriveGeneric, FlexibleInstances, MultiParamTypeClasses, OverloadedStrings #-}
 {-# OPTIONS_GHC  -fno-warn-unused-imports #-}
-module Mesos.V1.Master.Protos.Call.RemoveQuota (RemoveQuota(..), role) where
+module Mesos.V1.Master.Protos.Call.RemoveQuota (RemoveQuota(..)) where
 import Prelude ((+), (/), (++), (.))
 import qualified Prelude as Prelude'
 import qualified Data.Typeable as Prelude'
 import qualified GHC.Generics as Prelude'
 import qualified Data.Data as Prelude'
 import qualified Text.ProtocolBuffers.Header as P'
-import qualified Control.Lens.TH
 
-data RemoveQuota = RemoveQuota{_role :: !(P'.Utf8)}
+data RemoveQuota = RemoveQuota{role :: !(P'.Utf8)}
                    deriving (Prelude'.Show, Prelude'.Eq, Prelude'.Ord, Prelude'.Typeable, Prelude'.Data, Prelude'.Generic)
-
-Control.Lens.TH.makeLenses ''RemoveQuota
 
 instance P'.ToJSON RemoveQuota where
   toJSON msg = P'.objectNoEmpty ([("role", P'.toJSON (role msg))] ++ Prelude'.concat [])
@@ -24,7 +20,7 @@ instance P'.FromJSON RemoveQuota where
       (\ o ->
         do
           role <- P'.explicitParseField P'.parseJSON o "role"
-          Prelude'.return P'.defaultValue{_role = role})
+          Prelude'.return P'.defaultValue{role = role})
 
 instance P'.Mergeable RemoveQuota where
   mergeAppend (RemoveQuota x'1) (RemoveQuota y'1) = RemoveQuota (P'.mergeAppend x'1 y'1)
@@ -62,7 +58,7 @@ instance P'.Wire RemoveQuota where
     where
         update'Self wire'Tag old'Self
          = case wire'Tag of
-             10 -> Prelude'.fmap (\ !new'Field -> old'Self{_role = new'Field}) (P'.wireGet 9)
+             10 -> Prelude'.fmap (\ !new'Field -> old'Self{role = new'Field}) (P'.wireGet 9)
              _ -> let (field'Number, wire'Type) = P'.splitWireTag wire'Tag in P'.unknown field'Number wire'Type old'Self
 
 instance P'.MessageAPI msg' (msg' -> RemoveQuota) RemoveQuota where
@@ -74,7 +70,7 @@ instance P'.ReflectDescriptor RemoveQuota where
   getMessageInfo _ = P'.GetMessageInfo (P'.fromDistinctAscList [10]) (P'.fromDistinctAscList [10])
   reflectDescriptorInfo _
    = Prelude'.read
-      "DescriptorInfo {descName = ProtoName {protobufName = FIName \".mesos.v1.master.Call.RemoveQuota\", haskellPrefix = [MName \"Mesos\",MName \"V1\",MName \"Master\"], parentModule = [MName \"Protos\",MName \"Call\"], baseName = MName \"RemoveQuota\"}, descFilePath = [\"Mesos\",\"V1\",\"Master\",\"Protos\",\"Call\",\"RemoveQuota.hs\"], isGroup = False, fields = fromList [FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.master.Call.RemoveQuota.role\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Master\"], parentModule' = [MName \"Protos\",MName \"Call\",MName \"RemoveQuota\"], baseName' = FName \"role\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 1}, wireTag = WireTag {getWireTag = 10}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = True, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 9}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing}], descOneofs = fromList [], keys = fromList [], extRanges = [], knownKeys = fromList [], storeUnknown = False, lazyFields = False, makeLenses = True, jsonInstances = True}"
+      "DescriptorInfo {descName = ProtoName {protobufName = FIName \".mesos.v1.master.Call.RemoveQuota\", haskellPrefix = [MName \"Mesos\",MName \"V1\",MName \"Master\"], parentModule = [MName \"Protos\",MName \"Call\"], baseName = MName \"RemoveQuota\"}, descFilePath = [\"Mesos\",\"V1\",\"Master\",\"Protos\",\"Call\",\"RemoveQuota.hs\"], isGroup = False, fields = fromList [FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.master.Call.RemoveQuota.role\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Master\"], parentModule' = [MName \"Protos\",MName \"Call\",MName \"RemoveQuota\"], baseName' = FName \"role\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 1}, wireTag = WireTag {getWireTag = 10}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = True, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 9}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing}], descOneofs = fromList [], keys = fromList [], extRanges = [], knownKeys = fromList [], storeUnknown = False, lazyFields = False, makeLenses = False, jsonInstances = True}"
 
 instance P'.TextType RemoveQuota where
   tellT = P'.tellSubMessage
@@ -83,14 +79,14 @@ instance P'.TextType RemoveQuota where
 instance P'.TextMsg RemoveQuota where
   textPut msg
    = do
-       P'.tellT "role" (_role msg)
+       P'.tellT "role" (role msg)
   textGet
    = do
-       mods <- P'.sepEndBy (P'.choice [parse'_role]) P'.spaces
+       mods <- P'.sepEndBy (P'.choice [parse'role]) P'.spaces
        Prelude'.return (Prelude'.foldl (\ v f -> f v) P'.defaultValue mods)
     where
-        parse'_role
+        parse'role
          = P'.try
             (do
                v <- P'.getT "role"
-               Prelude'.return (\ o -> o{_role = v}))
+               Prelude'.return (\ o -> o{role = v}))

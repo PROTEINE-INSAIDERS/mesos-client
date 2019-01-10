@@ -1,19 +1,15 @@
-{-# LANGUAGE TemplateHaskell, BangPatterns, DeriveDataTypeable, DeriveGeneric, FlexibleInstances, MultiParamTypeClasses,
- OverloadedStrings #-}
+{-# LANGUAGE BangPatterns, DeriveDataTypeable, DeriveGeneric, FlexibleInstances, MultiParamTypeClasses, OverloadedStrings #-}
 {-# OPTIONS_GHC  -fno-warn-unused-imports #-}
-module Mesos.V1.Protos.CheckStatusInfo.Tcp (Tcp(..), succeeded) where
+module Mesos.V1.Protos.CheckStatusInfo.Tcp (Tcp(..)) where
 import Prelude ((+), (/), (++), (.))
 import qualified Prelude as Prelude'
 import qualified Data.Typeable as Prelude'
 import qualified GHC.Generics as Prelude'
 import qualified Data.Data as Prelude'
 import qualified Text.ProtocolBuffers.Header as P'
-import qualified Control.Lens.TH
 
-data Tcp = Tcp{_succeeded :: !(P'.Maybe P'.Bool)}
+data Tcp = Tcp{succeeded :: !(P'.Maybe P'.Bool)}
            deriving (Prelude'.Show, Prelude'.Eq, Prelude'.Ord, Prelude'.Typeable, Prelude'.Data, Prelude'.Generic)
-
-Control.Lens.TH.makeLenses ''Tcp
 
 instance P'.ToJSON Tcp where
   toJSON msg = P'.objectNoEmpty ([("succeeded", P'.toJSON (Prelude'.fmap P'.toJSON (succeeded msg)))] ++ Prelude'.concat [])
@@ -24,7 +20,7 @@ instance P'.FromJSON Tcp where
       (\ o ->
         do
           succeeded <- P'.explicitParseFieldMaybe P'.parseJSONBool o "succeeded"
-          Prelude'.return P'.defaultValue{_succeeded = succeeded})
+          Prelude'.return P'.defaultValue{succeeded = succeeded})
 
 instance P'.Mergeable Tcp where
   mergeAppend (Tcp x'1) (Tcp y'1) = Tcp (P'.mergeAppend x'1 y'1)
@@ -62,7 +58,7 @@ instance P'.Wire Tcp where
     where
         update'Self wire'Tag old'Self
          = case wire'Tag of
-             8 -> Prelude'.fmap (\ !new'Field -> old'Self{_succeeded = Prelude'.Just new'Field}) (P'.wireGet 8)
+             8 -> Prelude'.fmap (\ !new'Field -> old'Self{succeeded = Prelude'.Just new'Field}) (P'.wireGet 8)
              _ -> let (field'Number, wire'Type) = P'.splitWireTag wire'Tag in P'.unknown field'Number wire'Type old'Self
 
 instance P'.MessageAPI msg' (msg' -> Tcp) Tcp where
@@ -74,7 +70,7 @@ instance P'.ReflectDescriptor Tcp where
   getMessageInfo _ = P'.GetMessageInfo (P'.fromDistinctAscList []) (P'.fromDistinctAscList [8])
   reflectDescriptorInfo _
    = Prelude'.read
-      "DescriptorInfo {descName = ProtoName {protobufName = FIName \".mesos.v1.CheckStatusInfo.Tcp\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\",MName \"CheckStatusInfo\"], baseName = MName \"Tcp\"}, descFilePath = [\"Mesos\",\"V1\",\"Protos\",\"CheckStatusInfo\",\"Tcp.hs\"], isGroup = False, fields = fromList [FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.CheckStatusInfo.Tcp.succeeded\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"CheckStatusInfo\",MName \"Tcp\"], baseName' = FName \"succeeded\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 1}, wireTag = WireTag {getWireTag = 8}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 8}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing}], descOneofs = fromList [], keys = fromList [], extRanges = [], knownKeys = fromList [], storeUnknown = False, lazyFields = False, makeLenses = True, jsonInstances = True}"
+      "DescriptorInfo {descName = ProtoName {protobufName = FIName \".mesos.v1.CheckStatusInfo.Tcp\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\",MName \"CheckStatusInfo\"], baseName = MName \"Tcp\"}, descFilePath = [\"Mesos\",\"V1\",\"Protos\",\"CheckStatusInfo\",\"Tcp.hs\"], isGroup = False, fields = fromList [FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.CheckStatusInfo.Tcp.succeeded\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"CheckStatusInfo\",MName \"Tcp\"], baseName' = FName \"succeeded\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 1}, wireTag = WireTag {getWireTag = 8}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 8}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing}], descOneofs = fromList [], keys = fromList [], extRanges = [], knownKeys = fromList [], storeUnknown = False, lazyFields = False, makeLenses = False, jsonInstances = True}"
 
 instance P'.TextType Tcp where
   tellT = P'.tellSubMessage
@@ -83,14 +79,14 @@ instance P'.TextType Tcp where
 instance P'.TextMsg Tcp where
   textPut msg
    = do
-       P'.tellT "succeeded" (_succeeded msg)
+       P'.tellT "succeeded" (succeeded msg)
   textGet
    = do
-       mods <- P'.sepEndBy (P'.choice [parse'_succeeded]) P'.spaces
+       mods <- P'.sepEndBy (P'.choice [parse'succeeded]) P'.spaces
        Prelude'.return (Prelude'.foldl (\ v f -> f v) P'.defaultValue mods)
     where
-        parse'_succeeded
+        parse'succeeded
          = P'.try
             (do
                v <- P'.getT "succeeded"
-               Prelude'.return (\ o -> o{_succeeded = v}))
+               Prelude'.return (\ o -> o{succeeded = v}))

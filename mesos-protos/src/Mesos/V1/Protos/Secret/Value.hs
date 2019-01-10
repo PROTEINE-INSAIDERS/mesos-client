@@ -1,19 +1,15 @@
-{-# LANGUAGE TemplateHaskell, BangPatterns, DeriveDataTypeable, DeriveGeneric, FlexibleInstances, MultiParamTypeClasses,
- OverloadedStrings #-}
+{-# LANGUAGE BangPatterns, DeriveDataTypeable, DeriveGeneric, FlexibleInstances, MultiParamTypeClasses, OverloadedStrings #-}
 {-# OPTIONS_GHC  -fno-warn-unused-imports #-}
-module Mesos.V1.Protos.Secret.Value (Value(..), data') where
+module Mesos.V1.Protos.Secret.Value (Value(..)) where
 import Prelude ((+), (/), (++), (.))
 import qualified Prelude as Prelude'
 import qualified Data.Typeable as Prelude'
 import qualified GHC.Generics as Prelude'
 import qualified Data.Data as Prelude'
 import qualified Text.ProtocolBuffers.Header as P'
-import qualified Control.Lens.TH
 
-data Value = Value{_data' :: !(P'.ByteString)}
+data Value = Value{data' :: !(P'.ByteString)}
              deriving (Prelude'.Show, Prelude'.Eq, Prelude'.Ord, Prelude'.Typeable, Prelude'.Data, Prelude'.Generic)
-
-Control.Lens.TH.makeLenses ''Value
 
 instance P'.ToJSON Value where
   toJSON msg = P'.objectNoEmpty ([("data", P'.toJSONByteString (data' msg))] ++ Prelude'.concat [])
@@ -24,7 +20,7 @@ instance P'.FromJSON Value where
       (\ o ->
         do
           data' <- P'.explicitParseField P'.parseJSONByteString o "data"
-          Prelude'.return P'.defaultValue{_data' = data'})
+          Prelude'.return P'.defaultValue{data' = data'})
 
 instance P'.Mergeable Value where
   mergeAppend (Value x'1) (Value y'1) = Value (P'.mergeAppend x'1 y'1)
@@ -62,7 +58,7 @@ instance P'.Wire Value where
     where
         update'Self wire'Tag old'Self
          = case wire'Tag of
-             10 -> Prelude'.fmap (\ !new'Field -> old'Self{_data' = new'Field}) (P'.wireGet 12)
+             10 -> Prelude'.fmap (\ !new'Field -> old'Self{data' = new'Field}) (P'.wireGet 12)
              _ -> let (field'Number, wire'Type) = P'.splitWireTag wire'Tag in P'.unknown field'Number wire'Type old'Self
 
 instance P'.MessageAPI msg' (msg' -> Value) Value where
@@ -74,7 +70,7 @@ instance P'.ReflectDescriptor Value where
   getMessageInfo _ = P'.GetMessageInfo (P'.fromDistinctAscList [10]) (P'.fromDistinctAscList [10])
   reflectDescriptorInfo _
    = Prelude'.read
-      "DescriptorInfo {descName = ProtoName {protobufName = FIName \".mesos.v1.Secret.Value\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\",MName \"Secret\"], baseName = MName \"Value\"}, descFilePath = [\"Mesos\",\"V1\",\"Protos\",\"Secret\",\"Value.hs\"], isGroup = False, fields = fromList [FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Secret.Value.data\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Secret\",MName \"Value\"], baseName' = FName \"data'\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 1}, wireTag = WireTag {getWireTag = 10}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = True, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 12}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing}], descOneofs = fromList [], keys = fromList [], extRanges = [], knownKeys = fromList [], storeUnknown = False, lazyFields = False, makeLenses = True, jsonInstances = True}"
+      "DescriptorInfo {descName = ProtoName {protobufName = FIName \".mesos.v1.Secret.Value\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\",MName \"Secret\"], baseName = MName \"Value\"}, descFilePath = [\"Mesos\",\"V1\",\"Protos\",\"Secret\",\"Value.hs\"], isGroup = False, fields = fromList [FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Secret.Value.data\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Secret\",MName \"Value\"], baseName' = FName \"data'\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 1}, wireTag = WireTag {getWireTag = 10}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = True, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 12}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing}], descOneofs = fromList [], keys = fromList [], extRanges = [], knownKeys = fromList [], storeUnknown = False, lazyFields = False, makeLenses = False, jsonInstances = True}"
 
 instance P'.TextType Value where
   tellT = P'.tellSubMessage
@@ -83,14 +79,14 @@ instance P'.TextType Value where
 instance P'.TextMsg Value where
   textPut msg
    = do
-       P'.tellT "data" (_data' msg)
+       P'.tellT "data" (data' msg)
   textGet
    = do
-       mods <- P'.sepEndBy (P'.choice [parse'_data']) P'.spaces
+       mods <- P'.sepEndBy (P'.choice [parse'data']) P'.spaces
        Prelude'.return (Prelude'.foldl (\ v f -> f v) P'.defaultValue mods)
     where
-        parse'_data'
+        parse'data'
          = P'.try
             (do
                v <- P'.getT "data"
-               Prelude'.return (\ o -> o{_data' = v}))
+               Prelude'.return (\ o -> o{data' = v}))

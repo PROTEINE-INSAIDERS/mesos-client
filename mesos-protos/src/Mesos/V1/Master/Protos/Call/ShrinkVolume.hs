@@ -1,23 +1,19 @@
-{-# LANGUAGE TemplateHaskell, BangPatterns, DeriveDataTypeable, DeriveGeneric, FlexibleInstances, MultiParamTypeClasses,
- OverloadedStrings #-}
+{-# LANGUAGE BangPatterns, DeriveDataTypeable, DeriveGeneric, FlexibleInstances, MultiParamTypeClasses, OverloadedStrings #-}
 {-# OPTIONS_GHC  -fno-warn-unused-imports #-}
-module Mesos.V1.Master.Protos.Call.ShrinkVolume (ShrinkVolume(..), agent_id, volume, subtract) where
+module Mesos.V1.Master.Protos.Call.ShrinkVolume (ShrinkVolume(..)) where
 import Prelude ((+), (/), (++), (.))
 import qualified Prelude as Prelude'
 import qualified Data.Typeable as Prelude'
 import qualified GHC.Generics as Prelude'
 import qualified Data.Data as Prelude'
 import qualified Text.ProtocolBuffers.Header as P'
-import qualified Control.Lens.TH
 import qualified Mesos.V1.Protos.AgentID as Protos (AgentID)
 import qualified Mesos.V1.Protos.Resource as Protos (Resource)
 import qualified Mesos.V1.Protos.Value.Scalar as Protos.Value (Scalar)
 
-data ShrinkVolume = ShrinkVolume{_agent_id :: !(P'.Maybe Protos.AgentID), _volume :: !(Protos.Resource),
-                                 _subtract :: !(Protos.Value.Scalar)}
+data ShrinkVolume = ShrinkVolume{agent_id :: !(P'.Maybe Protos.AgentID), volume :: !(Protos.Resource),
+                                 subtract :: !(Protos.Value.Scalar)}
                     deriving (Prelude'.Show, Prelude'.Eq, Prelude'.Ord, Prelude'.Typeable, Prelude'.Data, Prelude'.Generic)
-
-Control.Lens.TH.makeLenses ''ShrinkVolume
 
 instance P'.ToJSON ShrinkVolume where
   toJSON msg
@@ -34,7 +30,7 @@ instance P'.FromJSON ShrinkVolume where
           agent_id <- P'.explicitParseFieldMaybe P'.parseJSON o "agent_id"
           volume <- P'.explicitParseField P'.parseJSON o "volume"
           subtract <- P'.explicitParseField P'.parseJSON o "subtract"
-          Prelude'.return P'.defaultValue{_agent_id = agent_id, _volume = volume, _subtract = subtract})
+          Prelude'.return P'.defaultValue{agent_id = agent_id, volume = volume, subtract = subtract})
 
 instance P'.Mergeable ShrinkVolume where
   mergeAppend (ShrinkVolume x'1 x'2 x'3) (ShrinkVolume y'1 y'2 y'3)
@@ -75,11 +71,10 @@ instance P'.Wire ShrinkVolume where
     where
         update'Self wire'Tag old'Self
          = case wire'Tag of
-             10 -> Prelude'.fmap
-                    (\ !new'Field -> old'Self{_agent_id = P'.mergeAppend (_agent_id old'Self) (Prelude'.Just new'Field)})
+             10 -> Prelude'.fmap (\ !new'Field -> old'Self{agent_id = P'.mergeAppend (agent_id old'Self) (Prelude'.Just new'Field)})
                     (P'.wireGet 11)
-             18 -> Prelude'.fmap (\ !new'Field -> old'Self{_volume = P'.mergeAppend (_volume old'Self) (new'Field)}) (P'.wireGet 11)
-             26 -> Prelude'.fmap (\ !new'Field -> old'Self{_subtract = P'.mergeAppend (_subtract old'Self) (new'Field)})
+             18 -> Prelude'.fmap (\ !new'Field -> old'Self{volume = P'.mergeAppend (volume old'Self) (new'Field)}) (P'.wireGet 11)
+             26 -> Prelude'.fmap (\ !new'Field -> old'Self{subtract = P'.mergeAppend (subtract old'Self) (new'Field)})
                     (P'.wireGet 11)
              _ -> let (field'Number, wire'Type) = P'.splitWireTag wire'Tag in P'.unknown field'Number wire'Type old'Self
 
@@ -92,7 +87,7 @@ instance P'.ReflectDescriptor ShrinkVolume where
   getMessageInfo _ = P'.GetMessageInfo (P'.fromDistinctAscList [18, 26]) (P'.fromDistinctAscList [10, 18, 26])
   reflectDescriptorInfo _
    = Prelude'.read
-      "DescriptorInfo {descName = ProtoName {protobufName = FIName \".mesos.v1.master.Call.ShrinkVolume\", haskellPrefix = [MName \"Mesos\",MName \"V1\",MName \"Master\"], parentModule = [MName \"Protos\",MName \"Call\"], baseName = MName \"ShrinkVolume\"}, descFilePath = [\"Mesos\",\"V1\",\"Master\",\"Protos\",\"Call\",\"ShrinkVolume.hs\"], isGroup = False, fields = fromList [FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.master.Call.ShrinkVolume.agent_id\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Master\"], parentModule' = [MName \"Protos\",MName \"Call\",MName \"ShrinkVolume\"], baseName' = FName \"agent_id\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 1}, wireTag = WireTag {getWireTag = 10}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.AgentID\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"AgentID\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.master.Call.ShrinkVolume.volume\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Master\"], parentModule' = [MName \"Protos\",MName \"Call\",MName \"ShrinkVolume\"], baseName' = FName \"volume\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 2}, wireTag = WireTag {getWireTag = 18}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = True, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.Resource\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"Resource\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.master.Call.ShrinkVolume.subtract\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Master\"], parentModule' = [MName \"Protos\",MName \"Call\",MName \"ShrinkVolume\"], baseName' = FName \"subtract\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 3}, wireTag = WireTag {getWireTag = 26}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = True, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.Value.Scalar\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\",MName \"Value\"], baseName = MName \"Scalar\"}), hsRawDefault = Nothing, hsDefault = Nothing}], descOneofs = fromList [], keys = fromList [], extRanges = [], knownKeys = fromList [], storeUnknown = False, lazyFields = False, makeLenses = True, jsonInstances = True}"
+      "DescriptorInfo {descName = ProtoName {protobufName = FIName \".mesos.v1.master.Call.ShrinkVolume\", haskellPrefix = [MName \"Mesos\",MName \"V1\",MName \"Master\"], parentModule = [MName \"Protos\",MName \"Call\"], baseName = MName \"ShrinkVolume\"}, descFilePath = [\"Mesos\",\"V1\",\"Master\",\"Protos\",\"Call\",\"ShrinkVolume.hs\"], isGroup = False, fields = fromList [FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.master.Call.ShrinkVolume.agent_id\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Master\"], parentModule' = [MName \"Protos\",MName \"Call\",MName \"ShrinkVolume\"], baseName' = FName \"agent_id\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 1}, wireTag = WireTag {getWireTag = 10}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.AgentID\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"AgentID\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.master.Call.ShrinkVolume.volume\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Master\"], parentModule' = [MName \"Protos\",MName \"Call\",MName \"ShrinkVolume\"], baseName' = FName \"volume\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 2}, wireTag = WireTag {getWireTag = 18}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = True, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.Resource\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"Resource\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.master.Call.ShrinkVolume.subtract\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Master\"], parentModule' = [MName \"Protos\",MName \"Call\",MName \"ShrinkVolume\"], baseName' = FName \"subtract\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 3}, wireTag = WireTag {getWireTag = 26}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = True, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.Value.Scalar\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\",MName \"Value\"], baseName = MName \"Scalar\"}), hsRawDefault = Nothing, hsDefault = Nothing}], descOneofs = fromList [], keys = fromList [], extRanges = [], knownKeys = fromList [], storeUnknown = False, lazyFields = False, makeLenses = False, jsonInstances = True}"
 
 instance P'.TextType ShrinkVolume where
   tellT = P'.tellSubMessage
@@ -101,26 +96,26 @@ instance P'.TextType ShrinkVolume where
 instance P'.TextMsg ShrinkVolume where
   textPut msg
    = do
-       P'.tellT "agent_id" (_agent_id msg)
-       P'.tellT "volume" (_volume msg)
-       P'.tellT "subtract" (_subtract msg)
+       P'.tellT "agent_id" (agent_id msg)
+       P'.tellT "volume" (volume msg)
+       P'.tellT "subtract" (subtract msg)
   textGet
    = do
-       mods <- P'.sepEndBy (P'.choice [parse'_agent_id, parse'_volume, parse'_subtract]) P'.spaces
+       mods <- P'.sepEndBy (P'.choice [parse'agent_id, parse'volume, parse'subtract]) P'.spaces
        Prelude'.return (Prelude'.foldl (\ v f -> f v) P'.defaultValue mods)
     where
-        parse'_agent_id
+        parse'agent_id
          = P'.try
             (do
                v <- P'.getT "agent_id"
-               Prelude'.return (\ o -> o{_agent_id = v}))
-        parse'_volume
+               Prelude'.return (\ o -> o{agent_id = v}))
+        parse'volume
          = P'.try
             (do
                v <- P'.getT "volume"
-               Prelude'.return (\ o -> o{_volume = v}))
-        parse'_subtract
+               Prelude'.return (\ o -> o{volume = v}))
+        parse'subtract
          = P'.try
             (do
                v <- P'.getT "subtract"
-               Prelude'.return (\ o -> o{_subtract = v}))
+               Prelude'.return (\ o -> o{subtract = v}))

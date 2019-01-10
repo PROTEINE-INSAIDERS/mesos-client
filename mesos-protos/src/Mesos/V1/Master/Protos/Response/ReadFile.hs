@@ -1,19 +1,15 @@
-{-# LANGUAGE TemplateHaskell, BangPatterns, DeriveDataTypeable, DeriveGeneric, FlexibleInstances, MultiParamTypeClasses,
- OverloadedStrings #-}
+{-# LANGUAGE BangPatterns, DeriveDataTypeable, DeriveGeneric, FlexibleInstances, MultiParamTypeClasses, OverloadedStrings #-}
 {-# OPTIONS_GHC  -fno-warn-unused-imports #-}
-module Mesos.V1.Master.Protos.Response.ReadFile (ReadFile(..), size, data') where
+module Mesos.V1.Master.Protos.Response.ReadFile (ReadFile(..)) where
 import Prelude ((+), (/), (++), (.))
 import qualified Prelude as Prelude'
 import qualified Data.Typeable as Prelude'
 import qualified GHC.Generics as Prelude'
 import qualified Data.Data as Prelude'
 import qualified Text.ProtocolBuffers.Header as P'
-import qualified Control.Lens.TH
 
-data ReadFile = ReadFile{_size :: !(P'.Word64), _data' :: !(P'.ByteString)}
+data ReadFile = ReadFile{size :: !(P'.Word64), data' :: !(P'.ByteString)}
                 deriving (Prelude'.Show, Prelude'.Eq, Prelude'.Ord, Prelude'.Typeable, Prelude'.Data, Prelude'.Generic)
-
-Control.Lens.TH.makeLenses ''ReadFile
 
 instance P'.ToJSON ReadFile where
   toJSON msg
@@ -27,7 +23,7 @@ instance P'.FromJSON ReadFile where
         do
           size <- P'.explicitParseField (P'.parseJSONReadWithPayload "uint64") o "size"
           data' <- P'.explicitParseField P'.parseJSONByteString o "data"
-          Prelude'.return P'.defaultValue{_size = size, _data' = data'})
+          Prelude'.return P'.defaultValue{size = size, data' = data'})
 
 instance P'.Mergeable ReadFile where
   mergeAppend (ReadFile x'1 x'2) (ReadFile y'1 y'2) = ReadFile (P'.mergeAppend x'1 y'1) (P'.mergeAppend x'2 y'2)
@@ -65,8 +61,8 @@ instance P'.Wire ReadFile where
     where
         update'Self wire'Tag old'Self
          = case wire'Tag of
-             8 -> Prelude'.fmap (\ !new'Field -> old'Self{_size = new'Field}) (P'.wireGet 4)
-             18 -> Prelude'.fmap (\ !new'Field -> old'Self{_data' = new'Field}) (P'.wireGet 12)
+             8 -> Prelude'.fmap (\ !new'Field -> old'Self{size = new'Field}) (P'.wireGet 4)
+             18 -> Prelude'.fmap (\ !new'Field -> old'Self{data' = new'Field}) (P'.wireGet 12)
              _ -> let (field'Number, wire'Type) = P'.splitWireTag wire'Tag in P'.unknown field'Number wire'Type old'Self
 
 instance P'.MessageAPI msg' (msg' -> ReadFile) ReadFile where
@@ -78,7 +74,7 @@ instance P'.ReflectDescriptor ReadFile where
   getMessageInfo _ = P'.GetMessageInfo (P'.fromDistinctAscList [8, 18]) (P'.fromDistinctAscList [8, 18])
   reflectDescriptorInfo _
    = Prelude'.read
-      "DescriptorInfo {descName = ProtoName {protobufName = FIName \".mesos.v1.master.Response.ReadFile\", haskellPrefix = [MName \"Mesos\",MName \"V1\",MName \"Master\"], parentModule = [MName \"Protos\",MName \"Response\"], baseName = MName \"ReadFile\"}, descFilePath = [\"Mesos\",\"V1\",\"Master\",\"Protos\",\"Response\",\"ReadFile.hs\"], isGroup = False, fields = fromList [FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.master.Response.ReadFile.size\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Master\"], parentModule' = [MName \"Protos\",MName \"Response\",MName \"ReadFile\"], baseName' = FName \"size\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 1}, wireTag = WireTag {getWireTag = 8}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = True, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.master.Response.ReadFile.data\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Master\"], parentModule' = [MName \"Protos\",MName \"Response\",MName \"ReadFile\"], baseName' = FName \"data'\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 2}, wireTag = WireTag {getWireTag = 18}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = True, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 12}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing}], descOneofs = fromList [], keys = fromList [], extRanges = [], knownKeys = fromList [], storeUnknown = False, lazyFields = False, makeLenses = True, jsonInstances = True}"
+      "DescriptorInfo {descName = ProtoName {protobufName = FIName \".mesos.v1.master.Response.ReadFile\", haskellPrefix = [MName \"Mesos\",MName \"V1\",MName \"Master\"], parentModule = [MName \"Protos\",MName \"Response\"], baseName = MName \"ReadFile\"}, descFilePath = [\"Mesos\",\"V1\",\"Master\",\"Protos\",\"Response\",\"ReadFile.hs\"], isGroup = False, fields = fromList [FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.master.Response.ReadFile.size\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Master\"], parentModule' = [MName \"Protos\",MName \"Response\",MName \"ReadFile\"], baseName' = FName \"size\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 1}, wireTag = WireTag {getWireTag = 8}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = True, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.master.Response.ReadFile.data\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Master\"], parentModule' = [MName \"Protos\",MName \"Response\",MName \"ReadFile\"], baseName' = FName \"data'\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 2}, wireTag = WireTag {getWireTag = 18}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = True, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 12}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing}], descOneofs = fromList [], keys = fromList [], extRanges = [], knownKeys = fromList [], storeUnknown = False, lazyFields = False, makeLenses = False, jsonInstances = True}"
 
 instance P'.TextType ReadFile where
   tellT = P'.tellSubMessage
@@ -87,20 +83,20 @@ instance P'.TextType ReadFile where
 instance P'.TextMsg ReadFile where
   textPut msg
    = do
-       P'.tellT "size" (_size msg)
-       P'.tellT "data" (_data' msg)
+       P'.tellT "size" (size msg)
+       P'.tellT "data" (data' msg)
   textGet
    = do
-       mods <- P'.sepEndBy (P'.choice [parse'_size, parse'_data']) P'.spaces
+       mods <- P'.sepEndBy (P'.choice [parse'size, parse'data']) P'.spaces
        Prelude'.return (Prelude'.foldl (\ v f -> f v) P'.defaultValue mods)
     where
-        parse'_size
+        parse'size
          = P'.try
             (do
                v <- P'.getT "size"
-               Prelude'.return (\ o -> o{_size = v}))
-        parse'_data'
+               Prelude'.return (\ o -> o{size = v}))
+        parse'data'
          = P'.try
             (do
                v <- P'.getT "data"
-               Prelude'.return (\ o -> o{_data' = v}))
+               Prelude'.return (\ o -> o{data' = v}))

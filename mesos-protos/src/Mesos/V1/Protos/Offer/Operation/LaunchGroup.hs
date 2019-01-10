@@ -1,21 +1,17 @@
-{-# LANGUAGE TemplateHaskell, BangPatterns, DeriveDataTypeable, DeriveGeneric, FlexibleInstances, MultiParamTypeClasses,
- OverloadedStrings #-}
+{-# LANGUAGE BangPatterns, DeriveDataTypeable, DeriveGeneric, FlexibleInstances, MultiParamTypeClasses, OverloadedStrings #-}
 {-# OPTIONS_GHC  -fno-warn-unused-imports #-}
-module Mesos.V1.Protos.Offer.Operation.LaunchGroup (LaunchGroup(..), executor, task_group) where
+module Mesos.V1.Protos.Offer.Operation.LaunchGroup (LaunchGroup(..)) where
 import Prelude ((+), (/), (++), (.))
 import qualified Prelude as Prelude'
 import qualified Data.Typeable as Prelude'
 import qualified GHC.Generics as Prelude'
 import qualified Data.Data as Prelude'
 import qualified Text.ProtocolBuffers.Header as P'
-import qualified Control.Lens.TH
 import qualified Mesos.V1.Protos.ExecutorInfo as Protos (ExecutorInfo)
 import qualified Mesos.V1.Protos.TaskGroupInfo as Protos (TaskGroupInfo)
 
-data LaunchGroup = LaunchGroup{_executor :: !(Protos.ExecutorInfo), _task_group :: !(Protos.TaskGroupInfo)}
+data LaunchGroup = LaunchGroup{executor :: !(Protos.ExecutorInfo), task_group :: !(Protos.TaskGroupInfo)}
                    deriving (Prelude'.Show, Prelude'.Eq, Prelude'.Ord, Prelude'.Typeable, Prelude'.Data, Prelude'.Generic)
-
-Control.Lens.TH.makeLenses ''LaunchGroup
 
 instance P'.ToJSON LaunchGroup where
   toJSON msg
@@ -28,7 +24,7 @@ instance P'.FromJSON LaunchGroup where
         do
           executor <- P'.explicitParseField P'.parseJSON o "executor"
           task_group <- P'.explicitParseField P'.parseJSON o "task_group"
-          Prelude'.return P'.defaultValue{_executor = executor, _task_group = task_group})
+          Prelude'.return P'.defaultValue{executor = executor, task_group = task_group})
 
 instance P'.Mergeable LaunchGroup where
   mergeAppend (LaunchGroup x'1 x'2) (LaunchGroup y'1 y'2) = LaunchGroup (P'.mergeAppend x'1 y'1) (P'.mergeAppend x'2 y'2)
@@ -66,9 +62,9 @@ instance P'.Wire LaunchGroup where
     where
         update'Self wire'Tag old'Self
          = case wire'Tag of
-             10 -> Prelude'.fmap (\ !new'Field -> old'Self{_executor = P'.mergeAppend (_executor old'Self) (new'Field)})
+             10 -> Prelude'.fmap (\ !new'Field -> old'Self{executor = P'.mergeAppend (executor old'Self) (new'Field)})
                     (P'.wireGet 11)
-             18 -> Prelude'.fmap (\ !new'Field -> old'Self{_task_group = P'.mergeAppend (_task_group old'Self) (new'Field)})
+             18 -> Prelude'.fmap (\ !new'Field -> old'Self{task_group = P'.mergeAppend (task_group old'Self) (new'Field)})
                     (P'.wireGet 11)
              _ -> let (field'Number, wire'Type) = P'.splitWireTag wire'Tag in P'.unknown field'Number wire'Type old'Self
 
@@ -81,7 +77,7 @@ instance P'.ReflectDescriptor LaunchGroup where
   getMessageInfo _ = P'.GetMessageInfo (P'.fromDistinctAscList [10, 18]) (P'.fromDistinctAscList [10, 18])
   reflectDescriptorInfo _
    = Prelude'.read
-      "DescriptorInfo {descName = ProtoName {protobufName = FIName \".mesos.v1.Offer.Operation.LaunchGroup\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\",MName \"Offer\",MName \"Operation\"], baseName = MName \"LaunchGroup\"}, descFilePath = [\"Mesos\",\"V1\",\"Protos\",\"Offer\",\"Operation\",\"LaunchGroup.hs\"], isGroup = False, fields = fromList [FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Offer.Operation.LaunchGroup.executor\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Offer\",MName \"Operation\",MName \"LaunchGroup\"], baseName' = FName \"executor\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 1}, wireTag = WireTag {getWireTag = 10}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = True, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.ExecutorInfo\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"ExecutorInfo\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Offer.Operation.LaunchGroup.task_group\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Offer\",MName \"Operation\",MName \"LaunchGroup\"], baseName' = FName \"task_group\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 2}, wireTag = WireTag {getWireTag = 18}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = True, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.TaskGroupInfo\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"TaskGroupInfo\"}), hsRawDefault = Nothing, hsDefault = Nothing}], descOneofs = fromList [], keys = fromList [], extRanges = [], knownKeys = fromList [], storeUnknown = False, lazyFields = False, makeLenses = True, jsonInstances = True}"
+      "DescriptorInfo {descName = ProtoName {protobufName = FIName \".mesos.v1.Offer.Operation.LaunchGroup\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\",MName \"Offer\",MName \"Operation\"], baseName = MName \"LaunchGroup\"}, descFilePath = [\"Mesos\",\"V1\",\"Protos\",\"Offer\",\"Operation\",\"LaunchGroup.hs\"], isGroup = False, fields = fromList [FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Offer.Operation.LaunchGroup.executor\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Offer\",MName \"Operation\",MName \"LaunchGroup\"], baseName' = FName \"executor\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 1}, wireTag = WireTag {getWireTag = 10}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = True, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.ExecutorInfo\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"ExecutorInfo\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Offer.Operation.LaunchGroup.task_group\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Offer\",MName \"Operation\",MName \"LaunchGroup\"], baseName' = FName \"task_group\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 2}, wireTag = WireTag {getWireTag = 18}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = True, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.TaskGroupInfo\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"TaskGroupInfo\"}), hsRawDefault = Nothing, hsDefault = Nothing}], descOneofs = fromList [], keys = fromList [], extRanges = [], knownKeys = fromList [], storeUnknown = False, lazyFields = False, makeLenses = False, jsonInstances = True}"
 
 instance P'.TextType LaunchGroup where
   tellT = P'.tellSubMessage
@@ -90,20 +86,20 @@ instance P'.TextType LaunchGroup where
 instance P'.TextMsg LaunchGroup where
   textPut msg
    = do
-       P'.tellT "executor" (_executor msg)
-       P'.tellT "task_group" (_task_group msg)
+       P'.tellT "executor" (executor msg)
+       P'.tellT "task_group" (task_group msg)
   textGet
    = do
-       mods <- P'.sepEndBy (P'.choice [parse'_executor, parse'_task_group]) P'.spaces
+       mods <- P'.sepEndBy (P'.choice [parse'executor, parse'task_group]) P'.spaces
        Prelude'.return (Prelude'.foldl (\ v f -> f v) P'.defaultValue mods)
     where
-        parse'_executor
+        parse'executor
          = P'.try
             (do
                v <- P'.getT "executor"
-               Prelude'.return (\ o -> o{_executor = v}))
-        parse'_task_group
+               Prelude'.return (\ o -> o{executor = v}))
+        parse'task_group
          = P'.try
             (do
                v <- P'.getT "task_group"
-               Prelude'.return (\ o -> o{_task_group = v}))
+               Prelude'.return (\ o -> o{task_group = v}))

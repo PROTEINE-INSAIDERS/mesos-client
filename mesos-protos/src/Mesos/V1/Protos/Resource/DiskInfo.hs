@@ -1,23 +1,19 @@
-{-# LANGUAGE TemplateHaskell, BangPatterns, DeriveDataTypeable, DeriveGeneric, FlexibleInstances, MultiParamTypeClasses,
- OverloadedStrings #-}
+{-# LANGUAGE BangPatterns, DeriveDataTypeable, DeriveGeneric, FlexibleInstances, MultiParamTypeClasses, OverloadedStrings #-}
 {-# OPTIONS_GHC  -fno-warn-unused-imports #-}
-module Mesos.V1.Protos.Resource.DiskInfo (DiskInfo(..), persistence, volume, source) where
+module Mesos.V1.Protos.Resource.DiskInfo (DiskInfo(..)) where
 import Prelude ((+), (/), (++), (.))
 import qualified Prelude as Prelude'
 import qualified Data.Typeable as Prelude'
 import qualified GHC.Generics as Prelude'
 import qualified Data.Data as Prelude'
 import qualified Text.ProtocolBuffers.Header as P'
-import qualified Control.Lens.TH
 import qualified Mesos.V1.Protos.Resource.DiskInfo.Persistence as Protos.Resource.DiskInfo (Persistence)
 import qualified Mesos.V1.Protos.Resource.DiskInfo.Source as Protos.Resource.DiskInfo (Source)
 import qualified Mesos.V1.Protos.Volume as Protos (Volume)
 
-data DiskInfo = DiskInfo{_persistence :: !(P'.Maybe Protos.Resource.DiskInfo.Persistence), _volume :: !(P'.Maybe Protos.Volume),
-                         _source :: !(P'.Maybe Protos.Resource.DiskInfo.Source)}
+data DiskInfo = DiskInfo{persistence :: !(P'.Maybe Protos.Resource.DiskInfo.Persistence), volume :: !(P'.Maybe Protos.Volume),
+                         source :: !(P'.Maybe Protos.Resource.DiskInfo.Source)}
                 deriving (Prelude'.Show, Prelude'.Eq, Prelude'.Ord, Prelude'.Typeable, Prelude'.Data, Prelude'.Generic)
-
-Control.Lens.TH.makeLenses ''DiskInfo
 
 instance P'.ToJSON DiskInfo where
   toJSON msg
@@ -34,7 +30,7 @@ instance P'.FromJSON DiskInfo where
           persistence <- P'.explicitParseFieldMaybe P'.parseJSON o "persistence"
           volume <- P'.explicitParseFieldMaybe P'.parseJSON o "volume"
           source <- P'.explicitParseFieldMaybe P'.parseJSON o "source"
-          Prelude'.return P'.defaultValue{_persistence = persistence, _volume = volume, _source = source})
+          Prelude'.return P'.defaultValue{persistence = persistence, volume = volume, source = source})
 
 instance P'.Mergeable DiskInfo where
   mergeAppend (DiskInfo x'1 x'2 x'3) (DiskInfo y'1 y'2 y'3)
@@ -76,11 +72,11 @@ instance P'.Wire DiskInfo where
         update'Self wire'Tag old'Self
          = case wire'Tag of
              10 -> Prelude'.fmap
-                    (\ !new'Field -> old'Self{_persistence = P'.mergeAppend (_persistence old'Self) (Prelude'.Just new'Field)})
+                    (\ !new'Field -> old'Self{persistence = P'.mergeAppend (persistence old'Self) (Prelude'.Just new'Field)})
                     (P'.wireGet 11)
-             18 -> Prelude'.fmap (\ !new'Field -> old'Self{_volume = P'.mergeAppend (_volume old'Self) (Prelude'.Just new'Field)})
+             18 -> Prelude'.fmap (\ !new'Field -> old'Self{volume = P'.mergeAppend (volume old'Self) (Prelude'.Just new'Field)})
                     (P'.wireGet 11)
-             26 -> Prelude'.fmap (\ !new'Field -> old'Self{_source = P'.mergeAppend (_source old'Self) (Prelude'.Just new'Field)})
+             26 -> Prelude'.fmap (\ !new'Field -> old'Self{source = P'.mergeAppend (source old'Self) (Prelude'.Just new'Field)})
                     (P'.wireGet 11)
              _ -> let (field'Number, wire'Type) = P'.splitWireTag wire'Tag in P'.unknown field'Number wire'Type old'Self
 
@@ -93,7 +89,7 @@ instance P'.ReflectDescriptor DiskInfo where
   getMessageInfo _ = P'.GetMessageInfo (P'.fromDistinctAscList []) (P'.fromDistinctAscList [10, 18, 26])
   reflectDescriptorInfo _
    = Prelude'.read
-      "DescriptorInfo {descName = ProtoName {protobufName = FIName \".mesos.v1.Resource.DiskInfo\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\",MName \"Resource\"], baseName = MName \"DiskInfo\"}, descFilePath = [\"Mesos\",\"V1\",\"Protos\",\"Resource\",\"DiskInfo.hs\"], isGroup = False, fields = fromList [FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Resource.DiskInfo.persistence\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Resource\",MName \"DiskInfo\"], baseName' = FName \"persistence\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 1}, wireTag = WireTag {getWireTag = 10}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.Resource.DiskInfo.Persistence\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\",MName \"Resource\",MName \"DiskInfo\"], baseName = MName \"Persistence\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Resource.DiskInfo.volume\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Resource\",MName \"DiskInfo\"], baseName' = FName \"volume\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 2}, wireTag = WireTag {getWireTag = 18}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.Volume\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"Volume\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Resource.DiskInfo.source\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Resource\",MName \"DiskInfo\"], baseName' = FName \"source\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 3}, wireTag = WireTag {getWireTag = 26}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.Resource.DiskInfo.Source\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\",MName \"Resource\",MName \"DiskInfo\"], baseName = MName \"Source\"}), hsRawDefault = Nothing, hsDefault = Nothing}], descOneofs = fromList [], keys = fromList [], extRanges = [], knownKeys = fromList [], storeUnknown = False, lazyFields = False, makeLenses = True, jsonInstances = True}"
+      "DescriptorInfo {descName = ProtoName {protobufName = FIName \".mesos.v1.Resource.DiskInfo\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\",MName \"Resource\"], baseName = MName \"DiskInfo\"}, descFilePath = [\"Mesos\",\"V1\",\"Protos\",\"Resource\",\"DiskInfo.hs\"], isGroup = False, fields = fromList [FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Resource.DiskInfo.persistence\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Resource\",MName \"DiskInfo\"], baseName' = FName \"persistence\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 1}, wireTag = WireTag {getWireTag = 10}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.Resource.DiskInfo.Persistence\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\",MName \"Resource\",MName \"DiskInfo\"], baseName = MName \"Persistence\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Resource.DiskInfo.volume\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Resource\",MName \"DiskInfo\"], baseName' = FName \"volume\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 2}, wireTag = WireTag {getWireTag = 18}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.Volume\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"Volume\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Resource.DiskInfo.source\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Resource\",MName \"DiskInfo\"], baseName' = FName \"source\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 3}, wireTag = WireTag {getWireTag = 26}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.Resource.DiskInfo.Source\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\",MName \"Resource\",MName \"DiskInfo\"], baseName = MName \"Source\"}), hsRawDefault = Nothing, hsDefault = Nothing}], descOneofs = fromList [], keys = fromList [], extRanges = [], knownKeys = fromList [], storeUnknown = False, lazyFields = False, makeLenses = False, jsonInstances = True}"
 
 instance P'.TextType DiskInfo where
   tellT = P'.tellSubMessage
@@ -102,26 +98,26 @@ instance P'.TextType DiskInfo where
 instance P'.TextMsg DiskInfo where
   textPut msg
    = do
-       P'.tellT "persistence" (_persistence msg)
-       P'.tellT "volume" (_volume msg)
-       P'.tellT "source" (_source msg)
+       P'.tellT "persistence" (persistence msg)
+       P'.tellT "volume" (volume msg)
+       P'.tellT "source" (source msg)
   textGet
    = do
-       mods <- P'.sepEndBy (P'.choice [parse'_persistence, parse'_volume, parse'_source]) P'.spaces
+       mods <- P'.sepEndBy (P'.choice [parse'persistence, parse'volume, parse'source]) P'.spaces
        Prelude'.return (Prelude'.foldl (\ v f -> f v) P'.defaultValue mods)
     where
-        parse'_persistence
+        parse'persistence
          = P'.try
             (do
                v <- P'.getT "persistence"
-               Prelude'.return (\ o -> o{_persistence = v}))
-        parse'_volume
+               Prelude'.return (\ o -> o{persistence = v}))
+        parse'volume
          = P'.try
             (do
                v <- P'.getT "volume"
-               Prelude'.return (\ o -> o{_volume = v}))
-        parse'_source
+               Prelude'.return (\ o -> o{volume = v}))
+        parse'source
          = P'.try
             (do
                v <- P'.getT "source"
-               Prelude'.return (\ o -> o{_source = v}))
+               Prelude'.return (\ o -> o{source = v}))

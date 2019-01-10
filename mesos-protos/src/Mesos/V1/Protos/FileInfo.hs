@@ -1,22 +1,18 @@
-{-# LANGUAGE TemplateHaskell, BangPatterns, DeriveDataTypeable, DeriveGeneric, FlexibleInstances, MultiParamTypeClasses,
- OverloadedStrings #-}
+{-# LANGUAGE BangPatterns, DeriveDataTypeable, DeriveGeneric, FlexibleInstances, MultiParamTypeClasses, OverloadedStrings #-}
 {-# OPTIONS_GHC  -fno-warn-unused-imports #-}
-module Mesos.V1.Protos.FileInfo (FileInfo(..), path, nlink, size, mtime, mode, uid, gid) where
+module Mesos.V1.Protos.FileInfo (FileInfo(..)) where
 import Prelude ((+), (/), (++), (.))
 import qualified Prelude as Prelude'
 import qualified Data.Typeable as Prelude'
 import qualified GHC.Generics as Prelude'
 import qualified Data.Data as Prelude'
 import qualified Text.ProtocolBuffers.Header as P'
-import qualified Control.Lens.TH
 import qualified Mesos.V1.Protos.TimeInfo as Protos (TimeInfo)
 
-data FileInfo = FileInfo{_path :: !(P'.Utf8), _nlink :: !(P'.Maybe P'.Int32), _size :: !(P'.Maybe P'.Word64),
-                         _mtime :: !(P'.Maybe Protos.TimeInfo), _mode :: !(P'.Maybe P'.Word32), _uid :: !(P'.Maybe P'.Utf8),
-                         _gid :: !(P'.Maybe P'.Utf8)}
+data FileInfo = FileInfo{path :: !(P'.Utf8), nlink :: !(P'.Maybe P'.Int32), size :: !(P'.Maybe P'.Word64),
+                         mtime :: !(P'.Maybe Protos.TimeInfo), mode :: !(P'.Maybe P'.Word32), uid :: !(P'.Maybe P'.Utf8),
+                         gid :: !(P'.Maybe P'.Utf8)}
                 deriving (Prelude'.Show, Prelude'.Eq, Prelude'.Ord, Prelude'.Typeable, Prelude'.Data, Prelude'.Generic)
-
-Control.Lens.TH.makeLenses ''FileInfo
 
 instance P'.ToJSON FileInfo where
   toJSON msg
@@ -40,7 +36,7 @@ instance P'.FromJSON FileInfo where
           uid <- P'.explicitParseFieldMaybe P'.parseJSON o "uid"
           gid <- P'.explicitParseFieldMaybe P'.parseJSON o "gid"
           Prelude'.return
-           P'.defaultValue{_path = path, _nlink = nlink, _size = size, _mtime = mtime, _mode = mode, _uid = uid, _gid = gid})
+           P'.defaultValue{path = path, nlink = nlink, size = size, mtime = mtime, mode = mode, uid = uid, gid = gid})
 
 instance P'.Mergeable FileInfo where
   mergeAppend (FileInfo x'1 x'2 x'3 x'4 x'5 x'6 x'7) (FileInfo y'1 y'2 y'3 y'4 y'5 y'6 y'7)
@@ -91,14 +87,14 @@ instance P'.Wire FileInfo where
     where
         update'Self wire'Tag old'Self
          = case wire'Tag of
-             10 -> Prelude'.fmap (\ !new'Field -> old'Self{_path = new'Field}) (P'.wireGet 9)
-             16 -> Prelude'.fmap (\ !new'Field -> old'Self{_nlink = Prelude'.Just new'Field}) (P'.wireGet 5)
-             24 -> Prelude'.fmap (\ !new'Field -> old'Self{_size = Prelude'.Just new'Field}) (P'.wireGet 4)
-             34 -> Prelude'.fmap (\ !new'Field -> old'Self{_mtime = P'.mergeAppend (_mtime old'Self) (Prelude'.Just new'Field)})
+             10 -> Prelude'.fmap (\ !new'Field -> old'Self{path = new'Field}) (P'.wireGet 9)
+             16 -> Prelude'.fmap (\ !new'Field -> old'Self{nlink = Prelude'.Just new'Field}) (P'.wireGet 5)
+             24 -> Prelude'.fmap (\ !new'Field -> old'Self{size = Prelude'.Just new'Field}) (P'.wireGet 4)
+             34 -> Prelude'.fmap (\ !new'Field -> old'Self{mtime = P'.mergeAppend (mtime old'Self) (Prelude'.Just new'Field)})
                     (P'.wireGet 11)
-             40 -> Prelude'.fmap (\ !new'Field -> old'Self{_mode = Prelude'.Just new'Field}) (P'.wireGet 13)
-             50 -> Prelude'.fmap (\ !new'Field -> old'Self{_uid = Prelude'.Just new'Field}) (P'.wireGet 9)
-             58 -> Prelude'.fmap (\ !new'Field -> old'Self{_gid = Prelude'.Just new'Field}) (P'.wireGet 9)
+             40 -> Prelude'.fmap (\ !new'Field -> old'Self{mode = Prelude'.Just new'Field}) (P'.wireGet 13)
+             50 -> Prelude'.fmap (\ !new'Field -> old'Self{uid = Prelude'.Just new'Field}) (P'.wireGet 9)
+             58 -> Prelude'.fmap (\ !new'Field -> old'Self{gid = Prelude'.Just new'Field}) (P'.wireGet 9)
              _ -> let (field'Number, wire'Type) = P'.splitWireTag wire'Tag in P'.unknown field'Number wire'Type old'Self
 
 instance P'.MessageAPI msg' (msg' -> FileInfo) FileInfo where
@@ -110,7 +106,7 @@ instance P'.ReflectDescriptor FileInfo where
   getMessageInfo _ = P'.GetMessageInfo (P'.fromDistinctAscList [10]) (P'.fromDistinctAscList [10, 16, 24, 34, 40, 50, 58])
   reflectDescriptorInfo _
    = Prelude'.read
-      "DescriptorInfo {descName = ProtoName {protobufName = FIName \".mesos.v1.FileInfo\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"FileInfo\"}, descFilePath = [\"Mesos\",\"V1\",\"Protos\",\"FileInfo.hs\"], isGroup = False, fields = fromList [FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.FileInfo.path\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"FileInfo\"], baseName' = FName \"path\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 1}, wireTag = WireTag {getWireTag = 10}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = True, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 9}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.FileInfo.nlink\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"FileInfo\"], baseName' = FName \"nlink\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 2}, wireTag = WireTag {getWireTag = 16}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 5}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.FileInfo.size\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"FileInfo\"], baseName' = FName \"size\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 3}, wireTag = WireTag {getWireTag = 24}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.FileInfo.mtime\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"FileInfo\"], baseName' = FName \"mtime\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 4}, wireTag = WireTag {getWireTag = 34}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.TimeInfo\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"TimeInfo\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.FileInfo.mode\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"FileInfo\"], baseName' = FName \"mode\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 5}, wireTag = WireTag {getWireTag = 40}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 13}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.FileInfo.uid\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"FileInfo\"], baseName' = FName \"uid\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 6}, wireTag = WireTag {getWireTag = 50}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 9}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.FileInfo.gid\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"FileInfo\"], baseName' = FName \"gid\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 7}, wireTag = WireTag {getWireTag = 58}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 9}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing}], descOneofs = fromList [], keys = fromList [], extRanges = [], knownKeys = fromList [], storeUnknown = False, lazyFields = False, makeLenses = True, jsonInstances = True}"
+      "DescriptorInfo {descName = ProtoName {protobufName = FIName \".mesos.v1.FileInfo\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"FileInfo\"}, descFilePath = [\"Mesos\",\"V1\",\"Protos\",\"FileInfo.hs\"], isGroup = False, fields = fromList [FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.FileInfo.path\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"FileInfo\"], baseName' = FName \"path\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 1}, wireTag = WireTag {getWireTag = 10}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = True, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 9}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.FileInfo.nlink\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"FileInfo\"], baseName' = FName \"nlink\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 2}, wireTag = WireTag {getWireTag = 16}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 5}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.FileInfo.size\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"FileInfo\"], baseName' = FName \"size\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 3}, wireTag = WireTag {getWireTag = 24}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.FileInfo.mtime\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"FileInfo\"], baseName' = FName \"mtime\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 4}, wireTag = WireTag {getWireTag = 34}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.TimeInfo\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"TimeInfo\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.FileInfo.mode\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"FileInfo\"], baseName' = FName \"mode\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 5}, wireTag = WireTag {getWireTag = 40}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 13}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.FileInfo.uid\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"FileInfo\"], baseName' = FName \"uid\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 6}, wireTag = WireTag {getWireTag = 50}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 9}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.FileInfo.gid\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"FileInfo\"], baseName' = FName \"gid\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 7}, wireTag = WireTag {getWireTag = 58}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 9}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing}], descOneofs = fromList [], keys = fromList [], extRanges = [], knownKeys = fromList [], storeUnknown = False, lazyFields = False, makeLenses = False, jsonInstances = True}"
 
 instance P'.TextType FileInfo where
   tellT = P'.tellSubMessage
@@ -119,51 +115,51 @@ instance P'.TextType FileInfo where
 instance P'.TextMsg FileInfo where
   textPut msg
    = do
-       P'.tellT "path" (_path msg)
-       P'.tellT "nlink" (_nlink msg)
-       P'.tellT "size" (_size msg)
-       P'.tellT "mtime" (_mtime msg)
-       P'.tellT "mode" (_mode msg)
-       P'.tellT "uid" (_uid msg)
-       P'.tellT "gid" (_gid msg)
+       P'.tellT "path" (path msg)
+       P'.tellT "nlink" (nlink msg)
+       P'.tellT "size" (size msg)
+       P'.tellT "mtime" (mtime msg)
+       P'.tellT "mode" (mode msg)
+       P'.tellT "uid" (uid msg)
+       P'.tellT "gid" (gid msg)
   textGet
    = do
-       mods <- P'.sepEndBy (P'.choice [parse'_path, parse'_nlink, parse'_size, parse'_mtime, parse'_mode, parse'_uid, parse'_gid])
+       mods <- P'.sepEndBy (P'.choice [parse'path, parse'nlink, parse'size, parse'mtime, parse'mode, parse'uid, parse'gid])
                 P'.spaces
        Prelude'.return (Prelude'.foldl (\ v f -> f v) P'.defaultValue mods)
     where
-        parse'_path
+        parse'path
          = P'.try
             (do
                v <- P'.getT "path"
-               Prelude'.return (\ o -> o{_path = v}))
-        parse'_nlink
+               Prelude'.return (\ o -> o{path = v}))
+        parse'nlink
          = P'.try
             (do
                v <- P'.getT "nlink"
-               Prelude'.return (\ o -> o{_nlink = v}))
-        parse'_size
+               Prelude'.return (\ o -> o{nlink = v}))
+        parse'size
          = P'.try
             (do
                v <- P'.getT "size"
-               Prelude'.return (\ o -> o{_size = v}))
-        parse'_mtime
+               Prelude'.return (\ o -> o{size = v}))
+        parse'mtime
          = P'.try
             (do
                v <- P'.getT "mtime"
-               Prelude'.return (\ o -> o{_mtime = v}))
-        parse'_mode
+               Prelude'.return (\ o -> o{mtime = v}))
+        parse'mode
          = P'.try
             (do
                v <- P'.getT "mode"
-               Prelude'.return (\ o -> o{_mode = v}))
-        parse'_uid
+               Prelude'.return (\ o -> o{mode = v}))
+        parse'uid
          = P'.try
             (do
                v <- P'.getT "uid"
-               Prelude'.return (\ o -> o{_uid = v}))
-        parse'_gid
+               Prelude'.return (\ o -> o{uid = v}))
+        parse'gid
          = P'.try
             (do
                v <- P'.getT "gid"
-               Prelude'.return (\ o -> o{_gid = v}))
+               Prelude'.return (\ o -> o{gid = v}))

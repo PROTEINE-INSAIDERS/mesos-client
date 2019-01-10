@@ -1,32 +1,24 @@
-{-# LANGUAGE TemplateHaskell, BangPatterns, DeriveDataTypeable, DeriveGeneric, FlexibleInstances, MultiParamTypeClasses,
- OverloadedStrings #-}
+{-# LANGUAGE BangPatterns, DeriveDataTypeable, DeriveGeneric, FlexibleInstances, MultiParamTypeClasses, OverloadedStrings #-}
 {-# OPTIONS_GHC  -fno-warn-unused-imports #-}
-module Mesos.V1.Protos.IpStatistics
-       (IpStatistics(..), forwarding, defaultTTL, inReceives, inHdrErrors, inAddrErrors, forwDatagrams, inUnknownProtos, inDiscards,
-        inDelivers, outRequests, outDiscards, outNoRoutes, reasmTimeout, reasmReqds, reasmOKs, reasmFails, fragOKs, fragFails,
-        fragCreates)
-       where
+module Mesos.V1.Protos.IpStatistics (IpStatistics(..)) where
 import Prelude ((+), (/), (++), (.))
 import qualified Prelude as Prelude'
 import qualified Data.Typeable as Prelude'
 import qualified GHC.Generics as Prelude'
 import qualified Data.Data as Prelude'
 import qualified Text.ProtocolBuffers.Header as P'
-import qualified Control.Lens.TH
 
-data IpStatistics = IpStatistics{_forwarding :: !(P'.Maybe P'.Int64), _defaultTTL :: !(P'.Maybe P'.Int64),
-                                 _inReceives :: !(P'.Maybe P'.Int64), _inHdrErrors :: !(P'.Maybe P'.Int64),
-                                 _inAddrErrors :: !(P'.Maybe P'.Int64), _forwDatagrams :: !(P'.Maybe P'.Int64),
-                                 _inUnknownProtos :: !(P'.Maybe P'.Int64), _inDiscards :: !(P'.Maybe P'.Int64),
-                                 _inDelivers :: !(P'.Maybe P'.Int64), _outRequests :: !(P'.Maybe P'.Int64),
-                                 _outDiscards :: !(P'.Maybe P'.Int64), _outNoRoutes :: !(P'.Maybe P'.Int64),
-                                 _reasmTimeout :: !(P'.Maybe P'.Int64), _reasmReqds :: !(P'.Maybe P'.Int64),
-                                 _reasmOKs :: !(P'.Maybe P'.Int64), _reasmFails :: !(P'.Maybe P'.Int64),
-                                 _fragOKs :: !(P'.Maybe P'.Int64), _fragFails :: !(P'.Maybe P'.Int64),
-                                 _fragCreates :: !(P'.Maybe P'.Int64)}
+data IpStatistics = IpStatistics{forwarding :: !(P'.Maybe P'.Int64), defaultTTL :: !(P'.Maybe P'.Int64),
+                                 inReceives :: !(P'.Maybe P'.Int64), inHdrErrors :: !(P'.Maybe P'.Int64),
+                                 inAddrErrors :: !(P'.Maybe P'.Int64), forwDatagrams :: !(P'.Maybe P'.Int64),
+                                 inUnknownProtos :: !(P'.Maybe P'.Int64), inDiscards :: !(P'.Maybe P'.Int64),
+                                 inDelivers :: !(P'.Maybe P'.Int64), outRequests :: !(P'.Maybe P'.Int64),
+                                 outDiscards :: !(P'.Maybe P'.Int64), outNoRoutes :: !(P'.Maybe P'.Int64),
+                                 reasmTimeout :: !(P'.Maybe P'.Int64), reasmReqds :: !(P'.Maybe P'.Int64),
+                                 reasmOKs :: !(P'.Maybe P'.Int64), reasmFails :: !(P'.Maybe P'.Int64),
+                                 fragOKs :: !(P'.Maybe P'.Int64), fragFails :: !(P'.Maybe P'.Int64),
+                                 fragCreates :: !(P'.Maybe P'.Int64)}
                     deriving (Prelude'.Show, Prelude'.Eq, Prelude'.Ord, Prelude'.Typeable, Prelude'.Data, Prelude'.Generic)
-
-Control.Lens.TH.makeLenses ''IpStatistics
 
 instance P'.ToJSON IpStatistics where
   toJSON msg
@@ -77,12 +69,11 @@ instance P'.FromJSON IpStatistics where
           fragFails <- P'.explicitParseFieldMaybe (P'.parseJSONReadWithPayload "int64") o "fragFails"
           fragCreates <- P'.explicitParseFieldMaybe (P'.parseJSONReadWithPayload "int64") o "fragCreates"
           Prelude'.return
-           P'.defaultValue{_forwarding = forwarding, _defaultTTL = defaultTTL, _inReceives = inReceives, _inHdrErrors = inHdrErrors,
-                           _inAddrErrors = inAddrErrors, _forwDatagrams = forwDatagrams, _inUnknownProtos = inUnknownProtos,
-                           _inDiscards = inDiscards, _inDelivers = inDelivers, _outRequests = outRequests,
-                           _outDiscards = outDiscards, _outNoRoutes = outNoRoutes, _reasmTimeout = reasmTimeout,
-                           _reasmReqds = reasmReqds, _reasmOKs = reasmOKs, _reasmFails = reasmFails, _fragOKs = fragOKs,
-                           _fragFails = fragFails, _fragCreates = fragCreates})
+           P'.defaultValue{forwarding = forwarding, defaultTTL = defaultTTL, inReceives = inReceives, inHdrErrors = inHdrErrors,
+                           inAddrErrors = inAddrErrors, forwDatagrams = forwDatagrams, inUnknownProtos = inUnknownProtos,
+                           inDiscards = inDiscards, inDelivers = inDelivers, outRequests = outRequests, outDiscards = outDiscards,
+                           outNoRoutes = outNoRoutes, reasmTimeout = reasmTimeout, reasmReqds = reasmReqds, reasmOKs = reasmOKs,
+                           reasmFails = reasmFails, fragOKs = fragOKs, fragFails = fragFails, fragCreates = fragCreates})
 
 instance P'.Mergeable IpStatistics where
   mergeAppend (IpStatistics x'1 x'2 x'3 x'4 x'5 x'6 x'7 x'8 x'9 x'10 x'11 x'12 x'13 x'14 x'15 x'16 x'17 x'18 x'19)
@@ -174,25 +165,25 @@ instance P'.Wire IpStatistics where
     where
         update'Self wire'Tag old'Self
          = case wire'Tag of
-             8 -> Prelude'.fmap (\ !new'Field -> old'Self{_forwarding = Prelude'.Just new'Field}) (P'.wireGet 3)
-             16 -> Prelude'.fmap (\ !new'Field -> old'Self{_defaultTTL = Prelude'.Just new'Field}) (P'.wireGet 3)
-             24 -> Prelude'.fmap (\ !new'Field -> old'Self{_inReceives = Prelude'.Just new'Field}) (P'.wireGet 3)
-             32 -> Prelude'.fmap (\ !new'Field -> old'Self{_inHdrErrors = Prelude'.Just new'Field}) (P'.wireGet 3)
-             40 -> Prelude'.fmap (\ !new'Field -> old'Self{_inAddrErrors = Prelude'.Just new'Field}) (P'.wireGet 3)
-             48 -> Prelude'.fmap (\ !new'Field -> old'Self{_forwDatagrams = Prelude'.Just new'Field}) (P'.wireGet 3)
-             56 -> Prelude'.fmap (\ !new'Field -> old'Self{_inUnknownProtos = Prelude'.Just new'Field}) (P'.wireGet 3)
-             64 -> Prelude'.fmap (\ !new'Field -> old'Self{_inDiscards = Prelude'.Just new'Field}) (P'.wireGet 3)
-             72 -> Prelude'.fmap (\ !new'Field -> old'Self{_inDelivers = Prelude'.Just new'Field}) (P'.wireGet 3)
-             80 -> Prelude'.fmap (\ !new'Field -> old'Self{_outRequests = Prelude'.Just new'Field}) (P'.wireGet 3)
-             88 -> Prelude'.fmap (\ !new'Field -> old'Self{_outDiscards = Prelude'.Just new'Field}) (P'.wireGet 3)
-             96 -> Prelude'.fmap (\ !new'Field -> old'Self{_outNoRoutes = Prelude'.Just new'Field}) (P'.wireGet 3)
-             104 -> Prelude'.fmap (\ !new'Field -> old'Self{_reasmTimeout = Prelude'.Just new'Field}) (P'.wireGet 3)
-             112 -> Prelude'.fmap (\ !new'Field -> old'Self{_reasmReqds = Prelude'.Just new'Field}) (P'.wireGet 3)
-             120 -> Prelude'.fmap (\ !new'Field -> old'Self{_reasmOKs = Prelude'.Just new'Field}) (P'.wireGet 3)
-             128 -> Prelude'.fmap (\ !new'Field -> old'Self{_reasmFails = Prelude'.Just new'Field}) (P'.wireGet 3)
-             136 -> Prelude'.fmap (\ !new'Field -> old'Self{_fragOKs = Prelude'.Just new'Field}) (P'.wireGet 3)
-             144 -> Prelude'.fmap (\ !new'Field -> old'Self{_fragFails = Prelude'.Just new'Field}) (P'.wireGet 3)
-             152 -> Prelude'.fmap (\ !new'Field -> old'Self{_fragCreates = Prelude'.Just new'Field}) (P'.wireGet 3)
+             8 -> Prelude'.fmap (\ !new'Field -> old'Self{forwarding = Prelude'.Just new'Field}) (P'.wireGet 3)
+             16 -> Prelude'.fmap (\ !new'Field -> old'Self{defaultTTL = Prelude'.Just new'Field}) (P'.wireGet 3)
+             24 -> Prelude'.fmap (\ !new'Field -> old'Self{inReceives = Prelude'.Just new'Field}) (P'.wireGet 3)
+             32 -> Prelude'.fmap (\ !new'Field -> old'Self{inHdrErrors = Prelude'.Just new'Field}) (P'.wireGet 3)
+             40 -> Prelude'.fmap (\ !new'Field -> old'Self{inAddrErrors = Prelude'.Just new'Field}) (P'.wireGet 3)
+             48 -> Prelude'.fmap (\ !new'Field -> old'Self{forwDatagrams = Prelude'.Just new'Field}) (P'.wireGet 3)
+             56 -> Prelude'.fmap (\ !new'Field -> old'Self{inUnknownProtos = Prelude'.Just new'Field}) (P'.wireGet 3)
+             64 -> Prelude'.fmap (\ !new'Field -> old'Self{inDiscards = Prelude'.Just new'Field}) (P'.wireGet 3)
+             72 -> Prelude'.fmap (\ !new'Field -> old'Self{inDelivers = Prelude'.Just new'Field}) (P'.wireGet 3)
+             80 -> Prelude'.fmap (\ !new'Field -> old'Self{outRequests = Prelude'.Just new'Field}) (P'.wireGet 3)
+             88 -> Prelude'.fmap (\ !new'Field -> old'Self{outDiscards = Prelude'.Just new'Field}) (P'.wireGet 3)
+             96 -> Prelude'.fmap (\ !new'Field -> old'Self{outNoRoutes = Prelude'.Just new'Field}) (P'.wireGet 3)
+             104 -> Prelude'.fmap (\ !new'Field -> old'Self{reasmTimeout = Prelude'.Just new'Field}) (P'.wireGet 3)
+             112 -> Prelude'.fmap (\ !new'Field -> old'Self{reasmReqds = Prelude'.Just new'Field}) (P'.wireGet 3)
+             120 -> Prelude'.fmap (\ !new'Field -> old'Self{reasmOKs = Prelude'.Just new'Field}) (P'.wireGet 3)
+             128 -> Prelude'.fmap (\ !new'Field -> old'Self{reasmFails = Prelude'.Just new'Field}) (P'.wireGet 3)
+             136 -> Prelude'.fmap (\ !new'Field -> old'Self{fragOKs = Prelude'.Just new'Field}) (P'.wireGet 3)
+             144 -> Prelude'.fmap (\ !new'Field -> old'Self{fragFails = Prelude'.Just new'Field}) (P'.wireGet 3)
+             152 -> Prelude'.fmap (\ !new'Field -> old'Self{fragCreates = Prelude'.Just new'Field}) (P'.wireGet 3)
              _ -> let (field'Number, wire'Type) = P'.splitWireTag wire'Tag in P'.unknown field'Number wire'Type old'Self
 
 instance P'.MessageAPI msg' (msg' -> IpStatistics) IpStatistics where
@@ -206,7 +197,7 @@ instance P'.ReflectDescriptor IpStatistics where
       (P'.fromDistinctAscList [8, 16, 24, 32, 40, 48, 56, 64, 72, 80, 88, 96, 104, 112, 120, 128, 136, 144, 152])
   reflectDescriptorInfo _
    = Prelude'.read
-      "DescriptorInfo {descName = ProtoName {protobufName = FIName \".mesos.v1.IpStatistics\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"IpStatistics\"}, descFilePath = [\"Mesos\",\"V1\",\"Protos\",\"IpStatistics.hs\"], isGroup = False, fields = fromList [FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.IpStatistics.Forwarding\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"IpStatistics\"], baseName' = FName \"forwarding\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 1}, wireTag = WireTag {getWireTag = 8}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 3}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.IpStatistics.DefaultTTL\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"IpStatistics\"], baseName' = FName \"defaultTTL\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 2}, wireTag = WireTag {getWireTag = 16}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 3}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.IpStatistics.InReceives\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"IpStatistics\"], baseName' = FName \"inReceives\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 3}, wireTag = WireTag {getWireTag = 24}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 3}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.IpStatistics.InHdrErrors\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"IpStatistics\"], baseName' = FName \"inHdrErrors\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 4}, wireTag = WireTag {getWireTag = 32}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 3}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.IpStatistics.InAddrErrors\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"IpStatistics\"], baseName' = FName \"inAddrErrors\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 5}, wireTag = WireTag {getWireTag = 40}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 3}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.IpStatistics.ForwDatagrams\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"IpStatistics\"], baseName' = FName \"forwDatagrams\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 6}, wireTag = WireTag {getWireTag = 48}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 3}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.IpStatistics.InUnknownProtos\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"IpStatistics\"], baseName' = FName \"inUnknownProtos\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 7}, wireTag = WireTag {getWireTag = 56}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 3}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.IpStatistics.InDiscards\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"IpStatistics\"], baseName' = FName \"inDiscards\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 8}, wireTag = WireTag {getWireTag = 64}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 3}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.IpStatistics.InDelivers\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"IpStatistics\"], baseName' = FName \"inDelivers\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 9}, wireTag = WireTag {getWireTag = 72}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 3}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.IpStatistics.OutRequests\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"IpStatistics\"], baseName' = FName \"outRequests\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 10}, wireTag = WireTag {getWireTag = 80}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 3}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.IpStatistics.OutDiscards\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"IpStatistics\"], baseName' = FName \"outDiscards\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 11}, wireTag = WireTag {getWireTag = 88}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 3}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.IpStatistics.OutNoRoutes\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"IpStatistics\"], baseName' = FName \"outNoRoutes\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 12}, wireTag = WireTag {getWireTag = 96}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 3}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.IpStatistics.ReasmTimeout\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"IpStatistics\"], baseName' = FName \"reasmTimeout\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 13}, wireTag = WireTag {getWireTag = 104}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 3}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.IpStatistics.ReasmReqds\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"IpStatistics\"], baseName' = FName \"reasmReqds\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 14}, wireTag = WireTag {getWireTag = 112}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 3}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.IpStatistics.ReasmOKs\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"IpStatistics\"], baseName' = FName \"reasmOKs\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 15}, wireTag = WireTag {getWireTag = 120}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 3}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.IpStatistics.ReasmFails\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"IpStatistics\"], baseName' = FName \"reasmFails\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 16}, wireTag = WireTag {getWireTag = 128}, packedTag = Nothing, wireTagLength = 2, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 3}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.IpStatistics.FragOKs\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"IpStatistics\"], baseName' = FName \"fragOKs\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 17}, wireTag = WireTag {getWireTag = 136}, packedTag = Nothing, wireTagLength = 2, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 3}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.IpStatistics.FragFails\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"IpStatistics\"], baseName' = FName \"fragFails\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 18}, wireTag = WireTag {getWireTag = 144}, packedTag = Nothing, wireTagLength = 2, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 3}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.IpStatistics.FragCreates\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"IpStatistics\"], baseName' = FName \"fragCreates\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 19}, wireTag = WireTag {getWireTag = 152}, packedTag = Nothing, wireTagLength = 2, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 3}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing}], descOneofs = fromList [], keys = fromList [], extRanges = [], knownKeys = fromList [], storeUnknown = False, lazyFields = False, makeLenses = True, jsonInstances = True}"
+      "DescriptorInfo {descName = ProtoName {protobufName = FIName \".mesos.v1.IpStatistics\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"IpStatistics\"}, descFilePath = [\"Mesos\",\"V1\",\"Protos\",\"IpStatistics.hs\"], isGroup = False, fields = fromList [FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.IpStatistics.Forwarding\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"IpStatistics\"], baseName' = FName \"forwarding\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 1}, wireTag = WireTag {getWireTag = 8}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 3}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.IpStatistics.DefaultTTL\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"IpStatistics\"], baseName' = FName \"defaultTTL\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 2}, wireTag = WireTag {getWireTag = 16}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 3}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.IpStatistics.InReceives\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"IpStatistics\"], baseName' = FName \"inReceives\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 3}, wireTag = WireTag {getWireTag = 24}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 3}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.IpStatistics.InHdrErrors\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"IpStatistics\"], baseName' = FName \"inHdrErrors\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 4}, wireTag = WireTag {getWireTag = 32}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 3}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.IpStatistics.InAddrErrors\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"IpStatistics\"], baseName' = FName \"inAddrErrors\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 5}, wireTag = WireTag {getWireTag = 40}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 3}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.IpStatistics.ForwDatagrams\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"IpStatistics\"], baseName' = FName \"forwDatagrams\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 6}, wireTag = WireTag {getWireTag = 48}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 3}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.IpStatistics.InUnknownProtos\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"IpStatistics\"], baseName' = FName \"inUnknownProtos\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 7}, wireTag = WireTag {getWireTag = 56}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 3}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.IpStatistics.InDiscards\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"IpStatistics\"], baseName' = FName \"inDiscards\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 8}, wireTag = WireTag {getWireTag = 64}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 3}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.IpStatistics.InDelivers\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"IpStatistics\"], baseName' = FName \"inDelivers\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 9}, wireTag = WireTag {getWireTag = 72}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 3}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.IpStatistics.OutRequests\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"IpStatistics\"], baseName' = FName \"outRequests\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 10}, wireTag = WireTag {getWireTag = 80}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 3}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.IpStatistics.OutDiscards\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"IpStatistics\"], baseName' = FName \"outDiscards\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 11}, wireTag = WireTag {getWireTag = 88}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 3}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.IpStatistics.OutNoRoutes\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"IpStatistics\"], baseName' = FName \"outNoRoutes\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 12}, wireTag = WireTag {getWireTag = 96}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 3}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.IpStatistics.ReasmTimeout\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"IpStatistics\"], baseName' = FName \"reasmTimeout\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 13}, wireTag = WireTag {getWireTag = 104}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 3}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.IpStatistics.ReasmReqds\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"IpStatistics\"], baseName' = FName \"reasmReqds\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 14}, wireTag = WireTag {getWireTag = 112}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 3}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.IpStatistics.ReasmOKs\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"IpStatistics\"], baseName' = FName \"reasmOKs\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 15}, wireTag = WireTag {getWireTag = 120}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 3}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.IpStatistics.ReasmFails\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"IpStatistics\"], baseName' = FName \"reasmFails\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 16}, wireTag = WireTag {getWireTag = 128}, packedTag = Nothing, wireTagLength = 2, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 3}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.IpStatistics.FragOKs\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"IpStatistics\"], baseName' = FName \"fragOKs\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 17}, wireTag = WireTag {getWireTag = 136}, packedTag = Nothing, wireTagLength = 2, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 3}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.IpStatistics.FragFails\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"IpStatistics\"], baseName' = FName \"fragFails\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 18}, wireTag = WireTag {getWireTag = 144}, packedTag = Nothing, wireTagLength = 2, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 3}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.IpStatistics.FragCreates\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"IpStatistics\"], baseName' = FName \"fragCreates\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 19}, wireTag = WireTag {getWireTag = 152}, packedTag = Nothing, wireTagLength = 2, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 3}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing}], descOneofs = fromList [], keys = fromList [], extRanges = [], knownKeys = fromList [], storeUnknown = False, lazyFields = False, makeLenses = False, jsonInstances = True}"
 
 instance P'.TextType IpStatistics where
   tellT = P'.tellSubMessage
@@ -215,128 +206,128 @@ instance P'.TextType IpStatistics where
 instance P'.TextMsg IpStatistics where
   textPut msg
    = do
-       P'.tellT "Forwarding" (_forwarding msg)
-       P'.tellT "DefaultTTL" (_defaultTTL msg)
-       P'.tellT "InReceives" (_inReceives msg)
-       P'.tellT "InHdrErrors" (_inHdrErrors msg)
-       P'.tellT "InAddrErrors" (_inAddrErrors msg)
-       P'.tellT "ForwDatagrams" (_forwDatagrams msg)
-       P'.tellT "InUnknownProtos" (_inUnknownProtos msg)
-       P'.tellT "InDiscards" (_inDiscards msg)
-       P'.tellT "InDelivers" (_inDelivers msg)
-       P'.tellT "OutRequests" (_outRequests msg)
-       P'.tellT "OutDiscards" (_outDiscards msg)
-       P'.tellT "OutNoRoutes" (_outNoRoutes msg)
-       P'.tellT "ReasmTimeout" (_reasmTimeout msg)
-       P'.tellT "ReasmReqds" (_reasmReqds msg)
-       P'.tellT "ReasmOKs" (_reasmOKs msg)
-       P'.tellT "ReasmFails" (_reasmFails msg)
-       P'.tellT "FragOKs" (_fragOKs msg)
-       P'.tellT "FragFails" (_fragFails msg)
-       P'.tellT "FragCreates" (_fragCreates msg)
+       P'.tellT "Forwarding" (forwarding msg)
+       P'.tellT "DefaultTTL" (defaultTTL msg)
+       P'.tellT "InReceives" (inReceives msg)
+       P'.tellT "InHdrErrors" (inHdrErrors msg)
+       P'.tellT "InAddrErrors" (inAddrErrors msg)
+       P'.tellT "ForwDatagrams" (forwDatagrams msg)
+       P'.tellT "InUnknownProtos" (inUnknownProtos msg)
+       P'.tellT "InDiscards" (inDiscards msg)
+       P'.tellT "InDelivers" (inDelivers msg)
+       P'.tellT "OutRequests" (outRequests msg)
+       P'.tellT "OutDiscards" (outDiscards msg)
+       P'.tellT "OutNoRoutes" (outNoRoutes msg)
+       P'.tellT "ReasmTimeout" (reasmTimeout msg)
+       P'.tellT "ReasmReqds" (reasmReqds msg)
+       P'.tellT "ReasmOKs" (reasmOKs msg)
+       P'.tellT "ReasmFails" (reasmFails msg)
+       P'.tellT "FragOKs" (fragOKs msg)
+       P'.tellT "FragFails" (fragFails msg)
+       P'.tellT "FragCreates" (fragCreates msg)
   textGet
    = do
        mods <- P'.sepEndBy
                 (P'.choice
-                  [parse'_forwarding, parse'_defaultTTL, parse'_inReceives, parse'_inHdrErrors, parse'_inAddrErrors,
-                   parse'_forwDatagrams, parse'_inUnknownProtos, parse'_inDiscards, parse'_inDelivers, parse'_outRequests,
-                   parse'_outDiscards, parse'_outNoRoutes, parse'_reasmTimeout, parse'_reasmReqds, parse'_reasmOKs,
-                   parse'_reasmFails, parse'_fragOKs, parse'_fragFails, parse'_fragCreates])
+                  [parse'forwarding, parse'defaultTTL, parse'inReceives, parse'inHdrErrors, parse'inAddrErrors, parse'forwDatagrams,
+                   parse'inUnknownProtos, parse'inDiscards, parse'inDelivers, parse'outRequests, parse'outDiscards,
+                   parse'outNoRoutes, parse'reasmTimeout, parse'reasmReqds, parse'reasmOKs, parse'reasmFails, parse'fragOKs,
+                   parse'fragFails, parse'fragCreates])
                 P'.spaces
        Prelude'.return (Prelude'.foldl (\ v f -> f v) P'.defaultValue mods)
     where
-        parse'_forwarding
+        parse'forwarding
          = P'.try
             (do
                v <- P'.getT "Forwarding"
-               Prelude'.return (\ o -> o{_forwarding = v}))
-        parse'_defaultTTL
+               Prelude'.return (\ o -> o{forwarding = v}))
+        parse'defaultTTL
          = P'.try
             (do
                v <- P'.getT "DefaultTTL"
-               Prelude'.return (\ o -> o{_defaultTTL = v}))
-        parse'_inReceives
+               Prelude'.return (\ o -> o{defaultTTL = v}))
+        parse'inReceives
          = P'.try
             (do
                v <- P'.getT "InReceives"
-               Prelude'.return (\ o -> o{_inReceives = v}))
-        parse'_inHdrErrors
+               Prelude'.return (\ o -> o{inReceives = v}))
+        parse'inHdrErrors
          = P'.try
             (do
                v <- P'.getT "InHdrErrors"
-               Prelude'.return (\ o -> o{_inHdrErrors = v}))
-        parse'_inAddrErrors
+               Prelude'.return (\ o -> o{inHdrErrors = v}))
+        parse'inAddrErrors
          = P'.try
             (do
                v <- P'.getT "InAddrErrors"
-               Prelude'.return (\ o -> o{_inAddrErrors = v}))
-        parse'_forwDatagrams
+               Prelude'.return (\ o -> o{inAddrErrors = v}))
+        parse'forwDatagrams
          = P'.try
             (do
                v <- P'.getT "ForwDatagrams"
-               Prelude'.return (\ o -> o{_forwDatagrams = v}))
-        parse'_inUnknownProtos
+               Prelude'.return (\ o -> o{forwDatagrams = v}))
+        parse'inUnknownProtos
          = P'.try
             (do
                v <- P'.getT "InUnknownProtos"
-               Prelude'.return (\ o -> o{_inUnknownProtos = v}))
-        parse'_inDiscards
+               Prelude'.return (\ o -> o{inUnknownProtos = v}))
+        parse'inDiscards
          = P'.try
             (do
                v <- P'.getT "InDiscards"
-               Prelude'.return (\ o -> o{_inDiscards = v}))
-        parse'_inDelivers
+               Prelude'.return (\ o -> o{inDiscards = v}))
+        parse'inDelivers
          = P'.try
             (do
                v <- P'.getT "InDelivers"
-               Prelude'.return (\ o -> o{_inDelivers = v}))
-        parse'_outRequests
+               Prelude'.return (\ o -> o{inDelivers = v}))
+        parse'outRequests
          = P'.try
             (do
                v <- P'.getT "OutRequests"
-               Prelude'.return (\ o -> o{_outRequests = v}))
-        parse'_outDiscards
+               Prelude'.return (\ o -> o{outRequests = v}))
+        parse'outDiscards
          = P'.try
             (do
                v <- P'.getT "OutDiscards"
-               Prelude'.return (\ o -> o{_outDiscards = v}))
-        parse'_outNoRoutes
+               Prelude'.return (\ o -> o{outDiscards = v}))
+        parse'outNoRoutes
          = P'.try
             (do
                v <- P'.getT "OutNoRoutes"
-               Prelude'.return (\ o -> o{_outNoRoutes = v}))
-        parse'_reasmTimeout
+               Prelude'.return (\ o -> o{outNoRoutes = v}))
+        parse'reasmTimeout
          = P'.try
             (do
                v <- P'.getT "ReasmTimeout"
-               Prelude'.return (\ o -> o{_reasmTimeout = v}))
-        parse'_reasmReqds
+               Prelude'.return (\ o -> o{reasmTimeout = v}))
+        parse'reasmReqds
          = P'.try
             (do
                v <- P'.getT "ReasmReqds"
-               Prelude'.return (\ o -> o{_reasmReqds = v}))
-        parse'_reasmOKs
+               Prelude'.return (\ o -> o{reasmReqds = v}))
+        parse'reasmOKs
          = P'.try
             (do
                v <- P'.getT "ReasmOKs"
-               Prelude'.return (\ o -> o{_reasmOKs = v}))
-        parse'_reasmFails
+               Prelude'.return (\ o -> o{reasmOKs = v}))
+        parse'reasmFails
          = P'.try
             (do
                v <- P'.getT "ReasmFails"
-               Prelude'.return (\ o -> o{_reasmFails = v}))
-        parse'_fragOKs
+               Prelude'.return (\ o -> o{reasmFails = v}))
+        parse'fragOKs
          = P'.try
             (do
                v <- P'.getT "FragOKs"
-               Prelude'.return (\ o -> o{_fragOKs = v}))
-        parse'_fragFails
+               Prelude'.return (\ o -> o{fragOKs = v}))
+        parse'fragFails
          = P'.try
             (do
                v <- P'.getT "FragFails"
-               Prelude'.return (\ o -> o{_fragFails = v}))
-        parse'_fragCreates
+               Prelude'.return (\ o -> o{fragFails = v}))
+        parse'fragCreates
          = P'.try
             (do
                v <- P'.getT "FragCreates"
-               Prelude'.return (\ o -> o{_fragCreates = v}))
+               Prelude'.return (\ o -> o{fragCreates = v}))

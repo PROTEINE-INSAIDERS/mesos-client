@@ -1,6 +1,6 @@
 {-# LANGUAGE OverloadedStrings #-}
 
-module Mesos.HTTP.Client.Internal where
+module Mesos.V1.Client.HTTP.Internal where
 
 import           Conduit
 import           Control.Monad
@@ -185,3 +185,5 @@ stream endpoint encoder decoder msg = do
                         .| logger "Message" 
                         .| sinkNull
   return ()
+
+-- TODO: фактически нам нужно 2 метода: call и subscribe. 

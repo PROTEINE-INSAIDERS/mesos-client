@@ -27,10 +27,10 @@ dependencies:
 - conduit
 - conduit-extra
 - containers
+- fclabels
 - http-client
 - http-conduit
 - http-types
-- lens
 - mesos-protos
 - protocol-buffers
 - protocol-buffers-descriptor

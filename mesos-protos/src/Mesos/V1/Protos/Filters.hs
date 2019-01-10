@@ -1,19 +1,15 @@
-{-# LANGUAGE TemplateHaskell, BangPatterns, DeriveDataTypeable, DeriveGeneric, FlexibleInstances, MultiParamTypeClasses,
- OverloadedStrings #-}
+{-# LANGUAGE BangPatterns, DeriveDataTypeable, DeriveGeneric, FlexibleInstances, MultiParamTypeClasses, OverloadedStrings #-}
 {-# OPTIONS_GHC  -fno-warn-unused-imports #-}
-module Mesos.V1.Protos.Filters (Filters(..), refuse_seconds) where
+module Mesos.V1.Protos.Filters (Filters(..)) where
 import Prelude ((+), (/), (++), (.))
 import qualified Prelude as Prelude'
 import qualified Data.Typeable as Prelude'
 import qualified GHC.Generics as Prelude'
 import qualified Data.Data as Prelude'
 import qualified Text.ProtocolBuffers.Header as P'
-import qualified Control.Lens.TH
 
-data Filters = Filters{_refuse_seconds :: !(P'.Maybe P'.Double)}
+data Filters = Filters{refuse_seconds :: !(P'.Maybe P'.Double)}
                deriving (Prelude'.Show, Prelude'.Eq, Prelude'.Ord, Prelude'.Typeable, Prelude'.Data, Prelude'.Generic)
-
-Control.Lens.TH.makeLenses ''Filters
 
 instance P'.ToJSON Filters where
   toJSON msg
@@ -27,7 +23,7 @@ instance P'.FromJSON Filters where
           refuse_seconds <- do
                               tmp <- P'.explicitParseFieldMaybe P'.parseJSON o "refuse_seconds"
                               Prelude'.return (Prelude'.maybe (Prelude'.Just (5.0)) Prelude'.Just tmp)
-          Prelude'.return P'.defaultValue{_refuse_seconds = refuse_seconds})
+          Prelude'.return P'.defaultValue{refuse_seconds = refuse_seconds})
 
 instance P'.Mergeable Filters where
   mergeAppend (Filters x'1) (Filters y'1) = Filters (P'.mergeAppend x'1 y'1)
@@ -65,7 +61,7 @@ instance P'.Wire Filters where
     where
         update'Self wire'Tag old'Self
          = case wire'Tag of
-             9 -> Prelude'.fmap (\ !new'Field -> old'Self{_refuse_seconds = Prelude'.Just new'Field}) (P'.wireGet 1)
+             9 -> Prelude'.fmap (\ !new'Field -> old'Self{refuse_seconds = Prelude'.Just new'Field}) (P'.wireGet 1)
              _ -> let (field'Number, wire'Type) = P'.splitWireTag wire'Tag in P'.unknown field'Number wire'Type old'Self
 
 instance P'.MessageAPI msg' (msg' -> Filters) Filters where
@@ -77,7 +73,7 @@ instance P'.ReflectDescriptor Filters where
   getMessageInfo _ = P'.GetMessageInfo (P'.fromDistinctAscList []) (P'.fromDistinctAscList [9])
   reflectDescriptorInfo _
    = Prelude'.read
-      "DescriptorInfo {descName = ProtoName {protobufName = FIName \".mesos.v1.Filters\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"Filters\"}, descFilePath = [\"Mesos\",\"V1\",\"Protos\",\"Filters.hs\"], isGroup = False, fields = fromList [FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Filters.refuse_seconds\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Filters\"], baseName' = FName \"refuse_seconds\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 1}, wireTag = WireTag {getWireTag = 9}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 1}, typeName = Nothing, hsRawDefault = Just \"5.0\", hsDefault = Just (HsDef'RealFloat (SRF'Rational (5 % 1)))}], descOneofs = fromList [], keys = fromList [], extRanges = [], knownKeys = fromList [], storeUnknown = False, lazyFields = False, makeLenses = True, jsonInstances = True}"
+      "DescriptorInfo {descName = ProtoName {protobufName = FIName \".mesos.v1.Filters\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"Filters\"}, descFilePath = [\"Mesos\",\"V1\",\"Protos\",\"Filters.hs\"], isGroup = False, fields = fromList [FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.Filters.refuse_seconds\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"Filters\"], baseName' = FName \"refuse_seconds\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 1}, wireTag = WireTag {getWireTag = 9}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 1}, typeName = Nothing, hsRawDefault = Just \"5.0\", hsDefault = Just (HsDef'RealFloat (SRF'Rational (5 % 1)))}], descOneofs = fromList [], keys = fromList [], extRanges = [], knownKeys = fromList [], storeUnknown = False, lazyFields = False, makeLenses = False, jsonInstances = True}"
 
 instance P'.TextType Filters where
   tellT = P'.tellSubMessage
@@ -86,14 +82,14 @@ instance P'.TextType Filters where
 instance P'.TextMsg Filters where
   textPut msg
    = do
-       P'.tellT "refuse_seconds" (_refuse_seconds msg)
+       P'.tellT "refuse_seconds" (refuse_seconds msg)
   textGet
    = do
-       mods <- P'.sepEndBy (P'.choice [parse'_refuse_seconds]) P'.spaces
+       mods <- P'.sepEndBy (P'.choice [parse'refuse_seconds]) P'.spaces
        Prelude'.return (Prelude'.foldl (\ v f -> f v) P'.defaultValue mods)
     where
-        parse'_refuse_seconds
+        parse'refuse_seconds
          = P'.try
             (do
                v <- P'.getT "refuse_seconds"
-               Prelude'.return (\ o -> o{_refuse_seconds = v}))
+               Prelude'.return (\ o -> o{refuse_seconds = v}))

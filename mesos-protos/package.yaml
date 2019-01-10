@@ -21,7 +21,6 @@ description:         Please see the README on GitHub at <https://github.com/sche
 
 dependencies:
 - base >= 4.7 && < 5
-- lens
 - protocol-buffers
 - protocol-buffers-descriptor
 

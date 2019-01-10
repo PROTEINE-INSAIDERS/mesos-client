@@ -1,21 +1,17 @@
-{-# LANGUAGE TemplateHaskell, BangPatterns, DeriveDataTypeable, DeriveGeneric, FlexibleInstances, MultiParamTypeClasses,
- OverloadedStrings #-}
+{-# LANGUAGE BangPatterns, DeriveDataTypeable, DeriveGeneric, FlexibleInstances, MultiParamTypeClasses, OverloadedStrings #-}
 {-# OPTIONS_GHC  -fno-warn-unused-imports #-}
-module Mesos.V1.Maintenance.Protos.Window (Window(..), machine_ids, unavailability) where
+module Mesos.V1.Maintenance.Protos.Window (Window(..)) where
 import Prelude ((+), (/), (++), (.))
 import qualified Prelude as Prelude'
 import qualified Data.Typeable as Prelude'
 import qualified GHC.Generics as Prelude'
 import qualified Data.Data as Prelude'
 import qualified Text.ProtocolBuffers.Header as P'
-import qualified Control.Lens.TH
 import qualified Mesos.V1.Protos.MachineID as Protos (MachineID)
 import qualified Mesos.V1.Protos.Unavailability as Protos (Unavailability)
 
-data Window = Window{_machine_ids :: !(P'.Seq Protos.MachineID), _unavailability :: !(Protos.Unavailability)}
+data Window = Window{machine_ids :: !(P'.Seq Protos.MachineID), unavailability :: !(Protos.Unavailability)}
               deriving (Prelude'.Show, Prelude'.Eq, Prelude'.Ord, Prelude'.Typeable, Prelude'.Data, Prelude'.Generic)
-
-Control.Lens.TH.makeLenses ''Window
 
 instance P'.ToJSON Window where
   toJSON msg
@@ -31,7 +27,7 @@ instance P'.FromJSON Window where
           machine_ids <- Prelude'.fmap (Prelude'.maybe Prelude'.mempty Prelude'.id)
                           (P'.explicitParseFieldMaybe (Prelude'.mapM P'.parseJSON P'.<=< P'.parseJSON) o "machine_ids")
           unavailability <- P'.explicitParseField P'.parseJSON o "unavailability"
-          Prelude'.return P'.defaultValue{_machine_ids = machine_ids, _unavailability = unavailability})
+          Prelude'.return P'.defaultValue{machine_ids = machine_ids, unavailability = unavailability})
 
 instance P'.Mergeable Window where
   mergeAppend (Window x'1 x'2) (Window y'1 y'2) = Window (P'.mergeAppend x'1 y'1) (P'.mergeAppend x'2 y'2)
@@ -69,9 +65,9 @@ instance P'.Wire Window where
     where
         update'Self wire'Tag old'Self
          = case wire'Tag of
-             10 -> Prelude'.fmap (\ !new'Field -> old'Self{_machine_ids = P'.append (_machine_ids old'Self) new'Field})
+             10 -> Prelude'.fmap (\ !new'Field -> old'Self{machine_ids = P'.append (machine_ids old'Self) new'Field})
                     (P'.wireGet 11)
-             18 -> Prelude'.fmap (\ !new'Field -> old'Self{_unavailability = P'.mergeAppend (_unavailability old'Self) (new'Field)})
+             18 -> Prelude'.fmap (\ !new'Field -> old'Self{unavailability = P'.mergeAppend (unavailability old'Self) (new'Field)})
                     (P'.wireGet 11)
              _ -> let (field'Number, wire'Type) = P'.splitWireTag wire'Tag in P'.unknown field'Number wire'Type old'Self
 
@@ -84,7 +80,7 @@ instance P'.ReflectDescriptor Window where
   getMessageInfo _ = P'.GetMessageInfo (P'.fromDistinctAscList [18]) (P'.fromDistinctAscList [10, 18])
   reflectDescriptorInfo _
    = Prelude'.read
-      "DescriptorInfo {descName = ProtoName {protobufName = FIName \".mesos.v1.maintenance.Window\", haskellPrefix = [MName \"Mesos\",MName \"V1\",MName \"Maintenance\"], parentModule = [MName \"Protos\"], baseName = MName \"Window\"}, descFilePath = [\"Mesos\",\"V1\",\"Maintenance\",\"Protos\",\"Window.hs\"], isGroup = False, fields = fromList [FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.maintenance.Window.machine_ids\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Maintenance\"], parentModule' = [MName \"Protos\",MName \"Window\"], baseName' = FName \"machine_ids\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 1}, wireTag = WireTag {getWireTag = 10}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = True, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.MachineID\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"MachineID\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.maintenance.Window.unavailability\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Maintenance\"], parentModule' = [MName \"Protos\",MName \"Window\"], baseName' = FName \"unavailability\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 2}, wireTag = WireTag {getWireTag = 18}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = True, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.Unavailability\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"Unavailability\"}), hsRawDefault = Nothing, hsDefault = Nothing}], descOneofs = fromList [], keys = fromList [], extRanges = [], knownKeys = fromList [], storeUnknown = False, lazyFields = False, makeLenses = True, jsonInstances = True}"
+      "DescriptorInfo {descName = ProtoName {protobufName = FIName \".mesos.v1.maintenance.Window\", haskellPrefix = [MName \"Mesos\",MName \"V1\",MName \"Maintenance\"], parentModule = [MName \"Protos\"], baseName = MName \"Window\"}, descFilePath = [\"Mesos\",\"V1\",\"Maintenance\",\"Protos\",\"Window.hs\"], isGroup = False, fields = fromList [FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.maintenance.Window.machine_ids\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Maintenance\"], parentModule' = [MName \"Protos\",MName \"Window\"], baseName' = FName \"machine_ids\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 1}, wireTag = WireTag {getWireTag = 10}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = True, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.MachineID\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"MachineID\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.maintenance.Window.unavailability\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Maintenance\"], parentModule' = [MName \"Protos\",MName \"Window\"], baseName' = FName \"unavailability\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 2}, wireTag = WireTag {getWireTag = 18}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = True, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.Unavailability\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"Unavailability\"}), hsRawDefault = Nothing, hsDefault = Nothing}], descOneofs = fromList [], keys = fromList [], extRanges = [], knownKeys = fromList [], storeUnknown = False, lazyFields = False, makeLenses = False, jsonInstances = True}"
 
 instance P'.TextType Window where
   tellT = P'.tellSubMessage
@@ -93,20 +89,20 @@ instance P'.TextType Window where
 instance P'.TextMsg Window where
   textPut msg
    = do
-       P'.tellT "machine_ids" (_machine_ids msg)
-       P'.tellT "unavailability" (_unavailability msg)
+       P'.tellT "machine_ids" (machine_ids msg)
+       P'.tellT "unavailability" (unavailability msg)
   textGet
    = do
-       mods <- P'.sepEndBy (P'.choice [parse'_machine_ids, parse'_unavailability]) P'.spaces
+       mods <- P'.sepEndBy (P'.choice [parse'machine_ids, parse'unavailability]) P'.spaces
        Prelude'.return (Prelude'.foldl (\ v f -> f v) P'.defaultValue mods)
     where
-        parse'_machine_ids
+        parse'machine_ids
          = P'.try
             (do
                v <- P'.getT "machine_ids"
-               Prelude'.return (\ o -> o{_machine_ids = P'.append (_machine_ids o) v}))
-        parse'_unavailability
+               Prelude'.return (\ o -> o{machine_ids = P'.append (machine_ids o) v}))
+        parse'unavailability
          = P'.try
             (do
                v <- P'.getT "unavailability"
-               Prelude'.return (\ o -> o{_unavailability = v}))
+               Prelude'.return (\ o -> o{unavailability = v}))

@@ -1,24 +1,18 @@
-{-# LANGUAGE TemplateHaskell, BangPatterns, DeriveDataTypeable, DeriveGeneric, FlexibleInstances, MultiParamTypeClasses,
- OverloadedStrings #-}
+{-# LANGUAGE BangPatterns, DeriveDataTypeable, DeriveGeneric, FlexibleInstances, MultiParamTypeClasses, OverloadedStrings #-}
 {-# OPTIONS_GHC  -fno-warn-unused-imports #-}
-module Mesos.V1.Protos.UdpStatistics
-       (UdpStatistics(..), inDatagrams, noPorts, inErrors, outDatagrams, rcvbufErrors, sndbufErrors, inCsumErrors, ignoredMulti)
-       where
+module Mesos.V1.Protos.UdpStatistics (UdpStatistics(..)) where
 import Prelude ((+), (/), (++), (.))
 import qualified Prelude as Prelude'
 import qualified Data.Typeable as Prelude'
 import qualified GHC.Generics as Prelude'
 import qualified Data.Data as Prelude'
 import qualified Text.ProtocolBuffers.Header as P'
-import qualified Control.Lens.TH
 
-data UdpStatistics = UdpStatistics{_inDatagrams :: !(P'.Maybe P'.Int64), _noPorts :: !(P'.Maybe P'.Int64),
-                                   _inErrors :: !(P'.Maybe P'.Int64), _outDatagrams :: !(P'.Maybe P'.Int64),
-                                   _rcvbufErrors :: !(P'.Maybe P'.Int64), _sndbufErrors :: !(P'.Maybe P'.Int64),
-                                   _inCsumErrors :: !(P'.Maybe P'.Int64), _ignoredMulti :: !(P'.Maybe P'.Int64)}
+data UdpStatistics = UdpStatistics{inDatagrams :: !(P'.Maybe P'.Int64), noPorts :: !(P'.Maybe P'.Int64),
+                                   inErrors :: !(P'.Maybe P'.Int64), outDatagrams :: !(P'.Maybe P'.Int64),
+                                   rcvbufErrors :: !(P'.Maybe P'.Int64), sndbufErrors :: !(P'.Maybe P'.Int64),
+                                   inCsumErrors :: !(P'.Maybe P'.Int64), ignoredMulti :: !(P'.Maybe P'.Int64)}
                      deriving (Prelude'.Show, Prelude'.Eq, Prelude'.Ord, Prelude'.Typeable, Prelude'.Data, Prelude'.Generic)
-
-Control.Lens.TH.makeLenses ''UdpStatistics
 
 instance P'.ToJSON UdpStatistics where
   toJSON msg
@@ -47,9 +41,9 @@ instance P'.FromJSON UdpStatistics where
           inCsumErrors <- P'.explicitParseFieldMaybe (P'.parseJSONReadWithPayload "int64") o "inCsumErrors"
           ignoredMulti <- P'.explicitParseFieldMaybe (P'.parseJSONReadWithPayload "int64") o "ignoredMulti"
           Prelude'.return
-           P'.defaultValue{_inDatagrams = inDatagrams, _noPorts = noPorts, _inErrors = inErrors, _outDatagrams = outDatagrams,
-                           _rcvbufErrors = rcvbufErrors, _sndbufErrors = sndbufErrors, _inCsumErrors = inCsumErrors,
-                           _ignoredMulti = ignoredMulti})
+           P'.defaultValue{inDatagrams = inDatagrams, noPorts = noPorts, inErrors = inErrors, outDatagrams = outDatagrams,
+                           rcvbufErrors = rcvbufErrors, sndbufErrors = sndbufErrors, inCsumErrors = inCsumErrors,
+                           ignoredMulti = ignoredMulti})
 
 instance P'.Mergeable UdpStatistics where
   mergeAppend (UdpStatistics x'1 x'2 x'3 x'4 x'5 x'6 x'7 x'8) (UdpStatistics y'1 y'2 y'3 y'4 y'5 y'6 y'7 y'8)
@@ -103,14 +97,14 @@ instance P'.Wire UdpStatistics where
     where
         update'Self wire'Tag old'Self
          = case wire'Tag of
-             8 -> Prelude'.fmap (\ !new'Field -> old'Self{_inDatagrams = Prelude'.Just new'Field}) (P'.wireGet 3)
-             16 -> Prelude'.fmap (\ !new'Field -> old'Self{_noPorts = Prelude'.Just new'Field}) (P'.wireGet 3)
-             24 -> Prelude'.fmap (\ !new'Field -> old'Self{_inErrors = Prelude'.Just new'Field}) (P'.wireGet 3)
-             32 -> Prelude'.fmap (\ !new'Field -> old'Self{_outDatagrams = Prelude'.Just new'Field}) (P'.wireGet 3)
-             40 -> Prelude'.fmap (\ !new'Field -> old'Self{_rcvbufErrors = Prelude'.Just new'Field}) (P'.wireGet 3)
-             48 -> Prelude'.fmap (\ !new'Field -> old'Self{_sndbufErrors = Prelude'.Just new'Field}) (P'.wireGet 3)
-             56 -> Prelude'.fmap (\ !new'Field -> old'Self{_inCsumErrors = Prelude'.Just new'Field}) (P'.wireGet 3)
-             64 -> Prelude'.fmap (\ !new'Field -> old'Self{_ignoredMulti = Prelude'.Just new'Field}) (P'.wireGet 3)
+             8 -> Prelude'.fmap (\ !new'Field -> old'Self{inDatagrams = Prelude'.Just new'Field}) (P'.wireGet 3)
+             16 -> Prelude'.fmap (\ !new'Field -> old'Self{noPorts = Prelude'.Just new'Field}) (P'.wireGet 3)
+             24 -> Prelude'.fmap (\ !new'Field -> old'Self{inErrors = Prelude'.Just new'Field}) (P'.wireGet 3)
+             32 -> Prelude'.fmap (\ !new'Field -> old'Self{outDatagrams = Prelude'.Just new'Field}) (P'.wireGet 3)
+             40 -> Prelude'.fmap (\ !new'Field -> old'Self{rcvbufErrors = Prelude'.Just new'Field}) (P'.wireGet 3)
+             48 -> Prelude'.fmap (\ !new'Field -> old'Self{sndbufErrors = Prelude'.Just new'Field}) (P'.wireGet 3)
+             56 -> Prelude'.fmap (\ !new'Field -> old'Self{inCsumErrors = Prelude'.Just new'Field}) (P'.wireGet 3)
+             64 -> Prelude'.fmap (\ !new'Field -> old'Self{ignoredMulti = Prelude'.Just new'Field}) (P'.wireGet 3)
              _ -> let (field'Number, wire'Type) = P'.splitWireTag wire'Tag in P'.unknown field'Number wire'Type old'Self
 
 instance P'.MessageAPI msg' (msg' -> UdpStatistics) UdpStatistics where
@@ -122,7 +116,7 @@ instance P'.ReflectDescriptor UdpStatistics where
   getMessageInfo _ = P'.GetMessageInfo (P'.fromDistinctAscList []) (P'.fromDistinctAscList [8, 16, 24, 32, 40, 48, 56, 64])
   reflectDescriptorInfo _
    = Prelude'.read
-      "DescriptorInfo {descName = ProtoName {protobufName = FIName \".mesos.v1.UdpStatistics\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"UdpStatistics\"}, descFilePath = [\"Mesos\",\"V1\",\"Protos\",\"UdpStatistics.hs\"], isGroup = False, fields = fromList [FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.UdpStatistics.InDatagrams\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"UdpStatistics\"], baseName' = FName \"inDatagrams\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 1}, wireTag = WireTag {getWireTag = 8}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 3}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.UdpStatistics.NoPorts\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"UdpStatistics\"], baseName' = FName \"noPorts\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 2}, wireTag = WireTag {getWireTag = 16}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 3}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.UdpStatistics.InErrors\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"UdpStatistics\"], baseName' = FName \"inErrors\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 3}, wireTag = WireTag {getWireTag = 24}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 3}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.UdpStatistics.OutDatagrams\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"UdpStatistics\"], baseName' = FName \"outDatagrams\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 4}, wireTag = WireTag {getWireTag = 32}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 3}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.UdpStatistics.RcvbufErrors\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"UdpStatistics\"], baseName' = FName \"rcvbufErrors\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 5}, wireTag = WireTag {getWireTag = 40}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 3}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.UdpStatistics.SndbufErrors\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"UdpStatistics\"], baseName' = FName \"sndbufErrors\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 6}, wireTag = WireTag {getWireTag = 48}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 3}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.UdpStatistics.InCsumErrors\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"UdpStatistics\"], baseName' = FName \"inCsumErrors\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 7}, wireTag = WireTag {getWireTag = 56}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 3}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.UdpStatistics.IgnoredMulti\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"UdpStatistics\"], baseName' = FName \"ignoredMulti\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 8}, wireTag = WireTag {getWireTag = 64}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 3}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing}], descOneofs = fromList [], keys = fromList [], extRanges = [], knownKeys = fromList [], storeUnknown = False, lazyFields = False, makeLenses = True, jsonInstances = True}"
+      "DescriptorInfo {descName = ProtoName {protobufName = FIName \".mesos.v1.UdpStatistics\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"UdpStatistics\"}, descFilePath = [\"Mesos\",\"V1\",\"Protos\",\"UdpStatistics.hs\"], isGroup = False, fields = fromList [FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.UdpStatistics.InDatagrams\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"UdpStatistics\"], baseName' = FName \"inDatagrams\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 1}, wireTag = WireTag {getWireTag = 8}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 3}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.UdpStatistics.NoPorts\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"UdpStatistics\"], baseName' = FName \"noPorts\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 2}, wireTag = WireTag {getWireTag = 16}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 3}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.UdpStatistics.InErrors\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"UdpStatistics\"], baseName' = FName \"inErrors\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 3}, wireTag = WireTag {getWireTag = 24}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 3}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.UdpStatistics.OutDatagrams\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"UdpStatistics\"], baseName' = FName \"outDatagrams\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 4}, wireTag = WireTag {getWireTag = 32}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 3}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.UdpStatistics.RcvbufErrors\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"UdpStatistics\"], baseName' = FName \"rcvbufErrors\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 5}, wireTag = WireTag {getWireTag = 40}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 3}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.UdpStatistics.SndbufErrors\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"UdpStatistics\"], baseName' = FName \"sndbufErrors\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 6}, wireTag = WireTag {getWireTag = 48}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 3}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.UdpStatistics.InCsumErrors\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"UdpStatistics\"], baseName' = FName \"inCsumErrors\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 7}, wireTag = WireTag {getWireTag = 56}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 3}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.UdpStatistics.IgnoredMulti\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"UdpStatistics\"], baseName' = FName \"ignoredMulti\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 8}, wireTag = WireTag {getWireTag = 64}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 3}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing}], descOneofs = fromList [], keys = fromList [], extRanges = [], knownKeys = fromList [], storeUnknown = False, lazyFields = False, makeLenses = False, jsonInstances = True}"
 
 instance P'.TextType UdpStatistics where
   tellT = P'.tellSubMessage
@@ -131,60 +125,60 @@ instance P'.TextType UdpStatistics where
 instance P'.TextMsg UdpStatistics where
   textPut msg
    = do
-       P'.tellT "InDatagrams" (_inDatagrams msg)
-       P'.tellT "NoPorts" (_noPorts msg)
-       P'.tellT "InErrors" (_inErrors msg)
-       P'.tellT "OutDatagrams" (_outDatagrams msg)
-       P'.tellT "RcvbufErrors" (_rcvbufErrors msg)
-       P'.tellT "SndbufErrors" (_sndbufErrors msg)
-       P'.tellT "InCsumErrors" (_inCsumErrors msg)
-       P'.tellT "IgnoredMulti" (_ignoredMulti msg)
+       P'.tellT "InDatagrams" (inDatagrams msg)
+       P'.tellT "NoPorts" (noPorts msg)
+       P'.tellT "InErrors" (inErrors msg)
+       P'.tellT "OutDatagrams" (outDatagrams msg)
+       P'.tellT "RcvbufErrors" (rcvbufErrors msg)
+       P'.tellT "SndbufErrors" (sndbufErrors msg)
+       P'.tellT "InCsumErrors" (inCsumErrors msg)
+       P'.tellT "IgnoredMulti" (ignoredMulti msg)
   textGet
    = do
        mods <- P'.sepEndBy
                 (P'.choice
-                  [parse'_inDatagrams, parse'_noPorts, parse'_inErrors, parse'_outDatagrams, parse'_rcvbufErrors,
-                   parse'_sndbufErrors, parse'_inCsumErrors, parse'_ignoredMulti])
+                  [parse'inDatagrams, parse'noPorts, parse'inErrors, parse'outDatagrams, parse'rcvbufErrors, parse'sndbufErrors,
+                   parse'inCsumErrors, parse'ignoredMulti])
                 P'.spaces
        Prelude'.return (Prelude'.foldl (\ v f -> f v) P'.defaultValue mods)
     where
-        parse'_inDatagrams
+        parse'inDatagrams
          = P'.try
             (do
                v <- P'.getT "InDatagrams"
-               Prelude'.return (\ o -> o{_inDatagrams = v}))
-        parse'_noPorts
+               Prelude'.return (\ o -> o{inDatagrams = v}))
+        parse'noPorts
          = P'.try
             (do
                v <- P'.getT "NoPorts"
-               Prelude'.return (\ o -> o{_noPorts = v}))
-        parse'_inErrors
+               Prelude'.return (\ o -> o{noPorts = v}))
+        parse'inErrors
          = P'.try
             (do
                v <- P'.getT "InErrors"
-               Prelude'.return (\ o -> o{_inErrors = v}))
-        parse'_outDatagrams
+               Prelude'.return (\ o -> o{inErrors = v}))
+        parse'outDatagrams
          = P'.try
             (do
                v <- P'.getT "OutDatagrams"
-               Prelude'.return (\ o -> o{_outDatagrams = v}))
-        parse'_rcvbufErrors
+               Prelude'.return (\ o -> o{outDatagrams = v}))
+        parse'rcvbufErrors
          = P'.try
             (do
                v <- P'.getT "RcvbufErrors"
-               Prelude'.return (\ o -> o{_rcvbufErrors = v}))
-        parse'_sndbufErrors
+               Prelude'.return (\ o -> o{rcvbufErrors = v}))
+        parse'sndbufErrors
          = P'.try
             (do
                v <- P'.getT "SndbufErrors"
-               Prelude'.return (\ o -> o{_sndbufErrors = v}))
-        parse'_inCsumErrors
+               Prelude'.return (\ o -> o{sndbufErrors = v}))
+        parse'inCsumErrors
          = P'.try
             (do
                v <- P'.getT "InCsumErrors"
-               Prelude'.return (\ o -> o{_inCsumErrors = v}))
-        parse'_ignoredMulti
+               Prelude'.return (\ o -> o{inCsumErrors = v}))
+        parse'ignoredMulti
          = P'.try
             (do
                v <- P'.getT "IgnoredMulti"
-               Prelude'.return (\ o -> o{_ignoredMulti = v}))
+               Prelude'.return (\ o -> o{ignoredMulti = v}))

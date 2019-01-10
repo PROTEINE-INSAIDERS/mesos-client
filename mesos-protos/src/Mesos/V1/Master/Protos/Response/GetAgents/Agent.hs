@@ -1,17 +1,12 @@
-{-# LANGUAGE TemplateHaskell, BangPatterns, DeriveDataTypeable, DeriveGeneric, FlexibleInstances, MultiParamTypeClasses,
- OverloadedStrings #-}
+{-# LANGUAGE BangPatterns, DeriveDataTypeable, DeriveGeneric, FlexibleInstances, MultiParamTypeClasses, OverloadedStrings #-}
 {-# OPTIONS_GHC  -fno-warn-unused-imports #-}
-module Mesos.V1.Master.Protos.Response.GetAgents.Agent
-       (Agent(..), agent_info, active, version, pid, registered_time, reregistered_time, total_resources, allocated_resources,
-        offered_resources, capabilities, resource_providers)
-       where
+module Mesos.V1.Master.Protos.Response.GetAgents.Agent (Agent(..)) where
 import Prelude ((+), (/), (++), (.))
 import qualified Prelude as Prelude'
 import qualified Data.Typeable as Prelude'
 import qualified GHC.Generics as Prelude'
 import qualified Data.Data as Prelude'
 import qualified Text.ProtocolBuffers.Header as P'
-import qualified Control.Lens.TH
 import qualified Mesos.V1.Master.Protos.Response.GetAgents.Agent.ResourceProvider as Protos.Response.GetAgents.Agent
        (ResourceProvider)
 import qualified Mesos.V1.Protos.AgentInfo as Protos (AgentInfo)
@@ -19,14 +14,12 @@ import qualified Mesos.V1.Protos.AgentInfo.Capability as Protos.AgentInfo (Capab
 import qualified Mesos.V1.Protos.Resource as Protos (Resource)
 import qualified Mesos.V1.Protos.TimeInfo as Protos (TimeInfo)
 
-data Agent = Agent{_agent_info :: !(Protos.AgentInfo), _active :: !(P'.Bool), _version :: !(P'.Utf8), _pid :: !(P'.Maybe P'.Utf8),
-                   _registered_time :: !(P'.Maybe Protos.TimeInfo), _reregistered_time :: !(P'.Maybe Protos.TimeInfo),
-                   _total_resources :: !(P'.Seq Protos.Resource), _allocated_resources :: !(P'.Seq Protos.Resource),
-                   _offered_resources :: !(P'.Seq Protos.Resource), _capabilities :: !(P'.Seq Protos.AgentInfo.Capability),
-                   _resource_providers :: !(P'.Seq Protos.Response.GetAgents.Agent.ResourceProvider)}
+data Agent = Agent{agent_info :: !(Protos.AgentInfo), active :: !(P'.Bool), version :: !(P'.Utf8), pid :: !(P'.Maybe P'.Utf8),
+                   registered_time :: !(P'.Maybe Protos.TimeInfo), reregistered_time :: !(P'.Maybe Protos.TimeInfo),
+                   total_resources :: !(P'.Seq Protos.Resource), allocated_resources :: !(P'.Seq Protos.Resource),
+                   offered_resources :: !(P'.Seq Protos.Resource), capabilities :: !(P'.Seq Protos.AgentInfo.Capability),
+                   resource_providers :: !(P'.Seq Protos.Response.GetAgents.Agent.ResourceProvider)}
              deriving (Prelude'.Show, Prelude'.Eq, Prelude'.Ord, Prelude'.Typeable, Prelude'.Data, Prelude'.Generic)
-
-Control.Lens.TH.makeLenses ''Agent
 
 instance P'.ToJSON Agent where
   toJSON msg
@@ -66,11 +59,11 @@ instance P'.FromJSON Agent where
                                  (P'.explicitParseFieldMaybe (Prelude'.mapM P'.parseJSON P'.<=< P'.parseJSON) o
                                    "resource_providers")
           Prelude'.return
-           P'.defaultValue{_agent_info = agent_info, _active = active, _version = version, _pid = pid,
-                           _registered_time = registered_time, _reregistered_time = reregistered_time,
-                           _total_resources = total_resources, _allocated_resources = allocated_resources,
-                           _offered_resources = offered_resources, _capabilities = capabilities,
-                           _resource_providers = resource_providers})
+           P'.defaultValue{agent_info = agent_info, active = active, version = version, pid = pid,
+                           registered_time = registered_time, reregistered_time = reregistered_time,
+                           total_resources = total_resources, allocated_resources = allocated_resources,
+                           offered_resources = offered_resources, capabilities = capabilities,
+                           resource_providers = resource_providers})
 
 instance P'.Mergeable Agent where
   mergeAppend (Agent x'1 x'2 x'3 x'4 x'5 x'6 x'7 x'8 x'9 x'10 x'11) (Agent y'1 y'2 y'3 y'4 y'5 y'6 y'7 y'8 y'9 y'10 y'11)
@@ -134,30 +127,29 @@ instance P'.Wire Agent where
     where
         update'Self wire'Tag old'Self
          = case wire'Tag of
-             10 -> Prelude'.fmap (\ !new'Field -> old'Self{_agent_info = P'.mergeAppend (_agent_info old'Self) (new'Field)})
+             10 -> Prelude'.fmap (\ !new'Field -> old'Self{agent_info = P'.mergeAppend (agent_info old'Self) (new'Field)})
                     (P'.wireGet 11)
-             16 -> Prelude'.fmap (\ !new'Field -> old'Self{_active = new'Field}) (P'.wireGet 8)
-             26 -> Prelude'.fmap (\ !new'Field -> old'Self{_version = new'Field}) (P'.wireGet 9)
-             34 -> Prelude'.fmap (\ !new'Field -> old'Self{_pid = Prelude'.Just new'Field}) (P'.wireGet 9)
+             16 -> Prelude'.fmap (\ !new'Field -> old'Self{active = new'Field}) (P'.wireGet 8)
+             26 -> Prelude'.fmap (\ !new'Field -> old'Self{version = new'Field}) (P'.wireGet 9)
+             34 -> Prelude'.fmap (\ !new'Field -> old'Self{pid = Prelude'.Just new'Field}) (P'.wireGet 9)
              42 -> Prelude'.fmap
                     (\ !new'Field ->
-                      old'Self{_registered_time = P'.mergeAppend (_registered_time old'Self) (Prelude'.Just new'Field)})
+                      old'Self{registered_time = P'.mergeAppend (registered_time old'Self) (Prelude'.Just new'Field)})
                     (P'.wireGet 11)
              50 -> Prelude'.fmap
                     (\ !new'Field ->
-                      old'Self{_reregistered_time = P'.mergeAppend (_reregistered_time old'Self) (Prelude'.Just new'Field)})
+                      old'Self{reregistered_time = P'.mergeAppend (reregistered_time old'Self) (Prelude'.Just new'Field)})
                     (P'.wireGet 11)
-             58 -> Prelude'.fmap (\ !new'Field -> old'Self{_total_resources = P'.append (_total_resources old'Self) new'Field})
+             58 -> Prelude'.fmap (\ !new'Field -> old'Self{total_resources = P'.append (total_resources old'Self) new'Field})
                     (P'.wireGet 11)
              66 -> Prelude'.fmap
-                    (\ !new'Field -> old'Self{_allocated_resources = P'.append (_allocated_resources old'Self) new'Field})
+                    (\ !new'Field -> old'Self{allocated_resources = P'.append (allocated_resources old'Self) new'Field})
                     (P'.wireGet 11)
-             74 -> Prelude'.fmap (\ !new'Field -> old'Self{_offered_resources = P'.append (_offered_resources old'Self) new'Field})
+             74 -> Prelude'.fmap (\ !new'Field -> old'Self{offered_resources = P'.append (offered_resources old'Self) new'Field})
                     (P'.wireGet 11)
-             82 -> Prelude'.fmap (\ !new'Field -> old'Self{_capabilities = P'.append (_capabilities old'Self) new'Field})
+             82 -> Prelude'.fmap (\ !new'Field -> old'Self{capabilities = P'.append (capabilities old'Self) new'Field})
                     (P'.wireGet 11)
-             90 -> Prelude'.fmap
-                    (\ !new'Field -> old'Self{_resource_providers = P'.append (_resource_providers old'Self) new'Field})
+             90 -> Prelude'.fmap (\ !new'Field -> old'Self{resource_providers = P'.append (resource_providers old'Self) new'Field})
                     (P'.wireGet 11)
              _ -> let (field'Number, wire'Type) = P'.splitWireTag wire'Tag in P'.unknown field'Number wire'Type old'Self
 
@@ -171,7 +163,7 @@ instance P'.ReflectDescriptor Agent where
    = P'.GetMessageInfo (P'.fromDistinctAscList [10, 16, 26]) (P'.fromDistinctAscList [10, 16, 26, 34, 42, 50, 58, 66, 74, 82, 90])
   reflectDescriptorInfo _
    = Prelude'.read
-      "DescriptorInfo {descName = ProtoName {protobufName = FIName \".mesos.v1.master.Response.GetAgents.Agent\", haskellPrefix = [MName \"Mesos\",MName \"V1\",MName \"Master\"], parentModule = [MName \"Protos\",MName \"Response\",MName \"GetAgents\"], baseName = MName \"Agent\"}, descFilePath = [\"Mesos\",\"V1\",\"Master\",\"Protos\",\"Response\",\"GetAgents\",\"Agent.hs\"], isGroup = False, fields = fromList [FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.master.Response.GetAgents.Agent.agent_info\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Master\"], parentModule' = [MName \"Protos\",MName \"Response\",MName \"GetAgents\",MName \"Agent\"], baseName' = FName \"agent_info\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 1}, wireTag = WireTag {getWireTag = 10}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = True, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.AgentInfo\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"AgentInfo\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.master.Response.GetAgents.Agent.active\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Master\"], parentModule' = [MName \"Protos\",MName \"Response\",MName \"GetAgents\",MName \"Agent\"], baseName' = FName \"active\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 2}, wireTag = WireTag {getWireTag = 16}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = True, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 8}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.master.Response.GetAgents.Agent.version\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Master\"], parentModule' = [MName \"Protos\",MName \"Response\",MName \"GetAgents\",MName \"Agent\"], baseName' = FName \"version\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 3}, wireTag = WireTag {getWireTag = 26}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = True, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 9}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.master.Response.GetAgents.Agent.pid\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Master\"], parentModule' = [MName \"Protos\",MName \"Response\",MName \"GetAgents\",MName \"Agent\"], baseName' = FName \"pid\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 4}, wireTag = WireTag {getWireTag = 34}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 9}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.master.Response.GetAgents.Agent.registered_time\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Master\"], parentModule' = [MName \"Protos\",MName \"Response\",MName \"GetAgents\",MName \"Agent\"], baseName' = FName \"registered_time\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 5}, wireTag = WireTag {getWireTag = 42}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.TimeInfo\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"TimeInfo\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.master.Response.GetAgents.Agent.reregistered_time\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Master\"], parentModule' = [MName \"Protos\",MName \"Response\",MName \"GetAgents\",MName \"Agent\"], baseName' = FName \"reregistered_time\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 6}, wireTag = WireTag {getWireTag = 50}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.TimeInfo\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"TimeInfo\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.master.Response.GetAgents.Agent.total_resources\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Master\"], parentModule' = [MName \"Protos\",MName \"Response\",MName \"GetAgents\",MName \"Agent\"], baseName' = FName \"total_resources\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 7}, wireTag = WireTag {getWireTag = 58}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = True, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.Resource\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"Resource\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.master.Response.GetAgents.Agent.allocated_resources\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Master\"], parentModule' = [MName \"Protos\",MName \"Response\",MName \"GetAgents\",MName \"Agent\"], baseName' = FName \"allocated_resources\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 8}, wireTag = WireTag {getWireTag = 66}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = True, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.Resource\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"Resource\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.master.Response.GetAgents.Agent.offered_resources\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Master\"], parentModule' = [MName \"Protos\",MName \"Response\",MName \"GetAgents\",MName \"Agent\"], baseName' = FName \"offered_resources\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 9}, wireTag = WireTag {getWireTag = 74}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = True, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.Resource\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"Resource\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.master.Response.GetAgents.Agent.capabilities\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Master\"], parentModule' = [MName \"Protos\",MName \"Response\",MName \"GetAgents\",MName \"Agent\"], baseName' = FName \"capabilities\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 10}, wireTag = WireTag {getWireTag = 82}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = True, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.AgentInfo.Capability\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\",MName \"AgentInfo\"], baseName = MName \"Capability\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.master.Response.GetAgents.Agent.resource_providers\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Master\"], parentModule' = [MName \"Protos\",MName \"Response\",MName \"GetAgents\",MName \"Agent\"], baseName' = FName \"resource_providers\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 11}, wireTag = WireTag {getWireTag = 90}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = True, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.master.Response.GetAgents.Agent.ResourceProvider\", haskellPrefix = [MName \"Mesos\",MName \"V1\",MName \"Master\"], parentModule = [MName \"Protos\",MName \"Response\",MName \"GetAgents\",MName \"Agent\"], baseName = MName \"ResourceProvider\"}), hsRawDefault = Nothing, hsDefault = Nothing}], descOneofs = fromList [], keys = fromList [], extRanges = [], knownKeys = fromList [], storeUnknown = False, lazyFields = False, makeLenses = True, jsonInstances = True}"
+      "DescriptorInfo {descName = ProtoName {protobufName = FIName \".mesos.v1.master.Response.GetAgents.Agent\", haskellPrefix = [MName \"Mesos\",MName \"V1\",MName \"Master\"], parentModule = [MName \"Protos\",MName \"Response\",MName \"GetAgents\"], baseName = MName \"Agent\"}, descFilePath = [\"Mesos\",\"V1\",\"Master\",\"Protos\",\"Response\",\"GetAgents\",\"Agent.hs\"], isGroup = False, fields = fromList [FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.master.Response.GetAgents.Agent.agent_info\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Master\"], parentModule' = [MName \"Protos\",MName \"Response\",MName \"GetAgents\",MName \"Agent\"], baseName' = FName \"agent_info\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 1}, wireTag = WireTag {getWireTag = 10}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = True, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.AgentInfo\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"AgentInfo\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.master.Response.GetAgents.Agent.active\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Master\"], parentModule' = [MName \"Protos\",MName \"Response\",MName \"GetAgents\",MName \"Agent\"], baseName' = FName \"active\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 2}, wireTag = WireTag {getWireTag = 16}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = True, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 8}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.master.Response.GetAgents.Agent.version\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Master\"], parentModule' = [MName \"Protos\",MName \"Response\",MName \"GetAgents\",MName \"Agent\"], baseName' = FName \"version\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 3}, wireTag = WireTag {getWireTag = 26}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = True, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 9}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.master.Response.GetAgents.Agent.pid\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Master\"], parentModule' = [MName \"Protos\",MName \"Response\",MName \"GetAgents\",MName \"Agent\"], baseName' = FName \"pid\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 4}, wireTag = WireTag {getWireTag = 34}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 9}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.master.Response.GetAgents.Agent.registered_time\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Master\"], parentModule' = [MName \"Protos\",MName \"Response\",MName \"GetAgents\",MName \"Agent\"], baseName' = FName \"registered_time\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 5}, wireTag = WireTag {getWireTag = 42}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.TimeInfo\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"TimeInfo\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.master.Response.GetAgents.Agent.reregistered_time\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Master\"], parentModule' = [MName \"Protos\",MName \"Response\",MName \"GetAgents\",MName \"Agent\"], baseName' = FName \"reregistered_time\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 6}, wireTag = WireTag {getWireTag = 50}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.TimeInfo\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"TimeInfo\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.master.Response.GetAgents.Agent.total_resources\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Master\"], parentModule' = [MName \"Protos\",MName \"Response\",MName \"GetAgents\",MName \"Agent\"], baseName' = FName \"total_resources\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 7}, wireTag = WireTag {getWireTag = 58}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = True, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.Resource\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"Resource\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.master.Response.GetAgents.Agent.allocated_resources\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Master\"], parentModule' = [MName \"Protos\",MName \"Response\",MName \"GetAgents\",MName \"Agent\"], baseName' = FName \"allocated_resources\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 8}, wireTag = WireTag {getWireTag = 66}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = True, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.Resource\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"Resource\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.master.Response.GetAgents.Agent.offered_resources\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Master\"], parentModule' = [MName \"Protos\",MName \"Response\",MName \"GetAgents\",MName \"Agent\"], baseName' = FName \"offered_resources\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 9}, wireTag = WireTag {getWireTag = 74}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = True, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.Resource\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"Resource\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.master.Response.GetAgents.Agent.capabilities\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Master\"], parentModule' = [MName \"Protos\",MName \"Response\",MName \"GetAgents\",MName \"Agent\"], baseName' = FName \"capabilities\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 10}, wireTag = WireTag {getWireTag = 82}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = True, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.AgentInfo.Capability\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\",MName \"AgentInfo\"], baseName = MName \"Capability\"}), hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.master.Response.GetAgents.Agent.resource_providers\", haskellPrefix' = [MName \"Mesos\",MName \"V1\",MName \"Master\"], parentModule' = [MName \"Protos\",MName \"Response\",MName \"GetAgents\",MName \"Agent\"], baseName' = FName \"resource_providers\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 11}, wireTag = WireTag {getWireTag = 90}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = True, mightPack = False, typeCode = FieldType {getFieldType = 11}, typeName = Just (ProtoName {protobufName = FIName \".mesos.v1.master.Response.GetAgents.Agent.ResourceProvider\", haskellPrefix = [MName \"Mesos\",MName \"V1\",MName \"Master\"], parentModule = [MName \"Protos\",MName \"Response\",MName \"GetAgents\",MName \"Agent\"], baseName = MName \"ResourceProvider\"}), hsRawDefault = Nothing, hsDefault = Nothing}], descOneofs = fromList [], keys = fromList [], extRanges = [], knownKeys = fromList [], storeUnknown = False, lazyFields = False, makeLenses = False, jsonInstances = True}"
 
 instance P'.TextType Agent where
   tellT = P'.tellSubMessage
@@ -180,79 +172,79 @@ instance P'.TextType Agent where
 instance P'.TextMsg Agent where
   textPut msg
    = do
-       P'.tellT "agent_info" (_agent_info msg)
-       P'.tellT "active" (_active msg)
-       P'.tellT "version" (_version msg)
-       P'.tellT "pid" (_pid msg)
-       P'.tellT "registered_time" (_registered_time msg)
-       P'.tellT "reregistered_time" (_reregistered_time msg)
-       P'.tellT "total_resources" (_total_resources msg)
-       P'.tellT "allocated_resources" (_allocated_resources msg)
-       P'.tellT "offered_resources" (_offered_resources msg)
-       P'.tellT "capabilities" (_capabilities msg)
-       P'.tellT "resource_providers" (_resource_providers msg)
+       P'.tellT "agent_info" (agent_info msg)
+       P'.tellT "active" (active msg)
+       P'.tellT "version" (version msg)
+       P'.tellT "pid" (pid msg)
+       P'.tellT "registered_time" (registered_time msg)
+       P'.tellT "reregistered_time" (reregistered_time msg)
+       P'.tellT "total_resources" (total_resources msg)
+       P'.tellT "allocated_resources" (allocated_resources msg)
+       P'.tellT "offered_resources" (offered_resources msg)
+       P'.tellT "capabilities" (capabilities msg)
+       P'.tellT "resource_providers" (resource_providers msg)
   textGet
    = do
        mods <- P'.sepEndBy
                 (P'.choice
-                  [parse'_agent_info, parse'_active, parse'_version, parse'_pid, parse'_registered_time, parse'_reregistered_time,
-                   parse'_total_resources, parse'_allocated_resources, parse'_offered_resources, parse'_capabilities,
-                   parse'_resource_providers])
+                  [parse'agent_info, parse'active, parse'version, parse'pid, parse'registered_time, parse'reregistered_time,
+                   parse'total_resources, parse'allocated_resources, parse'offered_resources, parse'capabilities,
+                   parse'resource_providers])
                 P'.spaces
        Prelude'.return (Prelude'.foldl (\ v f -> f v) P'.defaultValue mods)
     where
-        parse'_agent_info
+        parse'agent_info
          = P'.try
             (do
                v <- P'.getT "agent_info"
-               Prelude'.return (\ o -> o{_agent_info = v}))
-        parse'_active
+               Prelude'.return (\ o -> o{agent_info = v}))
+        parse'active
          = P'.try
             (do
                v <- P'.getT "active"
-               Prelude'.return (\ o -> o{_active = v}))
-        parse'_version
+               Prelude'.return (\ o -> o{active = v}))
+        parse'version
          = P'.try
             (do
                v <- P'.getT "version"
-               Prelude'.return (\ o -> o{_version = v}))
-        parse'_pid
+               Prelude'.return (\ o -> o{version = v}))
+        parse'pid
          = P'.try
             (do
                v <- P'.getT "pid"
-               Prelude'.return (\ o -> o{_pid = v}))
-        parse'_registered_time
+               Prelude'.return (\ o -> o{pid = v}))
+        parse'registered_time
          = P'.try
             (do
                v <- P'.getT "registered_time"
-               Prelude'.return (\ o -> o{_registered_time = v}))
-        parse'_reregistered_time
+               Prelude'.return (\ o -> o{registered_time = v}))
+        parse'reregistered_time
          = P'.try
             (do
                v <- P'.getT "reregistered_time"
-               Prelude'.return (\ o -> o{_reregistered_time = v}))
-        parse'_total_resources
+               Prelude'.return (\ o -> o{reregistered_time = v}))
+        parse'total_resources
          = P'.try
             (do
                v <- P'.getT "total_resources"
-               Prelude'.return (\ o -> o{_total_resources = P'.append (_total_resources o) v}))
-        parse'_allocated_resources
+               Prelude'.return (\ o -> o{total_resources = P'.append (total_resources o) v}))
+        parse'allocated_resources
          = P'.try
             (do
                v <- P'.getT "allocated_resources"
-               Prelude'.return (\ o -> o{_allocated_resources = P'.append (_allocated_resources o) v}))
-        parse'_offered_resources
+               Prelude'.return (\ o -> o{allocated_resources = P'.append (allocated_resources o) v}))
+        parse'offered_resources
          = P'.try
             (do
                v <- P'.getT "offered_resources"
-               Prelude'.return (\ o -> o{_offered_resources = P'.append (_offered_resources o) v}))
-        parse'_capabilities
+               Prelude'.return (\ o -> o{offered_resources = P'.append (offered_resources o) v}))
+        parse'capabilities
          = P'.try
             (do
                v <- P'.getT "capabilities"
-               Prelude'.return (\ o -> o{_capabilities = P'.append (_capabilities o) v}))
-        parse'_resource_providers
+               Prelude'.return (\ o -> o{capabilities = P'.append (capabilities o) v}))
+        parse'resource_providers
          = P'.try
             (do
                v <- P'.getT "resource_providers"
-               Prelude'.return (\ o -> o{_resource_providers = P'.append (_resource_providers o) v}))
+               Prelude'.return (\ o -> o{resource_providers = P'.append (resource_providers o) v}))

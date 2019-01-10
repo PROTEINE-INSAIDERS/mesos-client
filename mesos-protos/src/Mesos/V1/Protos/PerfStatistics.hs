@@ -1,56 +1,41 @@
-{-# LANGUAGE TemplateHaskell, BangPatterns, DeriveDataTypeable, DeriveGeneric, FlexibleInstances, MultiParamTypeClasses,
- OverloadedStrings #-}
+{-# LANGUAGE BangPatterns, DeriveDataTypeable, DeriveGeneric, FlexibleInstances, MultiParamTypeClasses, OverloadedStrings #-}
 {-# OPTIONS_GHC  -fno-warn-unused-imports #-}
-module Mesos.V1.Protos.PerfStatistics
-       (PerfStatistics(..), timestamp, duration, cycles, stalled_cycles_frontend, stalled_cycles_backend, instructions,
-        cache_references, cache_misses, branches, branch_misses, bus_cycles, ref_cycles, cpu_clock, task_clock, page_faults,
-        minor_faults, major_faults, context_switches, cpu_migrations, alignment_faults, emulation_faults, l1_dcache_loads,
-        l1_dcache_load_misses, l1_dcache_stores, l1_dcache_store_misses, l1_dcache_prefetches, l1_dcache_prefetch_misses,
-        l1_icache_loads, l1_icache_load_misses, l1_icache_prefetches, l1_icache_prefetch_misses, llc_loads, llc_load_misses,
-        llc_stores, llc_store_misses, llc_prefetches, llc_prefetch_misses, dtlb_loads, dtlb_load_misses, dtlb_stores,
-        dtlb_store_misses, dtlb_prefetches, dtlb_prefetch_misses, itlb_loads, itlb_load_misses, branch_loads, branch_load_misses,
-        node_loads, node_load_misses, node_stores, node_store_misses, node_prefetches, node_prefetch_misses)
-       where
+module Mesos.V1.Protos.PerfStatistics (PerfStatistics(..)) where
 import Prelude ((+), (/), (++), (.))
 import qualified Prelude as Prelude'
 import qualified Data.Typeable as Prelude'
 import qualified GHC.Generics as Prelude'
 import qualified Data.Data as Prelude'
 import qualified Text.ProtocolBuffers.Header as P'
-import qualified Control.Lens.TH
 
-data PerfStatistics = PerfStatistics{_timestamp :: !(P'.Double), _duration :: !(P'.Double), _cycles :: !(P'.Maybe P'.Word64),
-                                     _stalled_cycles_frontend :: !(P'.Maybe P'.Word64),
-                                     _stalled_cycles_backend :: !(P'.Maybe P'.Word64), _instructions :: !(P'.Maybe P'.Word64),
-                                     _cache_references :: !(P'.Maybe P'.Word64), _cache_misses :: !(P'.Maybe P'.Word64),
-                                     _branches :: !(P'.Maybe P'.Word64), _branch_misses :: !(P'.Maybe P'.Word64),
-                                     _bus_cycles :: !(P'.Maybe P'.Word64), _ref_cycles :: !(P'.Maybe P'.Word64),
-                                     _cpu_clock :: !(P'.Maybe P'.Double), _task_clock :: !(P'.Maybe P'.Double),
-                                     _page_faults :: !(P'.Maybe P'.Word64), _minor_faults :: !(P'.Maybe P'.Word64),
-                                     _major_faults :: !(P'.Maybe P'.Word64), _context_switches :: !(P'.Maybe P'.Word64),
-                                     _cpu_migrations :: !(P'.Maybe P'.Word64), _alignment_faults :: !(P'.Maybe P'.Word64),
-                                     _emulation_faults :: !(P'.Maybe P'.Word64), _l1_dcache_loads :: !(P'.Maybe P'.Word64),
-                                     _l1_dcache_load_misses :: !(P'.Maybe P'.Word64), _l1_dcache_stores :: !(P'.Maybe P'.Word64),
-                                     _l1_dcache_store_misses :: !(P'.Maybe P'.Word64),
-                                     _l1_dcache_prefetches :: !(P'.Maybe P'.Word64),
-                                     _l1_dcache_prefetch_misses :: !(P'.Maybe P'.Word64), _l1_icache_loads :: !(P'.Maybe P'.Word64),
-                                     _l1_icache_load_misses :: !(P'.Maybe P'.Word64),
-                                     _l1_icache_prefetches :: !(P'.Maybe P'.Word64),
-                                     _l1_icache_prefetch_misses :: !(P'.Maybe P'.Word64), _llc_loads :: !(P'.Maybe P'.Word64),
-                                     _llc_load_misses :: !(P'.Maybe P'.Word64), _llc_stores :: !(P'.Maybe P'.Word64),
-                                     _llc_store_misses :: !(P'.Maybe P'.Word64), _llc_prefetches :: !(P'.Maybe P'.Word64),
-                                     _llc_prefetch_misses :: !(P'.Maybe P'.Word64), _dtlb_loads :: !(P'.Maybe P'.Word64),
-                                     _dtlb_load_misses :: !(P'.Maybe P'.Word64), _dtlb_stores :: !(P'.Maybe P'.Word64),
-                                     _dtlb_store_misses :: !(P'.Maybe P'.Word64), _dtlb_prefetches :: !(P'.Maybe P'.Word64),
-                                     _dtlb_prefetch_misses :: !(P'.Maybe P'.Word64), _itlb_loads :: !(P'.Maybe P'.Word64),
-                                     _itlb_load_misses :: !(P'.Maybe P'.Word64), _branch_loads :: !(P'.Maybe P'.Word64),
-                                     _branch_load_misses :: !(P'.Maybe P'.Word64), _node_loads :: !(P'.Maybe P'.Word64),
-                                     _node_load_misses :: !(P'.Maybe P'.Word64), _node_stores :: !(P'.Maybe P'.Word64),
-                                     _node_store_misses :: !(P'.Maybe P'.Word64), _node_prefetches :: !(P'.Maybe P'.Word64),
-                                     _node_prefetch_misses :: !(P'.Maybe P'.Word64)}
+data PerfStatistics = PerfStatistics{timestamp :: !(P'.Double), duration :: !(P'.Double), cycles :: !(P'.Maybe P'.Word64),
+                                     stalled_cycles_frontend :: !(P'.Maybe P'.Word64),
+                                     stalled_cycles_backend :: !(P'.Maybe P'.Word64), instructions :: !(P'.Maybe P'.Word64),
+                                     cache_references :: !(P'.Maybe P'.Word64), cache_misses :: !(P'.Maybe P'.Word64),
+                                     branches :: !(P'.Maybe P'.Word64), branch_misses :: !(P'.Maybe P'.Word64),
+                                     bus_cycles :: !(P'.Maybe P'.Word64), ref_cycles :: !(P'.Maybe P'.Word64),
+                                     cpu_clock :: !(P'.Maybe P'.Double), task_clock :: !(P'.Maybe P'.Double),
+                                     page_faults :: !(P'.Maybe P'.Word64), minor_faults :: !(P'.Maybe P'.Word64),
+                                     major_faults :: !(P'.Maybe P'.Word64), context_switches :: !(P'.Maybe P'.Word64),
+                                     cpu_migrations :: !(P'.Maybe P'.Word64), alignment_faults :: !(P'.Maybe P'.Word64),
+                                     emulation_faults :: !(P'.Maybe P'.Word64), l1_dcache_loads :: !(P'.Maybe P'.Word64),
+                                     l1_dcache_load_misses :: !(P'.Maybe P'.Word64), l1_dcache_stores :: !(P'.Maybe P'.Word64),
+                                     l1_dcache_store_misses :: !(P'.Maybe P'.Word64), l1_dcache_prefetches :: !(P'.Maybe P'.Word64),
+                                     l1_dcache_prefetch_misses :: !(P'.Maybe P'.Word64), l1_icache_loads :: !(P'.Maybe P'.Word64),
+                                     l1_icache_load_misses :: !(P'.Maybe P'.Word64), l1_icache_prefetches :: !(P'.Maybe P'.Word64),
+                                     l1_icache_prefetch_misses :: !(P'.Maybe P'.Word64), llc_loads :: !(P'.Maybe P'.Word64),
+                                     llc_load_misses :: !(P'.Maybe P'.Word64), llc_stores :: !(P'.Maybe P'.Word64),
+                                     llc_store_misses :: !(P'.Maybe P'.Word64), llc_prefetches :: !(P'.Maybe P'.Word64),
+                                     llc_prefetch_misses :: !(P'.Maybe P'.Word64), dtlb_loads :: !(P'.Maybe P'.Word64),
+                                     dtlb_load_misses :: !(P'.Maybe P'.Word64), dtlb_stores :: !(P'.Maybe P'.Word64),
+                                     dtlb_store_misses :: !(P'.Maybe P'.Word64), dtlb_prefetches :: !(P'.Maybe P'.Word64),
+                                     dtlb_prefetch_misses :: !(P'.Maybe P'.Word64), itlb_loads :: !(P'.Maybe P'.Word64),
+                                     itlb_load_misses :: !(P'.Maybe P'.Word64), branch_loads :: !(P'.Maybe P'.Word64),
+                                     branch_load_misses :: !(P'.Maybe P'.Word64), node_loads :: !(P'.Maybe P'.Word64),
+                                     node_load_misses :: !(P'.Maybe P'.Word64), node_stores :: !(P'.Maybe P'.Word64),
+                                     node_store_misses :: !(P'.Maybe P'.Word64), node_prefetches :: !(P'.Maybe P'.Word64),
+                                     node_prefetch_misses :: !(P'.Maybe P'.Word64)}
                       deriving (Prelude'.Show, Prelude'.Eq, Prelude'.Ord, Prelude'.Typeable, Prelude'.Data, Prelude'.Generic)
-
-Control.Lens.TH.makeLenses ''PerfStatistics
 
 instance P'.ToJSON PerfStatistics where
   toJSON msg
@@ -170,27 +155,27 @@ instance P'.FromJSON PerfStatistics where
           node_prefetches <- P'.explicitParseFieldMaybe (P'.parseJSONReadWithPayload "uint64") o "node_prefetches"
           node_prefetch_misses <- P'.explicitParseFieldMaybe (P'.parseJSONReadWithPayload "uint64") o "node_prefetch_misses"
           Prelude'.return
-           P'.defaultValue{_timestamp = timestamp, _duration = duration, _cycles = cycles,
-                           _stalled_cycles_frontend = stalled_cycles_frontend, _stalled_cycles_backend = stalled_cycles_backend,
-                           _instructions = instructions, _cache_references = cache_references, _cache_misses = cache_misses,
-                           _branches = branches, _branch_misses = branch_misses, _bus_cycles = bus_cycles, _ref_cycles = ref_cycles,
-                           _cpu_clock = cpu_clock, _task_clock = task_clock, _page_faults = page_faults,
-                           _minor_faults = minor_faults, _major_faults = major_faults, _context_switches = context_switches,
-                           _cpu_migrations = cpu_migrations, _alignment_faults = alignment_faults,
-                           _emulation_faults = emulation_faults, _l1_dcache_loads = l1_dcache_loads,
-                           _l1_dcache_load_misses = l1_dcache_load_misses, _l1_dcache_stores = l1_dcache_stores,
-                           _l1_dcache_store_misses = l1_dcache_store_misses, _l1_dcache_prefetches = l1_dcache_prefetches,
-                           _l1_dcache_prefetch_misses = l1_dcache_prefetch_misses, _l1_icache_loads = l1_icache_loads,
-                           _l1_icache_load_misses = l1_icache_load_misses, _l1_icache_prefetches = l1_icache_prefetches,
-                           _l1_icache_prefetch_misses = l1_icache_prefetch_misses, _llc_loads = llc_loads,
-                           _llc_load_misses = llc_load_misses, _llc_stores = llc_stores, _llc_store_misses = llc_store_misses,
-                           _llc_prefetches = llc_prefetches, _llc_prefetch_misses = llc_prefetch_misses, _dtlb_loads = dtlb_loads,
-                           _dtlb_load_misses = dtlb_load_misses, _dtlb_stores = dtlb_stores, _dtlb_store_misses = dtlb_store_misses,
-                           _dtlb_prefetches = dtlb_prefetches, _dtlb_prefetch_misses = dtlb_prefetch_misses,
-                           _itlb_loads = itlb_loads, _itlb_load_misses = itlb_load_misses, _branch_loads = branch_loads,
-                           _branch_load_misses = branch_load_misses, _node_loads = node_loads, _node_load_misses = node_load_misses,
-                           _node_stores = node_stores, _node_store_misses = node_store_misses, _node_prefetches = node_prefetches,
-                           _node_prefetch_misses = node_prefetch_misses})
+           P'.defaultValue{timestamp = timestamp, duration = duration, cycles = cycles,
+                           stalled_cycles_frontend = stalled_cycles_frontend, stalled_cycles_backend = stalled_cycles_backend,
+                           instructions = instructions, cache_references = cache_references, cache_misses = cache_misses,
+                           branches = branches, branch_misses = branch_misses, bus_cycles = bus_cycles, ref_cycles = ref_cycles,
+                           cpu_clock = cpu_clock, task_clock = task_clock, page_faults = page_faults, minor_faults = minor_faults,
+                           major_faults = major_faults, context_switches = context_switches, cpu_migrations = cpu_migrations,
+                           alignment_faults = alignment_faults, emulation_faults = emulation_faults,
+                           l1_dcache_loads = l1_dcache_loads, l1_dcache_load_misses = l1_dcache_load_misses,
+                           l1_dcache_stores = l1_dcache_stores, l1_dcache_store_misses = l1_dcache_store_misses,
+                           l1_dcache_prefetches = l1_dcache_prefetches, l1_dcache_prefetch_misses = l1_dcache_prefetch_misses,
+                           l1_icache_loads = l1_icache_loads, l1_icache_load_misses = l1_icache_load_misses,
+                           l1_icache_prefetches = l1_icache_prefetches, l1_icache_prefetch_misses = l1_icache_prefetch_misses,
+                           llc_loads = llc_loads, llc_load_misses = llc_load_misses, llc_stores = llc_stores,
+                           llc_store_misses = llc_store_misses, llc_prefetches = llc_prefetches,
+                           llc_prefetch_misses = llc_prefetch_misses, dtlb_loads = dtlb_loads, dtlb_load_misses = dtlb_load_misses,
+                           dtlb_stores = dtlb_stores, dtlb_store_misses = dtlb_store_misses, dtlb_prefetches = dtlb_prefetches,
+                           dtlb_prefetch_misses = dtlb_prefetch_misses, itlb_loads = itlb_loads,
+                           itlb_load_misses = itlb_load_misses, branch_loads = branch_loads,
+                           branch_load_misses = branch_load_misses, node_loads = node_loads, node_load_misses = node_load_misses,
+                           node_stores = node_stores, node_store_misses = node_store_misses, node_prefetches = node_prefetches,
+                           node_prefetch_misses = node_prefetch_misses})
 
 instance P'.Mergeable PerfStatistics where
   mergeAppend
@@ -406,59 +391,59 @@ instance P'.Wire PerfStatistics where
     where
         update'Self wire'Tag old'Self
          = case wire'Tag of
-             9 -> Prelude'.fmap (\ !new'Field -> old'Self{_timestamp = new'Field}) (P'.wireGet 1)
-             17 -> Prelude'.fmap (\ !new'Field -> old'Self{_duration = new'Field}) (P'.wireGet 1)
-             24 -> Prelude'.fmap (\ !new'Field -> old'Self{_cycles = Prelude'.Just new'Field}) (P'.wireGet 4)
-             32 -> Prelude'.fmap (\ !new'Field -> old'Self{_stalled_cycles_frontend = Prelude'.Just new'Field}) (P'.wireGet 4)
-             40 -> Prelude'.fmap (\ !new'Field -> old'Self{_stalled_cycles_backend = Prelude'.Just new'Field}) (P'.wireGet 4)
-             48 -> Prelude'.fmap (\ !new'Field -> old'Self{_instructions = Prelude'.Just new'Field}) (P'.wireGet 4)
-             56 -> Prelude'.fmap (\ !new'Field -> old'Self{_cache_references = Prelude'.Just new'Field}) (P'.wireGet 4)
-             64 -> Prelude'.fmap (\ !new'Field -> old'Self{_cache_misses = Prelude'.Just new'Field}) (P'.wireGet 4)
-             72 -> Prelude'.fmap (\ !new'Field -> old'Self{_branches = Prelude'.Just new'Field}) (P'.wireGet 4)
-             80 -> Prelude'.fmap (\ !new'Field -> old'Self{_branch_misses = Prelude'.Just new'Field}) (P'.wireGet 4)
-             88 -> Prelude'.fmap (\ !new'Field -> old'Self{_bus_cycles = Prelude'.Just new'Field}) (P'.wireGet 4)
-             96 -> Prelude'.fmap (\ !new'Field -> old'Self{_ref_cycles = Prelude'.Just new'Field}) (P'.wireGet 4)
-             105 -> Prelude'.fmap (\ !new'Field -> old'Self{_cpu_clock = Prelude'.Just new'Field}) (P'.wireGet 1)
-             113 -> Prelude'.fmap (\ !new'Field -> old'Self{_task_clock = Prelude'.Just new'Field}) (P'.wireGet 1)
-             120 -> Prelude'.fmap (\ !new'Field -> old'Self{_page_faults = Prelude'.Just new'Field}) (P'.wireGet 4)
-             128 -> Prelude'.fmap (\ !new'Field -> old'Self{_minor_faults = Prelude'.Just new'Field}) (P'.wireGet 4)
-             136 -> Prelude'.fmap (\ !new'Field -> old'Self{_major_faults = Prelude'.Just new'Field}) (P'.wireGet 4)
-             144 -> Prelude'.fmap (\ !new'Field -> old'Self{_context_switches = Prelude'.Just new'Field}) (P'.wireGet 4)
-             152 -> Prelude'.fmap (\ !new'Field -> old'Self{_cpu_migrations = Prelude'.Just new'Field}) (P'.wireGet 4)
-             160 -> Prelude'.fmap (\ !new'Field -> old'Self{_alignment_faults = Prelude'.Just new'Field}) (P'.wireGet 4)
-             168 -> Prelude'.fmap (\ !new'Field -> old'Self{_emulation_faults = Prelude'.Just new'Field}) (P'.wireGet 4)
-             176 -> Prelude'.fmap (\ !new'Field -> old'Self{_l1_dcache_loads = Prelude'.Just new'Field}) (P'.wireGet 4)
-             184 -> Prelude'.fmap (\ !new'Field -> old'Self{_l1_dcache_load_misses = Prelude'.Just new'Field}) (P'.wireGet 4)
-             192 -> Prelude'.fmap (\ !new'Field -> old'Self{_l1_dcache_stores = Prelude'.Just new'Field}) (P'.wireGet 4)
-             200 -> Prelude'.fmap (\ !new'Field -> old'Self{_l1_dcache_store_misses = Prelude'.Just new'Field}) (P'.wireGet 4)
-             208 -> Prelude'.fmap (\ !new'Field -> old'Self{_l1_dcache_prefetches = Prelude'.Just new'Field}) (P'.wireGet 4)
-             216 -> Prelude'.fmap (\ !new'Field -> old'Self{_l1_dcache_prefetch_misses = Prelude'.Just new'Field}) (P'.wireGet 4)
-             224 -> Prelude'.fmap (\ !new'Field -> old'Self{_l1_icache_loads = Prelude'.Just new'Field}) (P'.wireGet 4)
-             232 -> Prelude'.fmap (\ !new'Field -> old'Self{_l1_icache_load_misses = Prelude'.Just new'Field}) (P'.wireGet 4)
-             240 -> Prelude'.fmap (\ !new'Field -> old'Self{_l1_icache_prefetches = Prelude'.Just new'Field}) (P'.wireGet 4)
-             248 -> Prelude'.fmap (\ !new'Field -> old'Self{_l1_icache_prefetch_misses = Prelude'.Just new'Field}) (P'.wireGet 4)
-             256 -> Prelude'.fmap (\ !new'Field -> old'Self{_llc_loads = Prelude'.Just new'Field}) (P'.wireGet 4)
-             264 -> Prelude'.fmap (\ !new'Field -> old'Self{_llc_load_misses = Prelude'.Just new'Field}) (P'.wireGet 4)
-             272 -> Prelude'.fmap (\ !new'Field -> old'Self{_llc_stores = Prelude'.Just new'Field}) (P'.wireGet 4)
-             280 -> Prelude'.fmap (\ !new'Field -> old'Self{_llc_store_misses = Prelude'.Just new'Field}) (P'.wireGet 4)
-             288 -> Prelude'.fmap (\ !new'Field -> old'Self{_llc_prefetches = Prelude'.Just new'Field}) (P'.wireGet 4)
-             296 -> Prelude'.fmap (\ !new'Field -> old'Self{_llc_prefetch_misses = Prelude'.Just new'Field}) (P'.wireGet 4)
-             304 -> Prelude'.fmap (\ !new'Field -> old'Self{_dtlb_loads = Prelude'.Just new'Field}) (P'.wireGet 4)
-             312 -> Prelude'.fmap (\ !new'Field -> old'Self{_dtlb_load_misses = Prelude'.Just new'Field}) (P'.wireGet 4)
-             320 -> Prelude'.fmap (\ !new'Field -> old'Self{_dtlb_stores = Prelude'.Just new'Field}) (P'.wireGet 4)
-             328 -> Prelude'.fmap (\ !new'Field -> old'Self{_dtlb_store_misses = Prelude'.Just new'Field}) (P'.wireGet 4)
-             336 -> Prelude'.fmap (\ !new'Field -> old'Self{_dtlb_prefetches = Prelude'.Just new'Field}) (P'.wireGet 4)
-             344 -> Prelude'.fmap (\ !new'Field -> old'Self{_dtlb_prefetch_misses = Prelude'.Just new'Field}) (P'.wireGet 4)
-             352 -> Prelude'.fmap (\ !new'Field -> old'Self{_itlb_loads = Prelude'.Just new'Field}) (P'.wireGet 4)
-             360 -> Prelude'.fmap (\ !new'Field -> old'Self{_itlb_load_misses = Prelude'.Just new'Field}) (P'.wireGet 4)
-             368 -> Prelude'.fmap (\ !new'Field -> old'Self{_branch_loads = Prelude'.Just new'Field}) (P'.wireGet 4)
-             376 -> Prelude'.fmap (\ !new'Field -> old'Self{_branch_load_misses = Prelude'.Just new'Field}) (P'.wireGet 4)
-             384 -> Prelude'.fmap (\ !new'Field -> old'Self{_node_loads = Prelude'.Just new'Field}) (P'.wireGet 4)
-             392 -> Prelude'.fmap (\ !new'Field -> old'Self{_node_load_misses = Prelude'.Just new'Field}) (P'.wireGet 4)
-             400 -> Prelude'.fmap (\ !new'Field -> old'Self{_node_stores = Prelude'.Just new'Field}) (P'.wireGet 4)
-             408 -> Prelude'.fmap (\ !new'Field -> old'Self{_node_store_misses = Prelude'.Just new'Field}) (P'.wireGet 4)
-             416 -> Prelude'.fmap (\ !new'Field -> old'Self{_node_prefetches = Prelude'.Just new'Field}) (P'.wireGet 4)
-             424 -> Prelude'.fmap (\ !new'Field -> old'Self{_node_prefetch_misses = Prelude'.Just new'Field}) (P'.wireGet 4)
+             9 -> Prelude'.fmap (\ !new'Field -> old'Self{timestamp = new'Field}) (P'.wireGet 1)
+             17 -> Prelude'.fmap (\ !new'Field -> old'Self{duration = new'Field}) (P'.wireGet 1)
+             24 -> Prelude'.fmap (\ !new'Field -> old'Self{cycles = Prelude'.Just new'Field}) (P'.wireGet 4)
+             32 -> Prelude'.fmap (\ !new'Field -> old'Self{stalled_cycles_frontend = Prelude'.Just new'Field}) (P'.wireGet 4)
+             40 -> Prelude'.fmap (\ !new'Field -> old'Self{stalled_cycles_backend = Prelude'.Just new'Field}) (P'.wireGet 4)
+             48 -> Prelude'.fmap (\ !new'Field -> old'Self{instructions = Prelude'.Just new'Field}) (P'.wireGet 4)
+             56 -> Prelude'.fmap (\ !new'Field -> old'Self{cache_references = Prelude'.Just new'Field}) (P'.wireGet 4)
+             64 -> Prelude'.fmap (\ !new'Field -> old'Self{cache_misses = Prelude'.Just new'Field}) (P'.wireGet 4)
+             72 -> Prelude'.fmap (\ !new'Field -> old'Self{branches = Prelude'.Just new'Field}) (P'.wireGet 4)
+             80 -> Prelude'.fmap (\ !new'Field -> old'Self{branch_misses = Prelude'.Just new'Field}) (P'.wireGet 4)
+             88 -> Prelude'.fmap (\ !new'Field -> old'Self{bus_cycles = Prelude'.Just new'Field}) (P'.wireGet 4)
+             96 -> Prelude'.fmap (\ !new'Field -> old'Self{ref_cycles = Prelude'.Just new'Field}) (P'.wireGet 4)
+             105 -> Prelude'.fmap (\ !new'Field -> old'Self{cpu_clock = Prelude'.Just new'Field}) (P'.wireGet 1)
+             113 -> Prelude'.fmap (\ !new'Field -> old'Self{task_clock = Prelude'.Just new'Field}) (P'.wireGet 1)
+             120 -> Prelude'.fmap (\ !new'Field -> old'Self{page_faults = Prelude'.Just new'Field}) (P'.wireGet 4)
+             128 -> Prelude'.fmap (\ !new'Field -> old'Self{minor_faults = Prelude'.Just new'Field}) (P'.wireGet 4)
+             136 -> Prelude'.fmap (\ !new'Field -> old'Self{major_faults = Prelude'.Just new'Field}) (P'.wireGet 4)
+             144 -> Prelude'.fmap (\ !new'Field -> old'Self{context_switches = Prelude'.Just new'Field}) (P'.wireGet 4)
+             152 -> Prelude'.fmap (\ !new'Field -> old'Self{cpu_migrations = Prelude'.Just new'Field}) (P'.wireGet 4)
+             160 -> Prelude'.fmap (\ !new'Field -> old'Self{alignment_faults = Prelude'.Just new'Field}) (P'.wireGet 4)
+             168 -> Prelude'.fmap (\ !new'Field -> old'Self{emulation_faults = Prelude'.Just new'Field}) (P'.wireGet 4)
+             176 -> Prelude'.fmap (\ !new'Field -> old'Self{l1_dcache_loads = Prelude'.Just new'Field}) (P'.wireGet 4)
+             184 -> Prelude'.fmap (\ !new'Field -> old'Self{l1_dcache_load_misses = Prelude'.Just new'Field}) (P'.wireGet 4)
+             192 -> Prelude'.fmap (\ !new'Field -> old'Self{l1_dcache_stores = Prelude'.Just new'Field}) (P'.wireGet 4)
+             200 -> Prelude'.fmap (\ !new'Field -> old'Self{l1_dcache_store_misses = Prelude'.Just new'Field}) (P'.wireGet 4)
+             208 -> Prelude'.fmap (\ !new'Field -> old'Self{l1_dcache_prefetches = Prelude'.Just new'Field}) (P'.wireGet 4)
+             216 -> Prelude'.fmap (\ !new'Field -> old'Self{l1_dcache_prefetch_misses = Prelude'.Just new'Field}) (P'.wireGet 4)
+             224 -> Prelude'.fmap (\ !new'Field -> old'Self{l1_icache_loads = Prelude'.Just new'Field}) (P'.wireGet 4)
+             232 -> Prelude'.fmap (\ !new'Field -> old'Self{l1_icache_load_misses = Prelude'.Just new'Field}) (P'.wireGet 4)
+             240 -> Prelude'.fmap (\ !new'Field -> old'Self{l1_icache_prefetches = Prelude'.Just new'Field}) (P'.wireGet 4)
+             248 -> Prelude'.fmap (\ !new'Field -> old'Self{l1_icache_prefetch_misses = Prelude'.Just new'Field}) (P'.wireGet 4)
+             256 -> Prelude'.fmap (\ !new'Field -> old'Self{llc_loads = Prelude'.Just new'Field}) (P'.wireGet 4)
+             264 -> Prelude'.fmap (\ !new'Field -> old'Self{llc_load_misses = Prelude'.Just new'Field}) (P'.wireGet 4)
+             272 -> Prelude'.fmap (\ !new'Field -> old'Self{llc_stores = Prelude'.Just new'Field}) (P'.wireGet 4)
+             280 -> Prelude'.fmap (\ !new'Field -> old'Self{llc_store_misses = Prelude'.Just new'Field}) (P'.wireGet 4)
+             288 -> Prelude'.fmap (\ !new'Field -> old'Self{llc_prefetches = Prelude'.Just new'Field}) (P'.wireGet 4)
+             296 -> Prelude'.fmap (\ !new'Field -> old'Self{llc_prefetch_misses = Prelude'.Just new'Field}) (P'.wireGet 4)
+             304 -> Prelude'.fmap (\ !new'Field -> old'Self{dtlb_loads = Prelude'.Just new'Field}) (P'.wireGet 4)
+             312 -> Prelude'.fmap (\ !new'Field -> old'Self{dtlb_load_misses = Prelude'.Just new'Field}) (P'.wireGet 4)
+             320 -> Prelude'.fmap (\ !new'Field -> old'Self{dtlb_stores = Prelude'.Just new'Field}) (P'.wireGet 4)
+             328 -> Prelude'.fmap (\ !new'Field -> old'Self{dtlb_store_misses = Prelude'.Just new'Field}) (P'.wireGet 4)
+             336 -> Prelude'.fmap (\ !new'Field -> old'Self{dtlb_prefetches = Prelude'.Just new'Field}) (P'.wireGet 4)
+             344 -> Prelude'.fmap (\ !new'Field -> old'Self{dtlb_prefetch_misses = Prelude'.Just new'Field}) (P'.wireGet 4)
+             352 -> Prelude'.fmap (\ !new'Field -> old'Self{itlb_loads = Prelude'.Just new'Field}) (P'.wireGet 4)
+             360 -> Prelude'.fmap (\ !new'Field -> old'Self{itlb_load_misses = Prelude'.Just new'Field}) (P'.wireGet 4)
+             368 -> Prelude'.fmap (\ !new'Field -> old'Self{branch_loads = Prelude'.Just new'Field}) (P'.wireGet 4)
+             376 -> Prelude'.fmap (\ !new'Field -> old'Self{branch_load_misses = Prelude'.Just new'Field}) (P'.wireGet 4)
+             384 -> Prelude'.fmap (\ !new'Field -> old'Self{node_loads = Prelude'.Just new'Field}) (P'.wireGet 4)
+             392 -> Prelude'.fmap (\ !new'Field -> old'Self{node_load_misses = Prelude'.Just new'Field}) (P'.wireGet 4)
+             400 -> Prelude'.fmap (\ !new'Field -> old'Self{node_stores = Prelude'.Just new'Field}) (P'.wireGet 4)
+             408 -> Prelude'.fmap (\ !new'Field -> old'Self{node_store_misses = Prelude'.Just new'Field}) (P'.wireGet 4)
+             416 -> Prelude'.fmap (\ !new'Field -> old'Self{node_prefetches = Prelude'.Just new'Field}) (P'.wireGet 4)
+             424 -> Prelude'.fmap (\ !new'Field -> old'Self{node_prefetch_misses = Prelude'.Just new'Field}) (P'.wireGet 4)
              _ -> let (field'Number, wire'Type) = P'.splitWireTag wire'Tag in P'.unknown field'Number wire'Type old'Self
 
 instance P'.MessageAPI msg' (msg' -> PerfStatistics) PerfStatistics where
@@ -475,7 +460,7 @@ instance P'.ReflectDescriptor PerfStatistics where
          416, 424])
   reflectDescriptorInfo _
    = Prelude'.read
-      "DescriptorInfo {descName = ProtoName {protobufName = FIName \".mesos.v1.PerfStatistics\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"PerfStatistics\"}, descFilePath = [\"Mesos\",\"V1\",\"Protos\",\"PerfStatistics.hs\"], isGroup = False, fields = fromList [FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.PerfStatistics.timestamp\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"PerfStatistics\"], baseName' = FName \"timestamp\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 1}, wireTag = WireTag {getWireTag = 9}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = True, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 1}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.PerfStatistics.duration\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"PerfStatistics\"], baseName' = FName \"duration\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 2}, wireTag = WireTag {getWireTag = 17}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = True, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 1}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.PerfStatistics.cycles\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"PerfStatistics\"], baseName' = FName \"cycles\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 3}, wireTag = WireTag {getWireTag = 24}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.PerfStatistics.stalled_cycles_frontend\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"PerfStatistics\"], baseName' = FName \"stalled_cycles_frontend\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 4}, wireTag = WireTag {getWireTag = 32}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.PerfStatistics.stalled_cycles_backend\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"PerfStatistics\"], baseName' = FName \"stalled_cycles_backend\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 5}, wireTag = WireTag {getWireTag = 40}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.PerfStatistics.instructions\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"PerfStatistics\"], baseName' = FName \"instructions\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 6}, wireTag = WireTag {getWireTag = 48}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.PerfStatistics.cache_references\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"PerfStatistics\"], baseName' = FName \"cache_references\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 7}, wireTag = WireTag {getWireTag = 56}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.PerfStatistics.cache_misses\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"PerfStatistics\"], baseName' = FName \"cache_misses\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 8}, wireTag = WireTag {getWireTag = 64}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.PerfStatistics.branches\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"PerfStatistics\"], baseName' = FName \"branches\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 9}, wireTag = WireTag {getWireTag = 72}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.PerfStatistics.branch_misses\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"PerfStatistics\"], baseName' = FName \"branch_misses\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 10}, wireTag = WireTag {getWireTag = 80}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.PerfStatistics.bus_cycles\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"PerfStatistics\"], baseName' = FName \"bus_cycles\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 11}, wireTag = WireTag {getWireTag = 88}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.PerfStatistics.ref_cycles\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"PerfStatistics\"], baseName' = FName \"ref_cycles\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 12}, wireTag = WireTag {getWireTag = 96}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.PerfStatistics.cpu_clock\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"PerfStatistics\"], baseName' = FName \"cpu_clock\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 13}, wireTag = WireTag {getWireTag = 105}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 1}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.PerfStatistics.task_clock\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"PerfStatistics\"], baseName' = FName \"task_clock\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 14}, wireTag = WireTag {getWireTag = 113}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 1}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.PerfStatistics.page_faults\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"PerfStatistics\"], baseName' = FName \"page_faults\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 15}, wireTag = WireTag {getWireTag = 120}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.PerfStatistics.minor_faults\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"PerfStatistics\"], baseName' = FName \"minor_faults\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 16}, wireTag = WireTag {getWireTag = 128}, packedTag = Nothing, wireTagLength = 2, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.PerfStatistics.major_faults\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"PerfStatistics\"], baseName' = FName \"major_faults\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 17}, wireTag = WireTag {getWireTag = 136}, packedTag = Nothing, wireTagLength = 2, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.PerfStatistics.context_switches\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"PerfStatistics\"], baseName' = FName \"context_switches\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 18}, wireTag = WireTag {getWireTag = 144}, packedTag = Nothing, wireTagLength = 2, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.PerfStatistics.cpu_migrations\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"PerfStatistics\"], baseName' = FName \"cpu_migrations\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 19}, wireTag = WireTag {getWireTag = 152}, packedTag = Nothing, wireTagLength = 2, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.PerfStatistics.alignment_faults\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"PerfStatistics\"], baseName' = FName \"alignment_faults\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 20}, wireTag = WireTag {getWireTag = 160}, packedTag = Nothing, wireTagLength = 2, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.PerfStatistics.emulation_faults\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"PerfStatistics\"], baseName' = FName \"emulation_faults\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 21}, wireTag = WireTag {getWireTag = 168}, packedTag = Nothing, wireTagLength = 2, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.PerfStatistics.l1_dcache_loads\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"PerfStatistics\"], baseName' = FName \"l1_dcache_loads\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 22}, wireTag = WireTag {getWireTag = 176}, packedTag = Nothing, wireTagLength = 2, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.PerfStatistics.l1_dcache_load_misses\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"PerfStatistics\"], baseName' = FName \"l1_dcache_load_misses\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 23}, wireTag = WireTag {getWireTag = 184}, packedTag = Nothing, wireTagLength = 2, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.PerfStatistics.l1_dcache_stores\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"PerfStatistics\"], baseName' = FName \"l1_dcache_stores\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 24}, wireTag = WireTag {getWireTag = 192}, packedTag = Nothing, wireTagLength = 2, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.PerfStatistics.l1_dcache_store_misses\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"PerfStatistics\"], baseName' = FName \"l1_dcache_store_misses\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 25}, wireTag = WireTag {getWireTag = 200}, packedTag = Nothing, wireTagLength = 2, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.PerfStatistics.l1_dcache_prefetches\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"PerfStatistics\"], baseName' = FName \"l1_dcache_prefetches\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 26}, wireTag = WireTag {getWireTag = 208}, packedTag = Nothing, wireTagLength = 2, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.PerfStatistics.l1_dcache_prefetch_misses\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"PerfStatistics\"], baseName' = FName \"l1_dcache_prefetch_misses\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 27}, wireTag = WireTag {getWireTag = 216}, packedTag = Nothing, wireTagLength = 2, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.PerfStatistics.l1_icache_loads\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"PerfStatistics\"], baseName' = FName \"l1_icache_loads\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 28}, wireTag = WireTag {getWireTag = 224}, packedTag = Nothing, wireTagLength = 2, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.PerfStatistics.l1_icache_load_misses\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"PerfStatistics\"], baseName' = FName \"l1_icache_load_misses\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 29}, wireTag = WireTag {getWireTag = 232}, packedTag = Nothing, wireTagLength = 2, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.PerfStatistics.l1_icache_prefetches\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"PerfStatistics\"], baseName' = FName \"l1_icache_prefetches\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 30}, wireTag = WireTag {getWireTag = 240}, packedTag = Nothing, wireTagLength = 2, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.PerfStatistics.l1_icache_prefetch_misses\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"PerfStatistics\"], baseName' = FName \"l1_icache_prefetch_misses\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 31}, wireTag = WireTag {getWireTag = 248}, packedTag = Nothing, wireTagLength = 2, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.PerfStatistics.llc_loads\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"PerfStatistics\"], baseName' = FName \"llc_loads\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 32}, wireTag = WireTag {getWireTag = 256}, packedTag = Nothing, wireTagLength = 2, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.PerfStatistics.llc_load_misses\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"PerfStatistics\"], baseName' = FName \"llc_load_misses\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 33}, wireTag = WireTag {getWireTag = 264}, packedTag = Nothing, wireTagLength = 2, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.PerfStatistics.llc_stores\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"PerfStatistics\"], baseName' = FName \"llc_stores\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 34}, wireTag = WireTag {getWireTag = 272}, packedTag = Nothing, wireTagLength = 2, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.PerfStatistics.llc_store_misses\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"PerfStatistics\"], baseName' = FName \"llc_store_misses\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 35}, wireTag = WireTag {getWireTag = 280}, packedTag = Nothing, wireTagLength = 2, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.PerfStatistics.llc_prefetches\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"PerfStatistics\"], baseName' = FName \"llc_prefetches\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 36}, wireTag = WireTag {getWireTag = 288}, packedTag = Nothing, wireTagLength = 2, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.PerfStatistics.llc_prefetch_misses\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"PerfStatistics\"], baseName' = FName \"llc_prefetch_misses\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 37}, wireTag = WireTag {getWireTag = 296}, packedTag = Nothing, wireTagLength = 2, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.PerfStatistics.dtlb_loads\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"PerfStatistics\"], baseName' = FName \"dtlb_loads\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 38}, wireTag = WireTag {getWireTag = 304}, packedTag = Nothing, wireTagLength = 2, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.PerfStatistics.dtlb_load_misses\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"PerfStatistics\"], baseName' = FName \"dtlb_load_misses\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 39}, wireTag = WireTag {getWireTag = 312}, packedTag = Nothing, wireTagLength = 2, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.PerfStatistics.dtlb_stores\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"PerfStatistics\"], baseName' = FName \"dtlb_stores\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 40}, wireTag = WireTag {getWireTag = 320}, packedTag = Nothing, wireTagLength = 2, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.PerfStatistics.dtlb_store_misses\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"PerfStatistics\"], baseName' = FName \"dtlb_store_misses\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 41}, wireTag = WireTag {getWireTag = 328}, packedTag = Nothing, wireTagLength = 2, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.PerfStatistics.dtlb_prefetches\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"PerfStatistics\"], baseName' = FName \"dtlb_prefetches\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 42}, wireTag = WireTag {getWireTag = 336}, packedTag = Nothing, wireTagLength = 2, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.PerfStatistics.dtlb_prefetch_misses\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"PerfStatistics\"], baseName' = FName \"dtlb_prefetch_misses\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 43}, wireTag = WireTag {getWireTag = 344}, packedTag = Nothing, wireTagLength = 2, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.PerfStatistics.itlb_loads\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"PerfStatistics\"], baseName' = FName \"itlb_loads\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 44}, wireTag = WireTag {getWireTag = 352}, packedTag = Nothing, wireTagLength = 2, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.PerfStatistics.itlb_load_misses\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"PerfStatistics\"], baseName' = FName \"itlb_load_misses\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 45}, wireTag = WireTag {getWireTag = 360}, packedTag = Nothing, wireTagLength = 2, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.PerfStatistics.branch_loads\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"PerfStatistics\"], baseName' = FName \"branch_loads\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 46}, wireTag = WireTag {getWireTag = 368}, packedTag = Nothing, wireTagLength = 2, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.PerfStatistics.branch_load_misses\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"PerfStatistics\"], baseName' = FName \"branch_load_misses\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 47}, wireTag = WireTag {getWireTag = 376}, packedTag = Nothing, wireTagLength = 2, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.PerfStatistics.node_loads\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"PerfStatistics\"], baseName' = FName \"node_loads\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 48}, wireTag = WireTag {getWireTag = 384}, packedTag = Nothing, wireTagLength = 2, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.PerfStatistics.node_load_misses\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"PerfStatistics\"], baseName' = FName \"node_load_misses\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 49}, wireTag = WireTag {getWireTag = 392}, packedTag = Nothing, wireTagLength = 2, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.PerfStatistics.node_stores\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"PerfStatistics\"], baseName' = FName \"node_stores\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 50}, wireTag = WireTag {getWireTag = 400}, packedTag = Nothing, wireTagLength = 2, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.PerfStatistics.node_store_misses\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"PerfStatistics\"], baseName' = FName \"node_store_misses\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 51}, wireTag = WireTag {getWireTag = 408}, packedTag = Nothing, wireTagLength = 2, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.PerfStatistics.node_prefetches\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"PerfStatistics\"], baseName' = FName \"node_prefetches\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 52}, wireTag = WireTag {getWireTag = 416}, packedTag = Nothing, wireTagLength = 2, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.PerfStatistics.node_prefetch_misses\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"PerfStatistics\"], baseName' = FName \"node_prefetch_misses\", baseNamePrefix' = \"_\"}, fieldNumber = FieldId {getFieldId = 53}, wireTag = WireTag {getWireTag = 424}, packedTag = Nothing, wireTagLength = 2, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing}], descOneofs = fromList [], keys = fromList [], extRanges = [], knownKeys = fromList [], storeUnknown = False, lazyFields = False, makeLenses = True, jsonInstances = True}"
+      "DescriptorInfo {descName = ProtoName {protobufName = FIName \".mesos.v1.PerfStatistics\", haskellPrefix = [MName \"Mesos\",MName \"V1\"], parentModule = [MName \"Protos\"], baseName = MName \"PerfStatistics\"}, descFilePath = [\"Mesos\",\"V1\",\"Protos\",\"PerfStatistics.hs\"], isGroup = False, fields = fromList [FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.PerfStatistics.timestamp\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"PerfStatistics\"], baseName' = FName \"timestamp\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 1}, wireTag = WireTag {getWireTag = 9}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = True, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 1}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.PerfStatistics.duration\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"PerfStatistics\"], baseName' = FName \"duration\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 2}, wireTag = WireTag {getWireTag = 17}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = True, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 1}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.PerfStatistics.cycles\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"PerfStatistics\"], baseName' = FName \"cycles\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 3}, wireTag = WireTag {getWireTag = 24}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.PerfStatistics.stalled_cycles_frontend\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"PerfStatistics\"], baseName' = FName \"stalled_cycles_frontend\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 4}, wireTag = WireTag {getWireTag = 32}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.PerfStatistics.stalled_cycles_backend\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"PerfStatistics\"], baseName' = FName \"stalled_cycles_backend\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 5}, wireTag = WireTag {getWireTag = 40}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.PerfStatistics.instructions\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"PerfStatistics\"], baseName' = FName \"instructions\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 6}, wireTag = WireTag {getWireTag = 48}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.PerfStatistics.cache_references\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"PerfStatistics\"], baseName' = FName \"cache_references\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 7}, wireTag = WireTag {getWireTag = 56}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.PerfStatistics.cache_misses\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"PerfStatistics\"], baseName' = FName \"cache_misses\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 8}, wireTag = WireTag {getWireTag = 64}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.PerfStatistics.branches\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"PerfStatistics\"], baseName' = FName \"branches\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 9}, wireTag = WireTag {getWireTag = 72}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.PerfStatistics.branch_misses\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"PerfStatistics\"], baseName' = FName \"branch_misses\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 10}, wireTag = WireTag {getWireTag = 80}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.PerfStatistics.bus_cycles\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"PerfStatistics\"], baseName' = FName \"bus_cycles\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 11}, wireTag = WireTag {getWireTag = 88}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.PerfStatistics.ref_cycles\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"PerfStatistics\"], baseName' = FName \"ref_cycles\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 12}, wireTag = WireTag {getWireTag = 96}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.PerfStatistics.cpu_clock\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"PerfStatistics\"], baseName' = FName \"cpu_clock\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 13}, wireTag = WireTag {getWireTag = 105}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 1}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.PerfStatistics.task_clock\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"PerfStatistics\"], baseName' = FName \"task_clock\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 14}, wireTag = WireTag {getWireTag = 113}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 1}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.PerfStatistics.page_faults\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"PerfStatistics\"], baseName' = FName \"page_faults\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 15}, wireTag = WireTag {getWireTag = 120}, packedTag = Nothing, wireTagLength = 1, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.PerfStatistics.minor_faults\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"PerfStatistics\"], baseName' = FName \"minor_faults\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 16}, wireTag = WireTag {getWireTag = 128}, packedTag = Nothing, wireTagLength = 2, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.PerfStatistics.major_faults\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"PerfStatistics\"], baseName' = FName \"major_faults\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 17}, wireTag = WireTag {getWireTag = 136}, packedTag = Nothing, wireTagLength = 2, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.PerfStatistics.context_switches\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"PerfStatistics\"], baseName' = FName \"context_switches\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 18}, wireTag = WireTag {getWireTag = 144}, packedTag = Nothing, wireTagLength = 2, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.PerfStatistics.cpu_migrations\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"PerfStatistics\"], baseName' = FName \"cpu_migrations\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 19}, wireTag = WireTag {getWireTag = 152}, packedTag = Nothing, wireTagLength = 2, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.PerfStatistics.alignment_faults\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"PerfStatistics\"], baseName' = FName \"alignment_faults\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 20}, wireTag = WireTag {getWireTag = 160}, packedTag = Nothing, wireTagLength = 2, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.PerfStatistics.emulation_faults\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"PerfStatistics\"], baseName' = FName \"emulation_faults\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 21}, wireTag = WireTag {getWireTag = 168}, packedTag = Nothing, wireTagLength = 2, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.PerfStatistics.l1_dcache_loads\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"PerfStatistics\"], baseName' = FName \"l1_dcache_loads\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 22}, wireTag = WireTag {getWireTag = 176}, packedTag = Nothing, wireTagLength = 2, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.PerfStatistics.l1_dcache_load_misses\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"PerfStatistics\"], baseName' = FName \"l1_dcache_load_misses\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 23}, wireTag = WireTag {getWireTag = 184}, packedTag = Nothing, wireTagLength = 2, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.PerfStatistics.l1_dcache_stores\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"PerfStatistics\"], baseName' = FName \"l1_dcache_stores\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 24}, wireTag = WireTag {getWireTag = 192}, packedTag = Nothing, wireTagLength = 2, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.PerfStatistics.l1_dcache_store_misses\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"PerfStatistics\"], baseName' = FName \"l1_dcache_store_misses\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 25}, wireTag = WireTag {getWireTag = 200}, packedTag = Nothing, wireTagLength = 2, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.PerfStatistics.l1_dcache_prefetches\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"PerfStatistics\"], baseName' = FName \"l1_dcache_prefetches\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 26}, wireTag = WireTag {getWireTag = 208}, packedTag = Nothing, wireTagLength = 2, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.PerfStatistics.l1_dcache_prefetch_misses\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"PerfStatistics\"], baseName' = FName \"l1_dcache_prefetch_misses\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 27}, wireTag = WireTag {getWireTag = 216}, packedTag = Nothing, wireTagLength = 2, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.PerfStatistics.l1_icache_loads\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"PerfStatistics\"], baseName' = FName \"l1_icache_loads\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 28}, wireTag = WireTag {getWireTag = 224}, packedTag = Nothing, wireTagLength = 2, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.PerfStatistics.l1_icache_load_misses\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"PerfStatistics\"], baseName' = FName \"l1_icache_load_misses\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 29}, wireTag = WireTag {getWireTag = 232}, packedTag = Nothing, wireTagLength = 2, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.PerfStatistics.l1_icache_prefetches\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"PerfStatistics\"], baseName' = FName \"l1_icache_prefetches\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 30}, wireTag = WireTag {getWireTag = 240}, packedTag = Nothing, wireTagLength = 2, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.PerfStatistics.l1_icache_prefetch_misses\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"PerfStatistics\"], baseName' = FName \"l1_icache_prefetch_misses\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 31}, wireTag = WireTag {getWireTag = 248}, packedTag = Nothing, wireTagLength = 2, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.PerfStatistics.llc_loads\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"PerfStatistics\"], baseName' = FName \"llc_loads\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 32}, wireTag = WireTag {getWireTag = 256}, packedTag = Nothing, wireTagLength = 2, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.PerfStatistics.llc_load_misses\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"PerfStatistics\"], baseName' = FName \"llc_load_misses\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 33}, wireTag = WireTag {getWireTag = 264}, packedTag = Nothing, wireTagLength = 2, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.PerfStatistics.llc_stores\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"PerfStatistics\"], baseName' = FName \"llc_stores\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 34}, wireTag = WireTag {getWireTag = 272}, packedTag = Nothing, wireTagLength = 2, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.PerfStatistics.llc_store_misses\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"PerfStatistics\"], baseName' = FName \"llc_store_misses\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 35}, wireTag = WireTag {getWireTag = 280}, packedTag = Nothing, wireTagLength = 2, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.PerfStatistics.llc_prefetches\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"PerfStatistics\"], baseName' = FName \"llc_prefetches\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 36}, wireTag = WireTag {getWireTag = 288}, packedTag = Nothing, wireTagLength = 2, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.PerfStatistics.llc_prefetch_misses\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"PerfStatistics\"], baseName' = FName \"llc_prefetch_misses\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 37}, wireTag = WireTag {getWireTag = 296}, packedTag = Nothing, wireTagLength = 2, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.PerfStatistics.dtlb_loads\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"PerfStatistics\"], baseName' = FName \"dtlb_loads\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 38}, wireTag = WireTag {getWireTag = 304}, packedTag = Nothing, wireTagLength = 2, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.PerfStatistics.dtlb_load_misses\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"PerfStatistics\"], baseName' = FName \"dtlb_load_misses\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 39}, wireTag = WireTag {getWireTag = 312}, packedTag = Nothing, wireTagLength = 2, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.PerfStatistics.dtlb_stores\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"PerfStatistics\"], baseName' = FName \"dtlb_stores\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 40}, wireTag = WireTag {getWireTag = 320}, packedTag = Nothing, wireTagLength = 2, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.PerfStatistics.dtlb_store_misses\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"PerfStatistics\"], baseName' = FName \"dtlb_store_misses\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 41}, wireTag = WireTag {getWireTag = 328}, packedTag = Nothing, wireTagLength = 2, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.PerfStatistics.dtlb_prefetches\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"PerfStatistics\"], baseName' = FName \"dtlb_prefetches\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 42}, wireTag = WireTag {getWireTag = 336}, packedTag = Nothing, wireTagLength = 2, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.PerfStatistics.dtlb_prefetch_misses\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"PerfStatistics\"], baseName' = FName \"dtlb_prefetch_misses\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 43}, wireTag = WireTag {getWireTag = 344}, packedTag = Nothing, wireTagLength = 2, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.PerfStatistics.itlb_loads\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"PerfStatistics\"], baseName' = FName \"itlb_loads\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 44}, wireTag = WireTag {getWireTag = 352}, packedTag = Nothing, wireTagLength = 2, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.PerfStatistics.itlb_load_misses\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"PerfStatistics\"], baseName' = FName \"itlb_load_misses\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 45}, wireTag = WireTag {getWireTag = 360}, packedTag = Nothing, wireTagLength = 2, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.PerfStatistics.branch_loads\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"PerfStatistics\"], baseName' = FName \"branch_loads\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 46}, wireTag = WireTag {getWireTag = 368}, packedTag = Nothing, wireTagLength = 2, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.PerfStatistics.branch_load_misses\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"PerfStatistics\"], baseName' = FName \"branch_load_misses\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 47}, wireTag = WireTag {getWireTag = 376}, packedTag = Nothing, wireTagLength = 2, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.PerfStatistics.node_loads\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"PerfStatistics\"], baseName' = FName \"node_loads\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 48}, wireTag = WireTag {getWireTag = 384}, packedTag = Nothing, wireTagLength = 2, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.PerfStatistics.node_load_misses\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"PerfStatistics\"], baseName' = FName \"node_load_misses\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 49}, wireTag = WireTag {getWireTag = 392}, packedTag = Nothing, wireTagLength = 2, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.PerfStatistics.node_stores\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"PerfStatistics\"], baseName' = FName \"node_stores\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 50}, wireTag = WireTag {getWireTag = 400}, packedTag = Nothing, wireTagLength = 2, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.PerfStatistics.node_store_misses\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"PerfStatistics\"], baseName' = FName \"node_store_misses\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 51}, wireTag = WireTag {getWireTag = 408}, packedTag = Nothing, wireTagLength = 2, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.PerfStatistics.node_prefetches\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"PerfStatistics\"], baseName' = FName \"node_prefetches\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 52}, wireTag = WireTag {getWireTag = 416}, packedTag = Nothing, wireTagLength = 2, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing},FieldInfo {fieldName = ProtoFName {protobufName' = FIName \".mesos.v1.PerfStatistics.node_prefetch_misses\", haskellPrefix' = [MName \"Mesos\",MName \"V1\"], parentModule' = [MName \"Protos\",MName \"PerfStatistics\"], baseName' = FName \"node_prefetch_misses\", baseNamePrefix' = \"\"}, fieldNumber = FieldId {getFieldId = 53}, wireTag = WireTag {getWireTag = 424}, packedTag = Nothing, wireTagLength = 2, isPacked = False, isRequired = False, canRepeat = False, mightPack = False, typeCode = FieldType {getFieldType = 4}, typeName = Nothing, hsRawDefault = Nothing, hsDefault = Nothing}], descOneofs = fromList [], keys = fromList [], extRanges = [], knownKeys = fromList [], storeUnknown = False, lazyFields = False, makeLenses = False, jsonInstances = True}"
 
 instance P'.TextType PerfStatistics where
   tellT = P'.tellSubMessage
@@ -484,341 +469,340 @@ instance P'.TextType PerfStatistics where
 instance P'.TextMsg PerfStatistics where
   textPut msg
    = do
-       P'.tellT "timestamp" (_timestamp msg)
-       P'.tellT "duration" (_duration msg)
-       P'.tellT "cycles" (_cycles msg)
-       P'.tellT "stalled_cycles_frontend" (_stalled_cycles_frontend msg)
-       P'.tellT "stalled_cycles_backend" (_stalled_cycles_backend msg)
-       P'.tellT "instructions" (_instructions msg)
-       P'.tellT "cache_references" (_cache_references msg)
-       P'.tellT "cache_misses" (_cache_misses msg)
-       P'.tellT "branches" (_branches msg)
-       P'.tellT "branch_misses" (_branch_misses msg)
-       P'.tellT "bus_cycles" (_bus_cycles msg)
-       P'.tellT "ref_cycles" (_ref_cycles msg)
-       P'.tellT "cpu_clock" (_cpu_clock msg)
-       P'.tellT "task_clock" (_task_clock msg)
-       P'.tellT "page_faults" (_page_faults msg)
-       P'.tellT "minor_faults" (_minor_faults msg)
-       P'.tellT "major_faults" (_major_faults msg)
-       P'.tellT "context_switches" (_context_switches msg)
-       P'.tellT "cpu_migrations" (_cpu_migrations msg)
-       P'.tellT "alignment_faults" (_alignment_faults msg)
-       P'.tellT "emulation_faults" (_emulation_faults msg)
-       P'.tellT "l1_dcache_loads" (_l1_dcache_loads msg)
-       P'.tellT "l1_dcache_load_misses" (_l1_dcache_load_misses msg)
-       P'.tellT "l1_dcache_stores" (_l1_dcache_stores msg)
-       P'.tellT "l1_dcache_store_misses" (_l1_dcache_store_misses msg)
-       P'.tellT "l1_dcache_prefetches" (_l1_dcache_prefetches msg)
-       P'.tellT "l1_dcache_prefetch_misses" (_l1_dcache_prefetch_misses msg)
-       P'.tellT "l1_icache_loads" (_l1_icache_loads msg)
-       P'.tellT "l1_icache_load_misses" (_l1_icache_load_misses msg)
-       P'.tellT "l1_icache_prefetches" (_l1_icache_prefetches msg)
-       P'.tellT "l1_icache_prefetch_misses" (_l1_icache_prefetch_misses msg)
-       P'.tellT "llc_loads" (_llc_loads msg)
-       P'.tellT "llc_load_misses" (_llc_load_misses msg)
-       P'.tellT "llc_stores" (_llc_stores msg)
-       P'.tellT "llc_store_misses" (_llc_store_misses msg)
-       P'.tellT "llc_prefetches" (_llc_prefetches msg)
-       P'.tellT "llc_prefetch_misses" (_llc_prefetch_misses msg)
-       P'.tellT "dtlb_loads" (_dtlb_loads msg)
-       P'.tellT "dtlb_load_misses" (_dtlb_load_misses msg)
-       P'.tellT "dtlb_stores" (_dtlb_stores msg)
-       P'.tellT "dtlb_store_misses" (_dtlb_store_misses msg)
-       P'.tellT "dtlb_prefetches" (_dtlb_prefetches msg)
-       P'.tellT "dtlb_prefetch_misses" (_dtlb_prefetch_misses msg)
-       P'.tellT "itlb_loads" (_itlb_loads msg)
-       P'.tellT "itlb_load_misses" (_itlb_load_misses msg)
-       P'.tellT "branch_loads" (_branch_loads msg)
-       P'.tellT "branch_load_misses" (_branch_load_misses msg)
-       P'.tellT "node_loads" (_node_loads msg)
-       P'.tellT "node_load_misses" (_node_load_misses msg)
-       P'.tellT "node_stores" (_node_stores msg)
-       P'.tellT "node_store_misses" (_node_store_misses msg)
-       P'.tellT "node_prefetches" (_node_prefetches msg)
-       P'.tellT "node_prefetch_misses" (_node_prefetch_misses msg)
+       P'.tellT "timestamp" (timestamp msg)
+       P'.tellT "duration" (duration msg)
+       P'.tellT "cycles" (cycles msg)
+       P'.tellT "stalled_cycles_frontend" (stalled_cycles_frontend msg)
+       P'.tellT "stalled_cycles_backend" (stalled_cycles_backend msg)
+       P'.tellT "instructions" (instructions msg)
+       P'.tellT "cache_references" (cache_references msg)
+       P'.tellT "cache_misses" (cache_misses msg)
+       P'.tellT "branches" (branches msg)
+       P'.tellT "branch_misses" (branch_misses msg)
+       P'.tellT "bus_cycles" (bus_cycles msg)
+       P'.tellT "ref_cycles" (ref_cycles msg)
+       P'.tellT "cpu_clock" (cpu_clock msg)
+       P'.tellT "task_clock" (task_clock msg)
+       P'.tellT "page_faults" (page_faults msg)
+       P'.tellT "minor_faults" (minor_faults msg)
+       P'.tellT "major_faults" (major_faults msg)
+       P'.tellT "context_switches" (context_switches msg)
+       P'.tellT "cpu_migrations" (cpu_migrations msg)
+       P'.tellT "alignment_faults" (alignment_faults msg)
+       P'.tellT "emulation_faults" (emulation_faults msg)
+       P'.tellT "l1_dcache_loads" (l1_dcache_loads msg)
+       P'.tellT "l1_dcache_load_misses" (l1_dcache_load_misses msg)
+       P'.tellT "l1_dcache_stores" (l1_dcache_stores msg)
+       P'.tellT "l1_dcache_store_misses" (l1_dcache_store_misses msg)
+       P'.tellT "l1_dcache_prefetches" (l1_dcache_prefetches msg)
+       P'.tellT "l1_dcache_prefetch_misses" (l1_dcache_prefetch_misses msg)
+       P'.tellT "l1_icache_loads" (l1_icache_loads msg)
+       P'.tellT "l1_icache_load_misses" (l1_icache_load_misses msg)
+       P'.tellT "l1_icache_prefetches" (l1_icache_prefetches msg)
+       P'.tellT "l1_icache_prefetch_misses" (l1_icache_prefetch_misses msg)
+       P'.tellT "llc_loads" (llc_loads msg)
+       P'.tellT "llc_load_misses" (llc_load_misses msg)
+       P'.tellT "llc_stores" (llc_stores msg)
+       P'.tellT "llc_store_misses" (llc_store_misses msg)
+       P'.tellT "llc_prefetches" (llc_prefetches msg)
+       P'.tellT "llc_prefetch_misses" (llc_prefetch_misses msg)
+       P'.tellT "dtlb_loads" (dtlb_loads msg)
+       P'.tellT "dtlb_load_misses" (dtlb_load_misses msg)
+       P'.tellT "dtlb_stores" (dtlb_stores msg)
+       P'.tellT "dtlb_store_misses" (dtlb_store_misses msg)
+       P'.tellT "dtlb_prefetches" (dtlb_prefetches msg)
+       P'.tellT "dtlb_prefetch_misses" (dtlb_prefetch_misses msg)
+       P'.tellT "itlb_loads" (itlb_loads msg)
+       P'.tellT "itlb_load_misses" (itlb_load_misses msg)
+       P'.tellT "branch_loads" (branch_loads msg)
+       P'.tellT "branch_load_misses" (branch_load_misses msg)
+       P'.tellT "node_loads" (node_loads msg)
+       P'.tellT "node_load_misses" (node_load_misses msg)
+       P'.tellT "node_stores" (node_stores msg)
+       P'.tellT "node_store_misses" (node_store_misses msg)
+       P'.tellT "node_prefetches" (node_prefetches msg)
+       P'.tellT "node_prefetch_misses" (node_prefetch_misses msg)
   textGet
    = do
        mods <- P'.sepEndBy
                 (P'.choice
-                  [parse'_timestamp, parse'_duration, parse'_cycles, parse'_stalled_cycles_frontend, parse'_stalled_cycles_backend,
-                   parse'_instructions, parse'_cache_references, parse'_cache_misses, parse'_branches, parse'_branch_misses,
-                   parse'_bus_cycles, parse'_ref_cycles, parse'_cpu_clock, parse'_task_clock, parse'_page_faults,
-                   parse'_minor_faults, parse'_major_faults, parse'_context_switches, parse'_cpu_migrations,
-                   parse'_alignment_faults, parse'_emulation_faults, parse'_l1_dcache_loads, parse'_l1_dcache_load_misses,
-                   parse'_l1_dcache_stores, parse'_l1_dcache_store_misses, parse'_l1_dcache_prefetches,
-                   parse'_l1_dcache_prefetch_misses, parse'_l1_icache_loads, parse'_l1_icache_load_misses,
-                   parse'_l1_icache_prefetches, parse'_l1_icache_prefetch_misses, parse'_llc_loads, parse'_llc_load_misses,
-                   parse'_llc_stores, parse'_llc_store_misses, parse'_llc_prefetches, parse'_llc_prefetch_misses, parse'_dtlb_loads,
-                   parse'_dtlb_load_misses, parse'_dtlb_stores, parse'_dtlb_store_misses, parse'_dtlb_prefetches,
-                   parse'_dtlb_prefetch_misses, parse'_itlb_loads, parse'_itlb_load_misses, parse'_branch_loads,
-                   parse'_branch_load_misses, parse'_node_loads, parse'_node_load_misses, parse'_node_stores,
-                   parse'_node_store_misses, parse'_node_prefetches, parse'_node_prefetch_misses])
+                  [parse'timestamp, parse'duration, parse'cycles, parse'stalled_cycles_frontend, parse'stalled_cycles_backend,
+                   parse'instructions, parse'cache_references, parse'cache_misses, parse'branches, parse'branch_misses,
+                   parse'bus_cycles, parse'ref_cycles, parse'cpu_clock, parse'task_clock, parse'page_faults, parse'minor_faults,
+                   parse'major_faults, parse'context_switches, parse'cpu_migrations, parse'alignment_faults, parse'emulation_faults,
+                   parse'l1_dcache_loads, parse'l1_dcache_load_misses, parse'l1_dcache_stores, parse'l1_dcache_store_misses,
+                   parse'l1_dcache_prefetches, parse'l1_dcache_prefetch_misses, parse'l1_icache_loads, parse'l1_icache_load_misses,
+                   parse'l1_icache_prefetches, parse'l1_icache_prefetch_misses, parse'llc_loads, parse'llc_load_misses,
+                   parse'llc_stores, parse'llc_store_misses, parse'llc_prefetches, parse'llc_prefetch_misses, parse'dtlb_loads,
+                   parse'dtlb_load_misses, parse'dtlb_stores, parse'dtlb_store_misses, parse'dtlb_prefetches,
+                   parse'dtlb_prefetch_misses, parse'itlb_loads, parse'itlb_load_misses, parse'branch_loads,
+                   parse'branch_load_misses, parse'node_loads, parse'node_load_misses, parse'node_stores, parse'node_store_misses,
+                   parse'node_prefetches, parse'node_prefetch_misses])
                 P'.spaces
        Prelude'.return (Prelude'.foldl (\ v f -> f v) P'.defaultValue mods)
     where
-        parse'_timestamp
+        parse'timestamp
          = P'.try
             (do
                v <- P'.getT "timestamp"
-               Prelude'.return (\ o -> o{_timestamp = v}))
-        parse'_duration
+               Prelude'.return (\ o -> o{timestamp = v}))
+        parse'duration
          = P'.try
             (do
                v <- P'.getT "duration"
-               Prelude'.return (\ o -> o{_duration = v}))
-        parse'_cycles
+               Prelude'.return (\ o -> o{duration = v}))
+        parse'cycles
          = P'.try
             (do
                v <- P'.getT "cycles"
-               Prelude'.return (\ o -> o{_cycles = v}))
-        parse'_stalled_cycles_frontend
+               Prelude'.return (\ o -> o{cycles = v}))
+        parse'stalled_cycles_frontend
          = P'.try
             (do
                v <- P'.getT "stalled_cycles_frontend"
-               Prelude'.return (\ o -> o{_stalled_cycles_frontend = v}))
-        parse'_stalled_cycles_backend
+               Prelude'.return (\ o -> o{stalled_cycles_frontend = v}))
+        parse'stalled_cycles_backend
          = P'.try
             (do
                v <- P'.getT "stalled_cycles_backend"
-               Prelude'.return (\ o -> o{_stalled_cycles_backend = v}))
-        parse'_instructions
+               Prelude'.return (\ o -> o{stalled_cycles_backend = v}))
+        parse'instructions
          = P'.try
             (do
                v <- P'.getT "instructions"
-               Prelude'.return (\ o -> o{_instructions = v}))
-        parse'_cache_references
+               Prelude'.return (\ o -> o{instructions = v}))
+        parse'cache_references
          = P'.try
             (do
                v <- P'.getT "cache_references"
-               Prelude'.return (\ o -> o{_cache_references = v}))
-        parse'_cache_misses
+               Prelude'.return (\ o -> o{cache_references = v}))
+        parse'cache_misses
          = P'.try
             (do
                v <- P'.getT "cache_misses"
-               Prelude'.return (\ o -> o{_cache_misses = v}))
-        parse'_branches
+               Prelude'.return (\ o -> o{cache_misses = v}))
+        parse'branches
          = P'.try
             (do
                v <- P'.getT "branches"
-               Prelude'.return (\ o -> o{_branches = v}))
-        parse'_branch_misses
+               Prelude'.return (\ o -> o{branches = v}))
+        parse'branch_misses
          = P'.try
             (do
                v <- P'.getT "branch_misses"
-               Prelude'.return (\ o -> o{_branch_misses = v}))
-        parse'_bus_cycles
+               Prelude'.return (\ o -> o{branch_misses = v}))
+        parse'bus_cycles
          = P'.try
             (do
                v <- P'.getT "bus_cycles"
-               Prelude'.return (\ o -> o{_bus_cycles = v}))
-        parse'_ref_cycles
+               Prelude'.return (\ o -> o{bus_cycles = v}))
+        parse'ref_cycles
          = P'.try
             (do
                v <- P'.getT "ref_cycles"
-               Prelude'.return (\ o -> o{_ref_cycles = v}))
-        parse'_cpu_clock
+               Prelude'.return (\ o -> o{ref_cycles = v}))
+        parse'cpu_clock
          = P'.try
             (do
                v <- P'.getT "cpu_clock"
-               Prelude'.return (\ o -> o{_cpu_clock = v}))
-        parse'_task_clock
+               Prelude'.return (\ o -> o{cpu_clock = v}))
+        parse'task_clock
          = P'.try
             (do
                v <- P'.getT "task_clock"
-               Prelude'.return (\ o -> o{_task_clock = v}))
-        parse'_page_faults
+               Prelude'.return (\ o -> o{task_clock = v}))
+        parse'page_faults
          = P'.try
             (do
                v <- P'.getT "page_faults"
-               Prelude'.return (\ o -> o{_page_faults = v}))
-        parse'_minor_faults
+               Prelude'.return (\ o -> o{page_faults = v}))
+        parse'minor_faults
          = P'.try
             (do
                v <- P'.getT "minor_faults"
-               Prelude'.return (\ o -> o{_minor_faults = v}))
-        parse'_major_faults
+               Prelude'.return (\ o -> o{minor_faults = v}))
+        parse'major_faults
          = P'.try
             (do
                v <- P'.getT "major_faults"
-               Prelude'.return (\ o -> o{_major_faults = v}))
-        parse'_context_switches
+               Prelude'.return (\ o -> o{major_faults = v}))
+        parse'context_switches
          = P'.try
             (do
                v <- P'.getT "context_switches"
-               Prelude'.return (\ o -> o{_context_switches = v}))
-        parse'_cpu_migrations
+               Prelude'.return (\ o -> o{context_switches = v}))
+        parse'cpu_migrations
          = P'.try
             (do
                v <- P'.getT "cpu_migrations"
-               Prelude'.return (\ o -> o{_cpu_migrations = v}))
-        parse'_alignment_faults
+               Prelude'.return (\ o -> o{cpu_migrations = v}))
+        parse'alignment_faults
          = P'.try
             (do
                v <- P'.getT "alignment_faults"
-               Prelude'.return (\ o -> o{_alignment_faults = v}))
-        parse'_emulation_faults
+               Prelude'.return (\ o -> o{alignment_faults = v}))
+        parse'emulation_faults
          = P'.try
             (do
                v <- P'.getT "emulation_faults"
-               Prelude'.return (\ o -> o{_emulation_faults = v}))
-        parse'_l1_dcache_loads
+               Prelude'.return (\ o -> o{emulation_faults = v}))
+        parse'l1_dcache_loads
          = P'.try
             (do
                v <- P'.getT "l1_dcache_loads"
-               Prelude'.return (\ o -> o{_l1_dcache_loads = v}))
-        parse'_l1_dcache_load_misses
+               Prelude'.return (\ o -> o{l1_dcache_loads = v}))
+        parse'l1_dcache_load_misses
          = P'.try
             (do
                v <- P'.getT "l1_dcache_load_misses"
-               Prelude'.return (\ o -> o{_l1_dcache_load_misses = v}))
-        parse'_l1_dcache_stores
+               Prelude'.return (\ o -> o{l1_dcache_load_misses = v}))
+        parse'l1_dcache_stores
          = P'.try
             (do
                v <- P'.getT "l1_dcache_stores"
-               Prelude'.return (\ o -> o{_l1_dcache_stores = v}))
-        parse'_l1_dcache_store_misses
+               Prelude'.return (\ o -> o{l1_dcache_stores = v}))
+        parse'l1_dcache_store_misses
          = P'.try
             (do
                v <- P'.getT "l1_dcache_store_misses"
-               Prelude'.return (\ o -> o{_l1_dcache_store_misses = v}))
-        parse'_l1_dcache_prefetches
+               Prelude'.return (\ o -> o{l1_dcache_store_misses = v}))
+        parse'l1_dcache_prefetches
          = P'.try
             (do
                v <- P'.getT "l1_dcache_prefetches"
-               Prelude'.return (\ o -> o{_l1_dcache_prefetches = v}))
-        parse'_l1_dcache_prefetch_misses
+               Prelude'.return (\ o -> o{l1_dcache_prefetches = v}))
+        parse'l1_dcache_prefetch_misses
          = P'.try
             (do
                v <- P'.getT "l1_dcache_prefetch_misses"
-               Prelude'.return (\ o -> o{_l1_dcache_prefetch_misses = v}))
-        parse'_l1_icache_loads
+               Prelude'.return (\ o -> o{l1_dcache_prefetch_misses = v}))
+        parse'l1_icache_loads
          = P'.try
             (do
                v <- P'.getT "l1_icache_loads"
-               Prelude'.return (\ o -> o{_l1_icache_loads = v}))
-        parse'_l1_icache_load_misses
+               Prelude'.return (\ o -> o{l1_icache_loads = v}))
+        parse'l1_icache_load_misses
          = P'.try
             (do
                v <- P'.getT "l1_icache_load_misses"
-               Prelude'.return (\ o -> o{_l1_icache_load_misses = v}))
-        parse'_l1_icache_prefetches
+               Prelude'.return (\ o -> o{l1_icache_load_misses = v}))
+        parse'l1_icache_prefetches
          = P'.try
             (do
                v <- P'.getT "l1_icache_prefetches"
-               Prelude'.return (\ o -> o{_l1_icache_prefetches = v}))
-        parse'_l1_icache_prefetch_misses
+               Prelude'.return (\ o -> o{l1_icache_prefetches = v}))
+        parse'l1_icache_prefetch_misses
          = P'.try
             (do
                v <- P'.getT "l1_icache_prefetch_misses"
-               Prelude'.return (\ o -> o{_l1_icache_prefetch_misses = v}))
-        parse'_llc_loads
+               Prelude'.return (\ o -> o{l1_icache_prefetch_misses = v}))
+        parse'llc_loads
          = P'.try
             (do
                v <- P'.getT "llc_loads"
-               Prelude'.return (\ o -> o{_llc_loads = v}))
-        parse'_llc_load_misses
+               Prelude'.return (\ o -> o{llc_loads = v}))
+        parse'llc_load_misses
          = P'.try
             (do
                v <- P'.getT "llc_load_misses"
-               Prelude'.return (\ o -> o{_llc_load_misses = v}))
-        parse'_llc_stores
+               Prelude'.return (\ o -> o{llc_load_misses = v}))
+        parse'llc_stores
          = P'.try
             (do
                v <- P'.getT "llc_stores"
-               Prelude'.return (\ o -> o{_llc_stores = v}))
-        parse'_llc_store_misses
+               Prelude'.return (\ o -> o{llc_stores = v}))
+        parse'llc_store_misses
          = P'.try
             (do
                v <- P'.getT "llc_store_misses"
-               Prelude'.return (\ o -> o{_llc_store_misses = v}))
-        parse'_llc_prefetches
+               Prelude'.return (\ o -> o{llc_store_misses = v}))
+        parse'llc_prefetches
          = P'.try
             (do
                v <- P'.getT "llc_prefetches"
-               Prelude'.return (\ o -> o{_llc_prefetches = v}))
-        parse'_llc_prefetch_misses
+               Prelude'.return (\ o -> o{llc_prefetches = v}))
+        parse'llc_prefetch_misses
          = P'.try
             (do
                v <- P'.getT "llc_prefetch_misses"
-               Prelude'.return (\ o -> o{_llc_prefetch_misses = v}))
-        parse'_dtlb_loads
+               Prelude'.return (\ o -> o{llc_prefetch_misses = v}))
+        parse'dtlb_loads
          = P'.try
             (do
                v <- P'.getT "dtlb_loads"
-               Prelude'.return (\ o -> o{_dtlb_loads = v}))
-        parse'_dtlb_load_misses
+               Prelude'.return (\ o -> o{dtlb_loads = v}))
+        parse'dtlb_load_misses
          = P'.try
             (do
                v <- P'.getT "dtlb_load_misses"
-               Prelude'.return (\ o -> o{_dtlb_load_misses = v}))
-        parse'_dtlb_stores
+               Prelude'.return (\ o -> o{dtlb_load_misses = v}))
+        parse'dtlb_stores
          = P'.try
             (do
                v <- P'.getT "dtlb_stores"
-               Prelude'.return (\ o -> o{_dtlb_stores = v}))
-        parse'_dtlb_store_misses
+               Prelude'.return (\ o -> o{dtlb_stores = v}))
+        parse'dtlb_store_misses
          = P'.try
             (do
                v <- P'.getT "dtlb_store_misses"
-               Prelude'.return (\ o -> o{_dtlb_store_misses = v}))
-        parse'_dtlb_prefetches
+               Prelude'.return (\ o -> o{dtlb_store_misses = v}))
+        parse'dtlb_prefetches
          = P'.try
             (do
                v <- P'.getT "dtlb_prefetches"
-               Prelude'.return (\ o -> o{_dtlb_prefetches = v}))
-        parse'_dtlb_prefetch_misses
+               Prelude'.return (\ o -> o{dtlb_prefetches = v}))
+        parse'dtlb_prefetch_misses
          = P'.try
             (do
                v <- P'.getT "dtlb_prefetch_misses"
-               Prelude'.return (\ o -> o{_dtlb_prefetch_misses = v}))
-        parse'_itlb_loads
+               Prelude'.return (\ o -> o{dtlb_prefetch_misses = v}))
+        parse'itlb_loads
          = P'.try
             (do
                v <- P'.getT "itlb_loads"
-               Prelude'.return (\ o -> o{_itlb_loads = v}))
-        parse'_itlb_load_misses
+               Prelude'.return (\ o -> o{itlb_loads = v}))
+        parse'itlb_load_misses
          = P'.try
             (do
                v <- P'.getT "itlb_load_misses"
-               Prelude'.return (\ o -> o{_itlb_load_misses = v}))
-        parse'_branch_loads
+               Prelude'.return (\ o -> o{itlb_load_misses = v}))
+        parse'branch_loads
          = P'.try
             (do
                v <- P'.getT "branch_loads"
-               Prelude'.return (\ o -> o{_branch_loads = v}))
-        parse'_branch_load_misses
+               Prelude'.return (\ o -> o{branch_loads = v}))
+        parse'branch_load_misses
          = P'.try
             (do
                v <- P'.getT "branch_load_misses"
-               Prelude'.return (\ o -> o{_branch_load_misses = v}))
-        parse'_node_loads
+               Prelude'.return (\ o -> o{branch_load_misses = v}))
+        parse'node_loads
          = P'.try
             (do
                v <- P'.getT "node_loads"
-               Prelude'.return (\ o -> o{_node_loads = v}))
-        parse'_node_load_misses
+               Prelude'.return (\ o -> o{node_loads = v}))
+        parse'node_load_misses
          = P'.try
             (do
                v <- P'.getT "node_load_misses"
-               Prelude'.return (\ o -> o{_node_load_misses = v}))
-        parse'_node_stores
+               Prelude'.return (\ o -> o{node_load_misses = v}))
+        parse'node_stores
          = P'.try
             (do
                v <- P'.getT "node_stores"
-               Prelude'.return (\ o -> o{_node_stores = v}))
-        parse'_node_store_misses
+               Prelude'.return (\ o -> o{node_stores = v}))
+        parse'node_store_misses
          = P'.try
             (do
                v <- P'.getT "node_store_misses"
-               Prelude'.return (\ o -> o{_node_store_misses = v}))
-        parse'_node_prefetches
+               Prelude'.return (\ o -> o{node_store_misses = v}))
+        parse'node_prefetches
          = P'.try
             (do
                v <- P'.getT "node_prefetches"
-               Prelude'.return (\ o -> o{_node_prefetches = v}))
-        parse'_node_prefetch_misses
+               Prelude'.return (\ o -> o{node_prefetches = v}))
+        parse'node_prefetch_misses
          = P'.try
             (do
                v <- P'.getT "node_prefetch_misses"
-               Prelude'.return (\ o -> o{_node_prefetch_misses = v}))
+               Prelude'.return (\ o -> o{node_prefetch_misses = v}))
