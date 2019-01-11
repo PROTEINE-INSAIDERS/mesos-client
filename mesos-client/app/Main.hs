@@ -5,7 +5,7 @@
 {-# LANGUAGE PolyKinds #-}
 {-# LANGUAGE TemplateHaskell #-}
 
-import Data.Proxy
+import Data.Singletons
 import           Data.Aeson
 import           Data.Either
 import Mesos.V1.Client.HTTP.Internal
@@ -35,6 +35,9 @@ import           Mesos.V1.Protos.Label
 import           Mesos.V1.Internal
 import Mesos.V1.Master.Protos.Call.Type as Master
 import Data.Label
+import Data.Conduit as C
+import Data.Conduit.Combinators as C
+import Mesos.V1.Client.HTTP.Master
 
 data Person = Person
   { name   :: String
@@ -80,13 +83,20 @@ main = do
         let
           settings = managerSetProxy (proxyEnvironment Nothing) defaultManagerSettings
         man <- newManager settings
-        endpoint <- newEndpoint man "http://localhost:5050/api/v1/scheduler"
+        endpoint <- newEndpoint man "http://localhost:5050/api/v1"
         (res :: Master.Response) <- call endpoint
-                                         jsonEncoder
-                                         jsonDecoder
-                                         (construct (Proxy :: Proxy Master.GET_HEALTH) ()) 
+                                         jsonCodec
+                                         (construct (Sing :: Sing Master.GET_HEALTH) ()) 
                                          -- let s = Scheduler.Subscribe { Scheduler.framework_info   = fin
          --                           , Scheduler.suppressed_roles = empty
          --                           }
         --stream endpoint M.jsonEncoder (M.jsonDecoder :: ResponseDecoder Scheduler.Event) (Scheduler.doSubscribe s)
         return ()
+
+-- TODO: необходимо выполнить следующее упражнение:
+-- 1. Прочитать одно сообщение из источника.
+-- 2. Получить продолжение трубы (a -> Cond)
+-- 3. Дочитать остатки, используя продолжение. 
+
+aa :: IO [Int]
+aa = C.runConduit $ C.yieldMany [1..5] .| C.drop 2 .| C.sinkList

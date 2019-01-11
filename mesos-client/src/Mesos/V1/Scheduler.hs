@@ -7,4 +7,4 @@ import           Mesos.V1.Scheduler.Call as Call
 import           Mesos.V1.Scheduler.Event as Event
 
 -- TODO: move to Call? (this wil introduce Mesos.V1.Scheduler.Call -> Mesos.V1.Scheduler.Event dep)
-type instance SubscribeEvent Call.Call = Event.Event
+type instance EventOf Call.Call = Event.Event

@@ -26,7 +26,7 @@ dependencies:
 - bytestring
 - conduit
 - conduit-extra
-- containers
+- exceptions
 - fclabels
 - http-client
 - http-conduit
@@ -35,6 +35,7 @@ dependencies:
 - protocol-buffers
 - protocol-buffers-descriptor
 - singletons
+- transformers
 - unliftio
 
 library:
@@ -49,6 +50,7 @@ executables:
     - -rtsopts
     - -with-rtsopts=-N
     dependencies:
+    - containers
     - mesos-client
 
 tests:
