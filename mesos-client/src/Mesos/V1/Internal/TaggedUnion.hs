@@ -42,8 +42,8 @@ class ( TaggedUnion (UnionType a) -- ^ Union type should be tagged union.
       , Default (UnionType a) -- ^ 'Default' if required for union type construction.
       , Eq (TagType (UnionType a)) -- ^ 'Eq' is requared for tag equality checking.
       ) => UnionTag (a :: k) where
-    type UnionType a :: * -- ^ Type of the union denoted by the promoted tag. 
-    type CaseType a  :: * -- ^ Type of the union case denoted by the promoted tag.
+    type UnionType (a :: k) :: * -- ^ Type of the union denoted by the promoted tag. 
+    type CaseType (a :: k)  :: * -- ^ Type of the union case denoted by the promoted tag.
     lCase :: Sing a -> UnionType a :-> Maybe (CaseType a)
     -- ^ Lense to field in union type containing case denoted by given tag.
     -- Firt argument should be singleton type and used only for type inference.   
