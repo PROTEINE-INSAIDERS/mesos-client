@@ -1,8 +1,15 @@
+{-# LANGUAGE DataKinds #-}
+{-# LANGUAGE GADTs #-}
+{-# LANGUAGE KindSignatures #-}
 {-# LANGUAGE TemplateHaskell #-}
+{-# LANGUAGE TypeFamilies #-}
+
+{-# OPTIONS_GHC -fno-warn-orphans #-}
 
 module Mesos.V1.Master.Response (module X, module Mesos.V1.Master.Response) where
 
 import Data.Label 
+import Data.Singletons.TH
 import Mesos.V1.Master.Protos.Response as X
 import Mesos.V1.Master.Protos.Response.Type as X
 import Mesos.V1.Master.Protos.Response.GetAgents as X (GetAgents)
@@ -26,3 +33,5 @@ import Mesos.V1.Master.Protos.Response.ListFiles as X (ListFiles)
 import Mesos.V1.Master.Protos.Response.ReadFile as X (ReadFile)
 
 mkLabels [''Response]
+
+genSingletons [''Type]

@@ -1,5 +1,7 @@
 {-# LANGUAGE TemplateHaskell #-}
 
+{-# OPTIONS_GHC -fno-warn-orphans #-}
+
 module Mesos.V1.Master.Event (module X, module Mesos.V1.Master.Event) where
 
 import Data.Label 

@@ -23,6 +23,7 @@ import           Data.Maybe
 import           Data.Proxy
 import           Data.Typeable
 import           Mesos.V1.Internal
+import           Mesos.V1.Internal.TaggedUnion
 import           Network.HTTP.Client            ( Manager )
 import           Network.HTTP.Simple ( Request )
 import qualified Network.HTTP.Simple as HTTP
@@ -159,19 +160,20 @@ call endpoing (Codec encoder decoder) msg = do
   let request = prepareRequest endpoing encoder (accept decoder) msg
   HTTP.httpSink request (\_ -> decoderSink $ decode decoder)
 
-
---call' :: ( MonadUnliftIO m
---         , Construct a
---         , Extract (ResponseTag a) 
---         ) => Endpoint -> (Sing a) -> CaseType (Sing a) -> m (CaseType (ResponseTag (Sing a)))
---call' = undefined
-
--- чтобы это заработало, мэппинги можно сделать мономорфными по виду, 
--- а ограничения задавать для проксированного типа
--- примерно так f2g :: (C1 (F2G (p a))) => p a -> p (F2G a)
--- а вот так можно прописать нормальные ограничения: f :: (C (F a :: k1)) => p a -> q (F a :: k1)
--- call' :: (UnionTag a, UnionTag (ResponseTag a)) => proxy a -> (CaseType (ResponseTag a))
---- call' = undefined 
+call' :: forall k1 k2 (a :: k1) (b :: k2) m . 
+         ( MonadUnliftIO m
+         , Construct a 
+         , Extract b
+         ) => Endpoint
+           -> Codec (UnionType a) (UnionType b)
+           -> CallTag a b
+           -> CaseType a
+           -> m (CaseType b)
+call' endpoint (Codec encoder decoder) tag msg = do
+  let requestMsg = construct (sing @a) msg
+      request = prepareRequest endpoint encoder (accept decoder) $ requestMsg
+  response <- HTTP.httpSink request $ \_ -> decoderSink $ decode decoder
+  liftIO $ extract (sing @b) response
 {- 
 call' :: forall (m :: * -> *) (a :: k1) k2 . ( MonadUnliftIO m
                       , UnionTag (a :: k1) -- ^ Request should be union type.

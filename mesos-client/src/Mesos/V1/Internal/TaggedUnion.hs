@@ -36,9 +36,10 @@ instance TaggedUnion Master.Response.Response where
     lTag = Master.Response.lType'
 
 class UnionTag a where
+    -- TODO: подумать, как завязать это на вид a.
     type UnionType a  -- ^ Type of the union denoted by the promoted tag. 
     type CaseType a   -- ^ Type of the union case denoted by the promoted tag.
-    lCase :: a -> UnionType a :-> Maybe (CaseType a)
+    lCase :: p a -> UnionType a :-> Maybe (CaseType a)
     -- ^ Lense to field in union type containing case denoted by given tag.
     -- Firt argument should be singleton type and used only for type inference.   
 
@@ -47,22 +48,28 @@ unitCase :: a :-> Maybe ()
 unitCase = lens (const $ Just ()) (const id)
 
 -- TODO: Implement tags for all mesos unions.
-instance UnionTag (Sing Master.Call.GET_HEALTH) where
-    type UnionType (Sing Master.Call.GET_HEALTH) = Master.Call.Call
-    type CaseType (Sing Master.Call.GET_HEALTH) = ()
+instance UnionTag Master.Call.GET_HEALTH where
+    type UnionType Master.Call.GET_HEALTH = Master.Call.Call
+    type CaseType  Master.Call.GET_HEALTH = ()
     lCase = const unitCase
 
+instance UnionTag Master.Response.GET_HEALTH where
+    type UnionType Master.Response.GET_HEALTH = Master.Response.Response
+    type CaseType  Master.Response.GET_HEALTH = Master.Response.GetHealth
+    lCase = const Master.Response.lGet_health
+    
 type Construct (a :: k)  = ( SingKind k
-                           , UnionTag (Sing (a :: k))
-                           , TagType (UnionType (Sing (a :: k))) ~ Demote k
-                           , TaggedUnion (UnionType (Sing a))
-                           , Default (UnionType (Sing a))
+                           , SingI a
+                           , UnionTag a
+                           , TagType (UnionType a) ~ Demote k
+                           , TaggedUnion (UnionType a)
+                           , Default (UnionType a)
                            )
 
-construct :: Construct (a :: k) => Sing a -> CaseType (Sing a) -> UnionType (Sing a)
-construct tag a = 
-      set lTag (Just $ fromSing tag)
-    . set (lCase tag) (Just a) 
+construct :: Construct (a :: k) => p a -> CaseType a -> UnionType a
+construct proxy a = 
+      set lTag (Just $ fromSing $ singByProxy $ proxy)
+    . set (lCase proxy) (Just a) 
     $ defaultValue
     
 data ExtractException = MissingTagException 
@@ -71,17 +78,18 @@ data ExtractException = MissingTagException
 instance Exception ExtractException 
 
 type Extract (a :: k) = ( SingKind k
-                        , UnionTag (Sing (a :: k))
-                        , TagType (UnionType (Sing (a :: k))) ~ Demote k
-                        , TaggedUnion (UnionType (Sing a)) 
-                        , Eq (TagType (UnionType (Sing a)))
+                        , SingI a
+                        , UnionTag a
+                        , TagType (UnionType a) ~ Demote k
+                        , TaggedUnion (UnionType a) 
+                        , Eq (TagType (UnionType a))
                         )
 
 extract :: ( MonadThrow m
            , Extract (a :: k)
-           ) => Sing a -> UnionType (Sing a) -> m (CaseType (Sing a))
+           ) => p a -> UnionType a -> m (CaseType a)
 extract tag a = case get lTag a of
-    Just tagValue | tagValue == fromSing tag ->
+    Just tagValue | tagValue == (fromSing $ singByProxy $ tag) ->
         case get (lCase tag) a of
             Just b  -> return b
             Nothing -> throwM MissingFieldException

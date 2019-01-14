@@ -84,15 +84,8 @@ main = do
           settings = managerSetProxy (proxyEnvironment Nothing) defaultManagerSettings
         man <- newManager settings
         endpoint <- newEndpoint man "http://localhost:5050/api/v1"
-    {-
-        (res :: Master.Response) <- call endpoint
-                                         jsonCodec
-                                         (construct (Sing :: Sing Master.GET_HEALTH) ()) 
-                                         -- let s = Scheduler.Subscribe { Scheduler.framework_info   = fin
-         --                           , Scheduler.suppressed_roles = empty
-         --                           }
-        --stream endpoint M.jsonEncoder (M.jsonDecoder :: ResponseDecoder Scheduler.Event) (Scheduler.doSubscribe s)
-        -}
+        res  <- getHealth endpoint jsonCodec
+        Prelude.print res  
         return ()
 
 -- TODO: необходимо выполнить следующее упражнение:
