@@ -160,13 +160,19 @@ call endpoing (Codec encoder decoder) msg = do
   HTTP.httpSink request (\_ -> decoderSink $ decode decoder)
 
 
+--call' :: ( MonadUnliftIO m
+--         , Construct a
+--         , Extract (ResponseTag a) 
+--         ) => Endpoint -> (Sing a) -> CaseType (Sing a) -> m (CaseType (ResponseTag (Sing a)))
+--call' = undefined
+
 -- чтобы это заработало, мэппинги можно сделать мономорфными по виду, 
 -- а ограничения задавать для проксированного типа
 -- примерно так f2g :: (C1 (F2G (p a))) => p a -> p (F2G a)
 -- а вот так можно прописать нормальные ограничения: f :: (C (F a :: k1)) => p a -> q (F a :: k1)
 -- call' :: (UnionTag a, UnionTag (ResponseTag a)) => proxy a -> (CaseType (ResponseTag a))
 --- call' = undefined 
-
+{- 
 call' :: forall (m :: * -> *) (a :: k1) k2 . ( MonadUnliftIO m
                       , UnionTag (a :: k1) -- ^ Request should be union type.
                       , UnionTag (ResponseTag (a :: k1) :: k2)  -- ^ Response should be union type.
@@ -181,7 +187,7 @@ call' endpoint (Codec encoder decoder) proxy msg = do
       sink :: HTTP.Response () -> ConduitT ByteString Void m (UnionType (ResponseTag (a :: k1) :: k2)) = (\_ -> decoderSink $ decode decoder)
   (response :: UnionType (ResponseTag (a :: k1) :: k2)) <- HTTP.httpSink request sink 
   liftIO $ extract sing response  
-
+-}
 decoderTransfomer :: (MonadIO m) => (ByteString -> DecodeResult a) -> ConduitT ByteString a m ()
 decoderTransfomer decoder = forever $ do
   mi <- await

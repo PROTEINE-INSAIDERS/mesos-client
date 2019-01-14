@@ -37,6 +37,7 @@ dependencies:
 - singletons
 - transformers
 - unliftio
+- template-haskell
 
 library:
   source-dirs: src
