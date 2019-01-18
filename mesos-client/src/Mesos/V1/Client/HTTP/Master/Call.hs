@@ -6,7 +6,7 @@
 
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 
-module Mesos.V1.Master.Call (module X, module Mesos.V1.Master.Call) where
+module Mesos.V1.Client.HTTP.Master.Call (module X, module Mesos.V1.Client.HTTP.Master.Call) where
 
 import Data.Label 
 import Data.Singletons.TH

@@ -13,9 +13,9 @@ import           Data.Label
 import           Data.Label.Base               as Label
 import           Data.Singletons
 import           Data.Typeable
-import qualified Mesos.V1.Master.Call          as Master.Call
-import qualified Mesos.V1.Master.Event         as Master.Event
-import qualified Mesos.V1.Master.Response      as Master.Response
+import qualified Mesos.V1.Client.HTTP.Master.Call          as Master.Call
+import qualified Mesos.V1.Client.HTTP.Master.Event         as Master.Event
+import qualified Mesos.V1.Client.HTTP.Master.Response      as Master.Response
 import           Text.ProtocolBuffers
 
 class TaggedUnion a where
