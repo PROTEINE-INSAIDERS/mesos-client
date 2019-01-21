@@ -4,7 +4,10 @@
 #-}
 
 module Mesos.V1.Client.HTTP.Master
-    ( I.newEndpoint
+    ( -- TODO: move shared "internal" functions to separate module ( possibly Mesos.V1.Client.HTTP ) and reexport it here.
+      I.newEndpoint
+    , I.jsonCodec
+    , I.protobufCodec
     , module Mesos.V1.Client.HTTP.Master
     )
 where
@@ -66,4 +69,4 @@ getHealth
     => Endpoint
     -> Codec Call.Call Response.Response
     -> m Response.GetHealth
-getHealth endpoint codec = call' endpoint codec GET_HEALTH ()
+getHealth endpoint codec =  undefined -- call' endpoint codec GET_HEALTH ()
