@@ -1,11 +1,10 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE FlexibleContexts  #-}
 {-# LANGUAGE TypeFamilies #-}
-{-# LANGUAGE TypeApplications #-}
 {-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE PolyKinds  #-}
 
-module Mesos.V1.Client.HTTP.Internal where
+module Mesos.V1.Client.HTTP.Internal (module Mesos.V1.Client.HTTP.Internal, module X) where
 
 import           Conduit
 import           Control.Monad
@@ -23,7 +22,7 @@ import           Data.Maybe
 import           Data.Proxy
 import           Data.Typeable
 import           Mesos.V1.Internal
-import           Mesos.V1.Internal.TaggedUnion
+import           Mesos.V1.Client.HTTP.Internal.Union as X
 import           Network.HTTP.Client            ( Manager )
 import           Network.HTTP.Simple ( Request )
 import qualified Network.HTTP.Simple as HTTP
@@ -159,7 +158,7 @@ call
 call endpoing (Codec encoder decoder) msg = do
   let request = prepareRequest endpoing encoder (accept decoder) msg
   HTTP.httpSink request (\_ -> decoderSink $ decode decoder)
-
+{-
 call' :: forall k1 k2 (a :: k1) (b :: k2) m . 
          ( MonadUnliftIO m
          , Construct a 
@@ -174,21 +173,6 @@ call' endpoint (Codec encoder decoder) tag msg = do
       request = prepareRequest endpoint encoder (accept decoder) $ requestMsg
   response <- HTTP.httpSink request $ \_ -> decoderSink $ decode decoder
   liftIO $ extract (sing @b) response
-{- 
-call' :: forall (m :: * -> *) (a :: k1) k2 . ( MonadUnliftIO m
-                      , UnionTag (a :: k1) -- ^ Request should be union type.
-                      , UnionTag (ResponseTag (a :: k1) :: k2)  -- ^ Response should be union type.
-                      ) => Endpoint 
-                        -> Codec (UnionType (a :: k1) :: *) (UnionType (ResponseTag (a :: k1) :: k2) :: *) 
-                        -> Sing (a :: k1) 
-                        -> (CaseType (a :: k1) :: *) 
-                        -> m (CaseType (ResponseTag (a :: k1) :: k2) :: *)
-call' endpoint (Codec encoder decoder) proxy msg = do
-  let requestMsg :: UnionType (a :: k1) = construct proxy msg
-      request :: HTTP.Request = prepareRequest endpoint encoder (accept decoder) $ requestMsg
-      sink :: HTTP.Response () -> ConduitT ByteString Void m (UnionType (ResponseTag (a :: k1) :: k2)) = (\_ -> decoderSink $ decode decoder)
-  (response :: UnionType (ResponseTag (a :: k1) :: k2)) <- HTTP.httpSink request sink 
-  liftIO $ extract sing response  
 -}
 decoderTransfomer :: (MonadIO m) => (ByteString -> DecodeResult a) -> ConduitT ByteString a m ()
 decoderTransfomer decoder = forever $ do

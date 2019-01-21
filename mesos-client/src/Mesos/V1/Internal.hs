@@ -3,7 +3,7 @@
 
 module Mesos.V1.Internal (module X, module Mesos.V1.Internal) where
 
-import Mesos.V1.Internal.TaggedUnion as X
+import Mesos.V1.Client.HTTP.Internal.Union as X
 
 {- # DEPRECATED EventOf "Should be mapped from tag" #-}
 type family EventOf subscribe :: *
