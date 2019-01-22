@@ -1,10 +1,16 @@
-{-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE FlexibleContexts  #-}
-{-# LANGUAGE TypeFamilies #-}
-{-# LANGUAGE ScopedTypeVariables #-}
-{-# LANGUAGE PolyKinds  #-}
+{-# LANGUAGE OverloadedStrings
+           , FlexibleContexts
+           , TypeFamilies
+           , ScopedTypeVariables
+           , PolyKinds
+           , TypeApplications
+#-}
 
-module Mesos.V1.Client.HTTP.Internal (module Mesos.V1.Client.HTTP.Internal, module X) where
+module Mesos.V1.Client.HTTP.Internal
+  ( module Mesos.V1.Client.HTTP.Internal
+  , module X
+  )
+where
 
 import           Conduit
 import           Control.Monad
@@ -21,16 +27,21 @@ import qualified Data.ByteString.Lazy          as LBS
 import           Data.Maybe
 import           Data.Proxy
 import           Data.Typeable
-import           Mesos.V1.Internal
-import           Mesos.V1.Client.HTTP.Internal.Union as X
+import           Mesos.V1.Client.HTTP.Internal.Union
+                                               as X
+import qualified Network.HTTP.Client           as HTTP
 import           Network.HTTP.Client            ( Manager )
-import           Network.HTTP.Simple ( Request )
-import qualified Network.HTTP.Simple as HTTP
-import           Network.HTTP.Types
+import           Network.HTTP.Simple            ( Request )
+import qualified Network.HTTP.Simple           as HTTP
+import qualified Network.HTTP.Types            as HTTP
 import           Text.ProtocolBuffers
 import qualified Text.ProtocolBuffers.Get      as ProtocolBuffers
 import           UnliftIO.Exception
 import           Data.Singletons
+import           Mesos.V1.Client.HTTP.Internal.Codec
+                                               as X
+
+data family CallTag :: k1 -> k2 -> *
 
 newtype Endpoint = Endpoint
   { request :: Request
@@ -40,85 +51,9 @@ newEndpoint :: (MonadThrow m) => Manager -> String -> m Endpoint
 newEndpoint manager address = do
   request <- HTTP.parseRequest address
   return Endpoint
-    { request = HTTP.setRequestManager manager $ HTTP.setRequestMethod methodPost request
+    { request = HTTP.setRequestManager manager
+                  $ HTTP.setRequestMethod HTTP.methodPost request
     }
-
-data RequestEncoder a = RequestEncoder
-  { contentType :: ByteString
-  , encode      :: a -> LBS.ByteString
-  -- ^ encode result is a LAZY ByteString because encoder may want to generate a stream with unknown number of chunks in advance.  
-  } 
-
-jsonEncoder :: (ToJSON a) => RequestEncoder a
-jsonEncoder =
-  RequestEncoder { contentType = "application/json", encode = Aeson.encode }
-
-protobufEncoder :: (ReflectDescriptor a, Wire a) => RequestEncoder a
-protobufEncoder =
-  RequestEncoder { contentType = "application/x-protobuf", encode = messagePut }
-
-data ResponseDecoder a = ResponseDecoder
-  { accept :: ByteString
-  , decode :: ByteString -> DecodeResult a
-  -- ^ decode operates on STRICT ByteString because input buffers are generally strict, and decode function have an ability
-  -- to request more input via Partial result.
-  -- It may also return unconsumed part of input buffer and strict ByteString since input is strict. 
-  }
-
-data DecodeResult a = Finished ByteString a
-                    | Partial (Maybe ByteString -> DecodeResult a) -- ^ Using Maybe allow us explicictly pass eof condition to underlying decoder.   
-                    | Failed SomeException
-
-data AttoparsecException = AttoparsecException ByteString [String] String deriving (Show, Typeable) -- ^ Exception wrapper for Attoparsec errors.
-instance Exception AttoparsecException
-
-decodeAtto
-  :: Atto.Parser a
-  -> (ByteString -> a -> DecodeResult b)
-  -> ByteString
-  -> DecodeResult b
-decodeAtto p c = go . Atto.parse p
- where
-  go (Atto.Fail i ctx e) = Failed $ toException $ AttoparsecException i ctx e
-  go (Atto.Partial f   ) = Partial $ go . f . fromMaybe BS.empty
-  go (Atto.Done i r    ) = c i r
-
--- | Exception wrapper for Aeson errors. Also holds unconsumed part of the input buffer and parsed JSON value.
-data AesonException = AesonException ByteString Aeson.Value String deriving (Show, Typeable)
-instance Exception AesonException
-
-decodeJson :: (FromJSON a) => ByteString -> DecodeResult a
-decodeJson = decodeAtto Aeson.json' $ \i r -> case Aeson.fromJSON r of
-  Aeson.Error   e -> Failed $ toException $ AesonException i r e
-  Aeson.Success a -> Finished i a
-
-jsonDecoder :: (FromJSON a) => ResponseDecoder a
-jsonDecoder =
-  ResponseDecoder { accept = "application/json", decode = decodeJson }
-
-data DecodeProtobufException = ProtobufException Int64 String deriving (Show, Typeable)
-
-instance Exception DecodeProtobufException
-
-decodeProtobuf :: (ReflectDescriptor a, Wire a) => ByteString -> DecodeResult a
-decodeProtobuf = go . runGet messageGetM . LBS.fromStrict
- where
-  go (ProtocolBuffers.Failed i s) =
-    Failed $ toException $ ProtobufException i s
-  go (ProtocolBuffers.Finished i _ a) = Finished (LBS.toStrict i) a
-  go (ProtocolBuffers.Partial f     ) = Partial $ go . f . fmap LBS.fromStrict
-
-protobufDecoder :: (ReflectDescriptor a, Wire a) => ResponseDecoder a
-protobufDecoder =
-  ResponseDecoder { accept = "application/x-protobuf", decode = decodeProtobuf }
-
-data Codec a b = Codec { encoder :: RequestEncoder a, decoder :: ResponseDecoder b }
-
-jsonCodec :: (ToJSON a, FromJSON b) => Codec a b  
-jsonCodec = Codec jsonEncoder jsonDecoder
-
-protobufCodec :: (ReflectDescriptor a, Wire a, ReflectDescriptor b, Wire b) => Codec a b  
-protobufCodec = Codec protobufEncoder protobufDecoder
 
 --TODO: в него можно добавить параметры запроса и ответа.
 data DecoderConduitException = NoInput
@@ -141,40 +76,40 @@ decoderSink decoder = do
   go (Partial f   ) = await >>= go . f
   go (Finished _ a) = return a
 
-prepareRequest :: Endpoint -> RequestEncoder msg -> ByteString -> msg -> Request
-prepareRequest (Endpoint request) (RequestEncoder contentType encode) accept msg
-  = HTTP.setRequestHeader hContentType [contentType]
-    $ HTTP.setRequestHeader hAccept [accept]
-    $ HTTP.setRequestBodyLBS (encode msg) request
+prepareRequest
+  :: Endpoint -> RequestEncoder msg -> ByteString -> Int -> msg -> Request
+prepareRequest (Endpoint request) (RequestEncoder contentType encode) accept acceptStatus msg
+  = HTTP.setRequestHeader HTTP.hContentType [contentType]
+    $ HTTP.setRequestHeader HTTP.hAccept [accept]
+    $ HTTP.setRequestBodyLBS
+        (encode msg)
+        request
+          { HTTP.checkResponse =
+            \request response ->
+              when (HTTP.getResponseStatusCode response /= acceptStatus) $ do
+                chunk <- HTTP.brReadSome (HTTP.responseBody response) 1024
+                let
+                  ex = HTTP.StatusCodeException (void response)
+                                                (LBS.toStrict chunk)
+                throwIO $ HTTP.HttpExceptionRequest request ex
+          }
 
--- TODO: add status code check'
--- ТODO: сигнатура ::  
 call
-  :: (MonadUnliftIO m)
-  => Endpoint
-  -> Codec msg (ResponseTo msg)
-  -> msg
-  -> m (ResponseTo msg)
-call endpoing (Codec encoder decoder) msg = do
-  let request = prepareRequest endpoing encoder (accept decoder) msg
-  HTTP.httpSink request (\_ -> decoderSink $ decode decoder)
-{-
-call' :: forall k1 k2 (a :: k1) (b :: k2) m . 
-         ( MonadUnliftIO m
-         , Construct a 
-         , Extract b
-         ) => Endpoint
-           -> Codec (UnionType a) (UnionType b)
-           -> CallTag a b
-           -> CaseType a
-           -> m (CaseType b)
-call' endpoint (Codec encoder decoder) tag msg = do
+  :: forall k1 k2 (a :: k1) (b :: k2) m
+   . (MonadUnliftIO m, Construct a, Extract b)
+  => CallTag a b
+  -> Endpoint
+  -> Case a
+  -> Codec (Union (Demote k1)) (Union (Demote k2))
+  -> m (Case b)
+call _ endpoint msg (Codec encoder decoder) = do
   let requestMsg = construct (sing @a) msg
-      request = prepareRequest endpoint encoder (accept decoder) $ requestMsg
-  response <- HTTP.httpSink request $ \_ -> decoderSink $ decode decoder
-  liftIO $ extract (sing @b) response
--}
-decoderTransfomer :: (MonadIO m) => (ByteString -> DecodeResult a) -> ConduitT ByteString a m ()
+      request = prepareRequest endpoint encoder (accept decoder) 200 requestMsg
+  responseUnion <- HTTP.httpSink request $ \_ -> decoderSink $ decode decoder
+  liftIO $ extract (sing @b) responseUnion
+
+decoderTransfomer
+  :: (MonadIO m) => (ByteString -> DecodeResult a) -> ConduitT ByteString a m ()
 decoderTransfomer decoder = forever $ do
   mi <- await
   case mi of
@@ -194,13 +129,13 @@ recordIOParser = do
 
 recordIODecoder :: ByteString -> DecodeResult ByteString
 recordIODecoder = decodeAtto recordIOParser Finished
-  
+
 recordIOTransformer :: (MonadIO m) => ConduitT ByteString ByteString m ()
 recordIOTransformer = decoderTransfomer recordIODecoder
 
 logger :: (MonadIO m, Show a) => String -> ConduitT a a m ()
-logger name = awaitForever $ \i -> do 
-  liftIO $ putStrLn $ name ++ ": " ++ show i 
+logger name = awaitForever $ \i -> do
+  liftIO $ putStrLn $ name ++ ": " ++ show i
   yield i
 
 -- subscriptions parameters:
@@ -212,7 +147,7 @@ logger name = awaitForever $ \i -> do
 -- args:
 -- call
 -- encoder
-
+{-
 -- TODO: make more specific (accept only subscribe calls specific for the current endpoint).
 subscribe :: (MonadUnliftIO m, Show (EventOf a)) => Endpoint -> RequestEncoder a -> ResponseDecoder (EventOf a) -> a -> ConduitT (EventOf a) Void m r -> m r
 subscribe endpoint encoder decoder msg sink = do
@@ -222,3 +157,4 @@ subscribe endpoint encoder decoder msg sink = do
                              .| decoderTransfomer (decode decoder) 
                              .| logger "Message" 
                              .| sink 
+-}

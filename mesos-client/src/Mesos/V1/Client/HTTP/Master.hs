@@ -15,16 +15,12 @@ where
 import           Conduit
 import           Data.Proxy
 import           Mesos.V1.Client.HTTP.Internal as I
-import           Mesos.V1.Internal
-import qualified Mesos.V1.Client.HTTP.Master.Call          as Call
-import qualified Mesos.V1.Client.HTTP.Master.Event         as Event
-import qualified Mesos.V1.Client.HTTP.Master.Response      as Response
-
-type instance EventOf Call.Call = Event.Event
-
-type instance ResponseTo Call.Call =  Response.Response
-
-type instance ResponseTag Call.GET_HEALTH = Response.GET_HEALTH
+import qualified Mesos.V1.Client.HTTP.Master.Call
+                                               as Call
+import qualified Mesos.V1.Client.HTTP.Master.Event
+                                               as Event
+import qualified Mesos.V1.Client.HTTP.Master.Response
+                                               as Response
 
 data instance CallTag :: Call.Type -> Response.Type -> * where
     GET_HEALTH ::CallTag Call.GET_HEALTH Response.GET_HEALTH
@@ -69,4 +65,11 @@ getHealth
     => Endpoint
     -> Codec Call.Call Response.Response
     -> m Response.GetHealth
-getHealth endpoint codec =  undefined -- call' endpoint codec GET_HEALTH ()
+getHealth = flip (call GET_HEALTH) ()
+
+getFlags
+    :: (MonadUnliftIO m)
+    => Endpoint
+    -> Codec Call.Call Response.Response
+    -> m Response.GetFlags
+getFlags = flip (call GET_FLAGS) ()

@@ -14,9 +14,8 @@ import Control.Monad.Zip
 import Data.Conduit
 import Mesos.V1.Protos.FrameworkID
 import Mesos.V1.Client.HTTP.Internal
-import qualified Mesos.V1.Scheduler.Call as Call
+import qualified Mesos.V1.Client.HTTP.Scheduler.Call as Call
 import qualified Mesos.V1.Client.HTTP.Internal as Internal
-import Mesos.V1.Scheduler
 import UnliftIO
 
 newtype SubscriptionT m a = SubscriptionT { unSubscriptionT :: ReaderT FrameworkID m a } 
