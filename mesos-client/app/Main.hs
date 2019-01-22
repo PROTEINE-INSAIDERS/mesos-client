@@ -40,6 +40,8 @@ main = do
           settings = managerSetProxy (proxyEnvironment Nothing) defaultManagerSettings
         man <- newManager settings
         endpoint <- newEndpoint man "http://localhost:5050/api/v1"
-        res  <- getHealth endpoint jsonCodec
-        Prelude.print res  
+        a  <- getHealth endpoint jsonCodec
+        Prelude.print a
+        b <- getFlags  endpoint protobufCodec
+        Prelude.print b
         return ()

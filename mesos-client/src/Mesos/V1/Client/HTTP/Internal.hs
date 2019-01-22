@@ -1,10 +1,16 @@
-{-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE FlexibleContexts  #-}
-{-# LANGUAGE TypeFamilies #-}
-{-# LANGUAGE ScopedTypeVariables #-}
-{-# LANGUAGE PolyKinds  #-}
+{-# LANGUAGE OverloadedStrings
+           , FlexibleContexts
+           , TypeFamilies
+           , ScopedTypeVariables
+           , PolyKinds
+           , TypeApplications
+#-}
 
-module Mesos.V1.Client.HTTP.Internal (module Mesos.V1.Client.HTTP.Internal, module X) where
+module Mesos.V1.Client.HTTP.Internal
+  ( module Mesos.V1.Client.HTTP.Internal
+  , module X
+  )
+where
 
 import           Conduit
 import           Control.Monad
@@ -21,17 +27,21 @@ import qualified Data.ByteString.Lazy          as LBS
 import           Data.Maybe
 import           Data.Proxy
 import           Data.Typeable
-import           Mesos.V1.Internal
-import           Mesos.V1.Client.HTTP.Internal.Union as X
+import           Mesos.V1.Client.HTTP.Internal.Union
+                                               as X
+import qualified Network.HTTP.Client           as HTTP
 import           Network.HTTP.Client            ( Manager )
-import           Network.HTTP.Simple ( Request )
-import qualified Network.HTTP.Simple as HTTP
-import           Network.HTTP.Types
+import           Network.HTTP.Simple            ( Request )
+import qualified Network.HTTP.Simple           as HTTP
+import qualified Network.HTTP.Types            as HTTP
 import           Text.ProtocolBuffers
 import qualified Text.ProtocolBuffers.Get      as ProtocolBuffers
 import           UnliftIO.Exception
 import           Data.Singletons
-import Mesos.V1.Client.HTTP.Internal.Codec as X
+import           Mesos.V1.Client.HTTP.Internal.Codec
+                                               as X
+
+data family CallTag :: k1 -> k2 -> *
 
 newtype Endpoint = Endpoint
   { request :: Request
@@ -41,7 +51,8 @@ newEndpoint :: (MonadThrow m) => Manager -> String -> m Endpoint
 newEndpoint manager address = do
   request <- HTTP.parseRequest address
   return Endpoint
-    { request = HTTP.setRequestManager manager $ HTTP.setRequestMethod methodPost request
+    { request = HTTP.setRequestManager manager
+                  $ HTTP.setRequestMethod HTTP.methodPost request
     }
 
 --TODO: в него можно добавить параметры запроса и ответа.
@@ -65,39 +76,40 @@ decoderSink decoder = do
   go (Partial f   ) = await >>= go . f
   go (Finished _ a) = return a
 
-prepareRequest :: Endpoint -> RequestEncoder msg -> ByteString -> msg -> Request
-prepareRequest (Endpoint request) (RequestEncoder contentType encode) accept msg
-  = HTTP.setRequestHeader hContentType [contentType]
-    $ HTTP.setRequestHeader hAccept [accept]
-    $ HTTP.setRequestBodyLBS (encode msg) request
+prepareRequest
+  :: Endpoint -> RequestEncoder msg -> ByteString -> Int -> msg -> Request
+prepareRequest (Endpoint request) (RequestEncoder contentType encode) accept acceptStatus msg
+  = HTTP.setRequestHeader HTTP.hContentType [contentType]
+    $ HTTP.setRequestHeader HTTP.hAccept [accept]
+    $ HTTP.setRequestBodyLBS
+        (encode msg)
+        request
+          { HTTP.checkResponse =
+            \request response ->
+              when (HTTP.getResponseStatusCode response /= acceptStatus) $ do
+                chunk <- HTTP.brReadSome (HTTP.responseBody response) 1024
+                let
+                  ex = HTTP.StatusCodeException (void response)
+                                                (LBS.toStrict chunk)
+                throwIO $ HTTP.HttpExceptionRequest request ex
+          }
 
--- TODO: add status code check'
 call
-  :: (MonadUnliftIO m)
-  => Endpoint
-  -> Codec msg (ResponseTo msg)
-  -> msg
-  -> m (ResponseTo msg)
-call endpoing (Codec encoder decoder) msg = do
-  let request = prepareRequest endpoing encoder (accept decoder) msg
-  HTTP.httpSink request (\_ -> decoderSink $ decode decoder)
-{-
-call' :: forall k1 k2 (a :: k1) (b :: k2) m . 
-         ( MonadUnliftIO m
-         , Construct a 
-         , Extract b
-         ) => Endpoint
-           -> Codec (UnionType a) (UnionType b)
-           -> CallTag a b
-           -> CaseType a
-           -> m (CaseType b)
-call' endpoint (Codec encoder decoder) tag msg = do
+  :: forall k1 k2 (a :: k1) (b :: k2) m
+   . (MonadUnliftIO m, Construct a, Extract b)
+  => CallTag a b
+  -> Endpoint
+  -> Case a
+  -> Codec (Union (Demote k1)) (Union (Demote k2))
+  -> m (Case b)
+call _ endpoint msg (Codec encoder decoder) = do
   let requestMsg = construct (sing @a) msg
-      request = prepareRequest endpoint encoder (accept decoder) $ requestMsg
-  response <- HTTP.httpSink request $ \_ -> decoderSink $ decode decoder
-  liftIO $ extract (sing @b) response
--}
-decoderTransfomer :: (MonadIO m) => (ByteString -> DecodeResult a) -> ConduitT ByteString a m ()
+      request = prepareRequest endpoint encoder (accept decoder) 200 requestMsg
+  responseUnion <- HTTP.httpSink request $ \_ -> decoderSink $ decode decoder
+  liftIO $ extract (sing @b) responseUnion
+
+decoderTransfomer
+  :: (MonadIO m) => (ByteString -> DecodeResult a) -> ConduitT ByteString a m ()
 decoderTransfomer decoder = forever $ do
   mi <- await
   case mi of
@@ -117,13 +129,13 @@ recordIOParser = do
 
 recordIODecoder :: ByteString -> DecodeResult ByteString
 recordIODecoder = decodeAtto recordIOParser Finished
-  
+
 recordIOTransformer :: (MonadIO m) => ConduitT ByteString ByteString m ()
 recordIOTransformer = decoderTransfomer recordIODecoder
 
 logger :: (MonadIO m, Show a) => String -> ConduitT a a m ()
-logger name = awaitForever $ \i -> do 
-  liftIO $ putStrLn $ name ++ ": " ++ show i 
+logger name = awaitForever $ \i -> do
+  liftIO $ putStrLn $ name ++ ": " ++ show i
   yield i
 
 -- subscriptions parameters:
@@ -135,7 +147,7 @@ logger name = awaitForever $ \i -> do
 -- args:
 -- call
 -- encoder
-
+{-
 -- TODO: make more specific (accept only subscribe calls specific for the current endpoint).
 subscribe :: (MonadUnliftIO m, Show (EventOf a)) => Endpoint -> RequestEncoder a -> ResponseDecoder (EventOf a) -> a -> ConduitT (EventOf a) Void m r -> m r
 subscribe endpoint encoder decoder msg sink = do
@@ -145,3 +157,4 @@ subscribe endpoint encoder decoder msg sink = do
                              .| decoderTransfomer (decode decoder) 
                              .| logger "Message" 
                              .| sink 
+-}
