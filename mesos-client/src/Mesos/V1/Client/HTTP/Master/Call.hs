@@ -1,4 +1,5 @@
-{-# LANGUAGE DataKinds
+{-# LANGUAGE CPP
+           , DataKinds
            , GADTs
            , KindSignatures
            , TemplateHaskell
@@ -42,147 +43,41 @@ instance UnionTag Type where
     type Union Type = Call
     lTag = lType'
 
-instance UnionCase 'GET_HEALTH where
-    type Case 'GET_HEALTH = ()
-    lCase = const lUnitCase
-    
-instance UnionCase 'GET_FLAGS where
-    type Case 'GET_FLAGS = ()
-    lCase = const lUnitCase
+#include "mesos-client.h"
 
-instance UnionCase 'GET_VERSION where
-    type Case 'GET_VERSION = ()  
-    lCase = const lUnitCase
-
-instance UnionCase 'GET_METRICS where
-    type Case 'GET_METRICS = GetMetrics
-    lCase = const lGet_metrics
-
-instance UnionCase 'GET_LOGGING_LEVEL where
-    type Case 'GET_LOGGING_LEVEL = ()  
-    lCase = const lUnitCase
-
-instance UnionCase 'SET_LOGGING_LEVEL where
-    type Case 'SET_LOGGING_LEVEL = SetLoggingLevel
-    lCase = const lSet_logging_level
-
-instance UnionCase 'LIST_FILES where
-    type Case 'LIST_FILES = ListFiles
-    lCase = const lList_files
-
-instance UnionCase 'READ_FILE where
-    type Case 'READ_FILE = ReadFile
-    lCase = const lRead_file
-
-instance UnionCase 'GET_STATE where
-    type Case 'GET_STATE = ()
-    lCase = const lUnitCase
-
-instance UnionCase 'GET_AGENTS where
-    type Case 'GET_AGENTS = ()
-    lCase = const lUnitCase
-
-instance UnionCase 'GET_FRAMEWORKS where
-    type Case 'GET_FRAMEWORKS = ()
-    lCase = const lUnitCase
-
-instance UnionCase 'GET_EXECUTORS where
-    type Case 'GET_EXECUTORS = ()
-    lCase = const lUnitCase
-
-instance UnionCase 'GET_OPERATIONS where
-    type Case 'GET_OPERATIONS = ()
-    lCase = const lUnitCase
-
-instance UnionCase 'GET_TASKS where
-    type Case 'GET_TASKS = ()
-    lCase = const lUnitCase
-
-instance UnionCase 'GET_ROLES where
-    type Case 'GET_ROLES = ()
-    lCase = const lUnitCase
-
-instance UnionCase 'GET_WEIGHTS where
-    type Case 'GET_WEIGHTS = ()
-    lCase = const lUnitCase
-
-instance UnionCase 'UPDATE_WEIGHTS where
-    type Case 'UPDATE_WEIGHTS = UpdateWeights
-    lCase = const lUpdate_weights
-
-instance UnionCase 'GET_MASTER where
-    type Case 'GET_MASTER = ()
-    lCase = const lUnitCase
-
--- probably should not be here.
-instance UnionCase 'SUBSCRIBE where
-    type Case 'SUBSCRIBE = ()
-    lCase = const lUnitCase
-
-instance UnionCase 'RESERVE_RESOURCES where
-    type Case 'RESERVE_RESOURCES = ReserveResources
-    lCase = const lReserve_resources
-
-instance UnionCase 'UNRESERVE_RESOURCES where
-    type Case 'UNRESERVE_RESOURCES = UnreserveResources
-    lCase = const lUnreserve_resources
-
-instance UnionCase 'CREATE_VOLUMES where
-    type Case 'CREATE_VOLUMES = CreateVolumes
-    lCase = const lCreate_volumes
-
-instance UnionCase 'DESTROY_VOLUMES where
-    type Case 'DESTROY_VOLUMES = DestroyVolumes
-    lCase = const lDestroy_volumes
-
-instance UnionCase 'GROW_VOLUME where
-    type Case 'GROW_VOLUME = GrowVolume
-    lCase = const lGrow_volume
-
-instance UnionCase 'SHRINK_VOLUME where
-    type Case 'SHRINK_VOLUME = ShrinkVolume
-    lCase = const lShrink_volume
-
-instance UnionCase 'GET_MAINTENANCE_STATUS where
-    type Case 'GET_MAINTENANCE_STATUS = ()  
-    lCase = const lUnitCase
-
-instance UnionCase 'GET_MAINTENANCE_SCHEDULE where
-    type Case 'GET_MAINTENANCE_SCHEDULE = ()  
-    lCase = const lUnitCase
-
-instance UnionCase 'UPDATE_MAINTENANCE_SCHEDULE where
-    type Case 'UPDATE_MAINTENANCE_SCHEDULE = UpdateMaintenanceSchedule
-    lCase = const lUpdate_maintenance_schedule
-
-instance UnionCase 'START_MAINTENANCE where
-    type Case 'START_MAINTENANCE = StartMaintenance
-    lCase = const lStart_maintenance
-
-instance UnionCase 'STOP_MAINTENANCE where
-    type Case 'STOP_MAINTENANCE = StopMaintenance
-    lCase = const lStop_maintenance
-
-instance UnionCase 'GET_QUOTA where
-    type Case 'GET_QUOTA = ()
-    lCase = const lUnitCase
-
-instance UnionCase 'UPDATE_QUOTA where
-    type Case 'UPDATE_QUOTA = UpdateQuota
-    lCase = const lUpdate_quota
-
-instance UnionCase 'SET_QUOTA where
-    type Case 'SET_QUOTA = SetQuota
-    lCase = const lSet_quota
-
-instance UnionCase 'REMOVE_QUOTA where
-    type Case 'REMOVE_QUOTA = RemoveQuota
-    lCase = const lRemove_quota
-
-instance UnionCase 'TEARDOWN where
-    type Case 'TEARDOWN = Teardown
-    lCase = const lTeardown
-
-instance UnionCase 'MARK_AGENT_GONE where
-    type Case 'MARK_AGENT_GONE = MarkAgentGone
-    lCase = const lMark_agent_gone
+UNIT_CASE(GET_HEALTH)
+UNIT_CASE(GET_FLAGS)
+UNIT_CASE(GET_VERSION)
+UNION_CASE(GET_METRICS, GetMetrics, lGet_metrics)
+UNIT_CASE(GET_LOGGING_LEVEL)
+UNION_CASE(SET_LOGGING_LEVEL, SetLoggingLevel, lSet_logging_level)
+UNION_CASE(LIST_FILES, ListFiles, lList_files)
+UNION_CASE(READ_FILE, ReadFile, lRead_file)
+UNIT_CASE(GET_STATE)
+UNIT_CASE(GET_AGENTS)
+UNIT_CASE(GET_FRAMEWORKS)
+UNIT_CASE(GET_EXECUTORS)
+UNIT_CASE(GET_OPERATIONS)
+UNIT_CASE(GET_TASKS)
+UNIT_CASE(GET_ROLES)
+UNIT_CASE(GET_WEIGHTS)
+UNION_CASE(UPDATE_WEIGHTS, UpdateWeights, lUpdate_weights)
+UNIT_CASE(GET_MASTER)
+UNIT_CASE(SUBSCRIBE)
+UNION_CASE(RESERVE_RESOURCES, ReserveResources, lReserve_resources)
+UNION_CASE(UNRESERVE_RESOURCES, UnreserveResources, lUnreserve_resources)
+UNION_CASE(CREATE_VOLUMES, CreateVolumes, lCreate_volumes)
+UNION_CASE(DESTROY_VOLUMES, DestroyVolumes, lDestroy_volumes)
+UNION_CASE(GROW_VOLUME, GrowVolume, lGrow_volume)
+UNION_CASE(SHRINK_VOLUME, ShrinkVolume, lShrink_volume)
+UNIT_CASE(GET_MAINTENANCE_STATUS)
+UNIT_CASE(GET_MAINTENANCE_SCHEDULE)
+UNION_CASE(UPDATE_MAINTENANCE_SCHEDULE, UpdateMaintenanceSchedule, lUpdate_maintenance_schedule)
+UNION_CASE(START_MAINTENANCE, StartMaintenance, lStart_maintenance)
+UNION_CASE(STOP_MAINTENANCE, StopMaintenance, lStop_maintenance)
+UNIT_CASE(GET_QUOTA)
+UNION_CASE(UPDATE_QUOTA, UpdateQuota, lUpdate_quota)
+UNION_CASE(SET_QUOTA, SetQuota, lSet_quota)
+UNION_CASE(REMOVE_QUOTA, RemoveQuota, lRemove_quota)
+UNION_CASE(TEARDOWN, Teardown, lTeardown)
+UNION_CASE(MARK_AGENT_GONE, MarkAgentGone, lMark_agent_gone)

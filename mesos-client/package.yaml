@@ -17,7 +17,7 @@ extra-source-files:
 # To avoid duplicated efforts in documentation and dealing with the
 # complications of embedding Haddock markup inside cabal files, it is
 # common to point users to the README.md file.
-description:         Please see the README on GitHub at <https://github.com/schernichkin/mesos-client#readme>
+description:         Please see the README on GitHub at <https://github.com/PROTEINE-INSAIDERS/mesos-client#readme>
 
 dependencies:
 - base >= 4.7 && < 5
@@ -41,6 +41,7 @@ dependencies:
 
 library:
   source-dirs: src
+  include-dirs: include
 
 executables:
   mesos-client-exe:
